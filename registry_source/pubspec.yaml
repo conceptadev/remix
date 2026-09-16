@@ -1,0 +1,39 @@
+name: registry_source
+description: >
+  The authored source of the bundled Remix registry: the default and Fortal
+  presets and the Agent behavior they style. Never published; it exists to be
+  analyzed, tested, and derived into remix_cli's templates.
+publish_to: none
+resolution: workspace
+
+# No `version:` on purpose. Nothing depends on this package and nothing ever
+# will: applications consume the installed source the templates derive from.
+#
+# `lib/src/default` is authored under the word `Vanilla` and `lib/src/fortal`
+# under `Fortal`; the builder swaps each for the consumer's prefix and asserts
+# the round trip on every file. `lib/src/agent` is authored under `Agent`, and
+# the recipes in each preset import it by relative path.
+
+# The workspace floor rather than the consumer floor: the default preset's
+# `sidebar_layout` uses private named parameters, a Dart 3.12 feature, and
+# installs that requirement into every consumer already.
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # The workspace resolves this to the sibling source package. The derived
+  # registry owns the hosted Remix floor installed into consumer applications.
+  remix: ^1.0.0-beta.10
+  mix: ^2.2.0-beta.5
+  mix_annotations: ^2.2.0-beta.1
+  mix_chart: ^0.0.1-beta.1
+  remix_ui_icons: ^0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.10.1
+  mix_generator: ^2.2.0-beta.3

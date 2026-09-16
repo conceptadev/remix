@@ -310,7 +310,7 @@ class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayou
 /// destination's `onSelected` callback closing the sheet after navigating),
 /// since the layout re-provides this scope inside the sheet route.
 class {{typePrefix}}SidebarLayoutScope extends InheritedWidget {
-  // `remix_{{valuePrefix}}` floors at Dart 3.11, one release before private named
+  // {{typePrefix}} source floors at Dart 3.11, one release before private named
   // parameters, so this assigns the private fields explicitly instead of
   // naming the parameters after them.
   const {{typePrefix}}SidebarLayoutScope._({
@@ -319,8 +319,8 @@ class {{typePrefix}}SidebarLayoutScope extends InheritedWidget {
     required VoidCallback openCompact,
     required VoidCallback closeCompact,
     required super.child,
-  }) : _openCompact = openCompact,
-       _closeCompact = closeCompact;
+  }) : _openCompact = openCompact, // ignore: prefer_initializing_formals
+       _closeCompact = closeCompact; // ignore: prefer_initializing_formals
 
   /// Whether the layout is currently in its compact presentation.
   final bool isCompact;

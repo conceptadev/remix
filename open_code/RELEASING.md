@@ -1,24 +1,16 @@
 # Release the Open Code presets
 
-## Current state
+## Release boundary
 
-The stack prepares Remix `1.0.0-beta.10` and `remix_cli` `0.1.0`.
-Neither version has been published from this stack. The existing
-`remix_fortal` release remains available until the replacement passes validation.
+The checkout declares Remix `1.0.0-beta.10` and `remix_cli` `0.1.0`.
+Do not infer publication status from these version numbers or historical PR
+stacks. Check pub.dev and the corresponding publish workflow before a release;
+never republish a version that already exists.
 
-Remix beta.8 was published from PR #182 on September 5, 2026. It does not
-include the exports required by the Fortal preset. This stack requires a new release.
-
-The native GitHub stack contains [#177](https://github.com/conceptadev/remix/pull/177),
-[#180](https://github.com/conceptadev/remix/pull/180), and
-[#178](https://github.com/conceptadev/remix/pull/178), from bottom to top.
-Review each PR against its parent. Require passing checks for every PR.
-
-After merge approval, merge the stack through the top PR, #178.
-GitHub merges all three PRs into `main`. For a partial merge, start with #177.
-GitHub automatically rebases the remaining branches and updates their targets.
-Require passing checks after any rebase. See the
-[GitHub stack instructions](https://docs.github.com/en/pull-requests/get-started/about-stacked-prs#merging).
+Use the final reviewed merge commit as the release candidate. Checkout CI,
+package dry-runs, hosted runtime installation, and published CLI installation
+are separate gates. Source migration into `registry_source/` does not imply
+that the hosted replacement has been released.
 
 ## Validate the release candidate
 
@@ -96,7 +88,8 @@ After the published CLI checks pass, mark `remix_fortal` discontinued in its
 pub.dev Admin tab. Name `remix_cli` as the replacement package. The migration
 instructions use `remix init --preset fortal` and application-owned imports.
 
-Keep `packages/remix_fortal` in the repository as the analyzed authoring source.
+Keep `registry_source/lib/src/fortal` in the private `registry_source`
+workspace package as the analyzed authoring source.
 Keep `publish_to: none` and its tests. Existing hosted installations remain
 available; discontinuation does not delete their package versions.
 

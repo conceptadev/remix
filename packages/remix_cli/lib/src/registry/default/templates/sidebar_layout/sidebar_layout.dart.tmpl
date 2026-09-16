@@ -110,8 +110,7 @@ class {{typePrefix}}SidebarLayout extends StatefulWidget {
   final ValueChanged<bool>? onCompactOpenChanged;
 
   @override
-  State<{{typePrefix}}SidebarLayout> createState() =>
-      _{{typePrefix}}SidebarLayoutState();
+  State<{{typePrefix}}SidebarLayout> createState() => _{{typePrefix}}SidebarLayoutState();
 }
 
 class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayout> {
@@ -169,7 +168,8 @@ class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayou
 
   Future<void> _pushSheet() async {
     _sheetShowing = true;
-    final reduceMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final reduceMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     await showRemixDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -190,40 +190,40 @@ class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayou
             if (!didPop) _closeCompact();
           },
           child: {{typePrefix}}SidebarLayoutScope._(
-          isCompact: true,
-          isCompactOpen: true,
-          openCompact: _openCompact,
-          closeCompact: _closeCompact,
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            // A plain DecoratedBox paints the panel surface without
-            // affecting layout, unlike a Mix `Box`, whose border-box sizing
-            // would shrink `width` by the border's own stroke width.
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: MixScope.tokenOf(
-                  {{typePrefix}}Tokens.background,
-                  dialogContext,
-                ),
-                border: BorderDirectional(
-                  end: BorderSide(
-                    color: MixScope.tokenOf(
-                      {{typePrefix}}Tokens.border,
-                      dialogContext,
+            isCompact: true,
+            isCompactOpen: true,
+            openCompact: _openCompact,
+            closeCompact: _closeCompact,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              // A plain DecoratedBox paints the panel surface without
+              // affecting layout, unlike a Mix `Box`, whose border-box sizing
+              // would shrink `width` by the border's own stroke width.
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: MixScope.tokenOf(
+                    {{typePrefix}}Tokens.background,
+                    dialogContext,
+                  ),
+                  border: BorderDirectional(
+                    end: BorderSide(
+                      color: MixScope.tokenOf(
+                        {{typePrefix}}Tokens.border,
+                        dialogContext,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              child: SizedBox(
-                width: width,
-                height: double.infinity,
-                child: RemixDialog(
-                  semanticLabel: _navigationSemanticLabel,
-                  child: widget.sidebar,
+                child: SizedBox(
+                  width: width,
+                  height: double.infinity,
+                  child: RemixDialog(
+                    semanticLabel: _navigationSemanticLabel,
+                    child: widget.sidebar,
+                  ),
                 ),
               ),
             ),
-          ),
           ),
         );
       },
@@ -270,7 +270,8 @@ class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayou
   }
 
   Widget _wideRow() {
-    final reduceMotion = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final reduceMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -290,7 +291,10 @@ class _{{typePrefix}}SidebarLayoutState extends State<{{typePrefix}}SidebarLayou
   Widget _body() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [?widget.header, Expanded(child: widget.body)],
+      children: [
+        ?widget.header,
+        Expanded(child: widget.body),
+      ],
     );
   }
 }
@@ -344,8 +348,7 @@ class {{typePrefix}}SidebarLayoutScope extends InheritedWidget {
   /// Reads the nearest [{{typePrefix}}SidebarLayoutScope], or null outside a
   /// [{{typePrefix}}SidebarLayout].
   static {{typePrefix}}SidebarLayoutScope? maybeOf(BuildContext context) =>
-      context
-          .dependOnInheritedWidgetOfExactType<{{typePrefix}}SidebarLayoutScope>();
+      context.dependOnInheritedWidgetOfExactType<{{typePrefix}}SidebarLayoutScope>();
 
   @override
   bool updateShouldNotify({{typePrefix}}SidebarLayoutScope oldWidget) =>

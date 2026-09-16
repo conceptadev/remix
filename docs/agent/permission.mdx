@@ -1,0 +1,56 @@
+---
+title: Permission
+description: A tool permission request with explicit host-owned decisions.
+---
+
+A tool permission request with explicit host-owned decisions.
+
+This is an [Open Code](/open-code) component: it installs into your application,
+not as a separate Agent runtime package. The names below assume prefix `Ui`.
+
+## Install
+
+In a Flutter application with the project-local CLI configured:
+
+```shell
+dart run remix_cli:remix init --prefix Ui --preset fortal
+dart run remix_cli:remix add permission_recipe
+```
+
+Use `--preset default` when initializing a default-preset application. Do not
+reinitialize an existing application with a different preset. Installing
+`permission_recipe` includes its component and required theme/control dependencies.
+Use `add permission` instead when you want the bare component and will provide styles.
+
+Import `ui/ui.dart` from your application and render under its `UiScope`.
+
+## Behavior
+
+Supply `tool` and wire `onAllowOnce`, `onAlwaysAllow`, and `onDeny`. States are `pending`, `deciding`, `allowed`, `running`, `complete`, `denied`, and `error`. Use a new `requestId` for a new request. Buttons report decisions; the application must enforce permission and define the scope of an always-allow grant. Parameter details use `RemixDataListItem` values.
+
+## Recipe bundle
+
+`uiAgentPermissionRecipe()` returns these styles:
+
+| Bundle field | Style type |
+|---|---|
+| `style` | `UiPermissionStyler` |
+| `surfaceStyle` | `CardStyler` |
+| `detailsStyle` | `DisclosureStyler` |
+| `parametersStyle` | `DataListStyler` |
+| `allowOnceStyle` | `ButtonStyler` |
+| `alwaysAllowStyle` | `ButtonStyler` |
+| `denyStyle` | `ButtonStyler` |
+
+Pass the bundle's styles to the corresponding component parameters. Each
+factory accepts same-named overrides, merged after the preset defaults.
+Child-control styles must be passed through unchanged so hover, focus, and
+disabled styles resolve in the child's context.
+
+## Review and customize
+
+The dashboard's **Workspace → Chat** demonstrates this surface alongside the
+other Agent components. Its responses and tool activity are simulated locally.
+Edit your installed source to customize it; `dart run remix_cli:remix add
+permission_recipe --diff` previews authored-source differences without overwriting
+local edits.

@@ -102,7 +102,8 @@ void main() {
 
   final failures = <String>[];
   final jobs =
-      (loadYaml(workflowFile.readAsStringSync()) as YamlMap)['jobs'] as YamlMap?;
+      (loadYaml(workflowFile.readAsStringSync()) as YamlMap)['jobs']
+          as YamlMap?;
   if (jobs == null) {
     stderr.writeln('$_workflow declares no jobs.');
     exitCode = 1;
@@ -115,8 +116,7 @@ void main() {
     if (job is! YamlMap) return;
 
     final matrix = <String, List<String>>{};
-    final declared =
-        (job['strategy'] as YamlMap?)?['matrix'] as YamlMap?;
+    final declared = (job['strategy'] as YamlMap?)?['matrix'] as YamlMap?;
     declared?.forEach((key, value) {
       if (value is YamlList) {
         matrix['$key'] = value.map((entry) => '$entry').toList();

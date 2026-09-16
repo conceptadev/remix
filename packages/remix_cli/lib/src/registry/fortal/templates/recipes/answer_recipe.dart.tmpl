@@ -1,0 +1,52 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../components/answer.dart';
+import '../components/card.dart';
+import '../components/disclosure.dart';
+import '../components/icon_button.dart';
+import '../theme/theme.dart';
+
+@immutable
+final class {{typePrefix}}AgentAnswerRecipe {
+  const {{typePrefix}}AgentAnswerRecipe({
+    required this.style,
+    required this.surfaceStyle,
+    required this.sourcesStyle,
+    required this.copyStyle,
+    required this.retryStyle,
+  });
+  final {{typePrefix}}AnswerStyler style;
+  final CardStyler surfaceStyle;
+  final DisclosureStyler sourcesStyle;
+  final IconButtonStyler copyStyle;
+  final IconButtonStyler retryStyle;
+}
+
+{{typePrefix}}AgentAnswerRecipe {{valuePrefix}}AgentAnswerRecipe({
+  {{typePrefix}}AnswerStyler style = const {{typePrefix}}AnswerStyler.create(),
+  CardStyler surfaceStyle = const CardStyler.create(),
+  DisclosureStyler sourcesStyle = const DisclosureStyler.create(),
+  IconButtonStyler copyStyle = const IconButtonStyler.create(),
+  IconButtonStyler retryStyle = const IconButtonStyler.create(),
+}) => {{typePrefix}}AgentAnswerRecipe(
+  style: {{typePrefix}}AnswerStyler(
+    body: BoxStyler(),
+    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
+    feedback: BoxStyler().padding(.only(top: 6)),
+    sourcesLabel: TextStyler().color({{typePrefix}}Tokens.gray12()).fontSize(13),
+    indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+  ).merge(style),
+  surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
+  sourcesStyle: {{valuePrefix}}DisclosureStyle(style: sourcesStyle),
+  copyStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .ghost,
+    size: .size1,
+    style: copyStyle,
+  ),
+  retryStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .ghost,
+    size: .size1,
+    style: retryStyle,
+  ),
+);

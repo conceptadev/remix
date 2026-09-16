@@ -1,0 +1,37 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:registry_source/fortal.dart';
+
+import '../../helpers/test_helpers.dart';
+
+void main() {
+  testWidgets('default style constrains the popover to 480 pixels', (
+    tester,
+  ) async {
+    final resolved = await resolveInFortalScope(
+      tester,
+      (context) => fortalPopoverStyle().build(context),
+    );
+
+    expect(
+      resolved.spec.container.spec.constraints,
+      const BoxConstraints(maxWidth: 480),
+    );
+  });
+
+  testWidgets('FortalPopover supplies the themed overlay style', (
+    tester,
+  ) async {
+    await tester.pumpRemixApp(
+      const FortalPopover(
+        popoverChild: Text('Fortal content'),
+        child: Text('Open Fortal popover'),
+      ),
+    );
+
+    await tester.tap(find.text('Open Fortal popover'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Fortal content'), findsOneWidget);
+  });
+}

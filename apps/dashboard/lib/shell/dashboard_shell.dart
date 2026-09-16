@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../pages/charts_page.dart';
+import '../pages/chat_page.dart';
 import '../pages/customers_page.dart';
 import '../pages/gallery/gallery_actions_page.dart';
 import '../pages/gallery/gallery_display_page.dart';
@@ -28,6 +29,9 @@ class _DashboardShellState extends State<DashboardShell> {
   DashboardPage _selected = .overview;
   String _searchQuery = '';
   bool _sidebarCollapsed = false;
+  // The sidebar layout reparents its body when crossing the compact breakpoint.
+  // Keep page state (including an active conversation) through that move.
+  final _pageStackKey = GlobalKey();
 
   void _select(DashboardPage page) => setState(() => _selected = page);
 
@@ -37,6 +41,7 @@ class _DashboardShellState extends State<DashboardShell> {
     // enum order.
     final pages = <Widget>[
       OverviewPage(onViewOrders: () => _select(.orders)),
+      const ChatPage(),
       CustomersPage(globalQuery: _searchQuery),
       OrdersPage(globalQuery: _searchQuery),
       const SettingsPage(),
@@ -49,14 +54,14 @@ class _DashboardShellState extends State<DashboardShell> {
       const GalleryTypographyPage(),
     ];
 
-    return FortalSidebarLayout(
+    return UiSidebarLayout(
       compactBreakpoint: dashboardCompactBreakpoint,
       sidebarWidth: dashboardSidebarWidth,
       collapsedWidth: dashboardSidebarCollapsedWidth,
       collapsed: _sidebarCollapsed,
       sidebar: Builder(
         builder: (context) {
-          final scope = FortalSidebarLayoutScope.of(context);
+          final scope = UiSidebarLayoutScope.of(context);
           return Sidebar(
             key: const ValueKey('dashboard-sidebar'),
             selected: _selected,
@@ -77,7 +82,7 @@ class _DashboardShellState extends State<DashboardShell> {
       ),
       header: Builder(
         builder: (context) {
-          final scope = FortalSidebarLayoutScope.of(context);
+          final scope = UiSidebarLayoutScope.of(context);
           return TopBar(
             page: _selected,
             onMenuPressed: scope.isCompact ? scope.openCompact : null,
@@ -86,7 +91,11 @@ class _DashboardShellState extends State<DashboardShell> {
           );
         },
       ),
-      body: IndexedStack(index: _selected.index, children: pages),
+      body: IndexedStack(
+        key: _pageStackKey,
+        index: _selected.index,
+        children: pages,
+      ),
     );
   }
 }

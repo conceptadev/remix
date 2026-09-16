@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../../ui/ui.dart';
 
 import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
@@ -28,33 +28,33 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
           description:
               'Both viewport alignments across the complete four-size scale.',
           child: GalleryEnumMatrix(
-            rows: FortalDialogAlign.values,
-            columns: FortalDialogSize.values,
-            cellBuilder: (context, align, size) => FortalButton.soft(
+            rows: UiDialogAlign.values,
+            columns: UiDialogSize.values,
+            cellBuilder: (context, align, size) => UiButton.soft(
               size: .size1,
               semanticLabel:
                   'Open ${enumLabel(align)} ${enumLabel(size)} dialog',
               onPressed: () => showRemixDialog<void>(
                 context: context,
                 barrierLabel: 'Dismiss',
-                builder: (dialogContext) => FortalDialog(
+                builder: (dialogContext) => UiDialog(
                   align: align,
                   size: size,
                   title: 'Invite teammates',
                   description: 'Share this workspace with your collaborators.',
                   actions: [
-                    FortalButton.soft(
+                    UiButton.soft(
                       onPressed: () => Navigator.of(dialogContext).pop(),
                       label: 'Cancel',
                     ),
-                    FortalButton(
+                    UiButton(
                       onPressed: () => Navigator.of(dialogContext).pop(),
                       label: 'Send invite',
                     ),
                   ],
                   child: const Padding(
                     padding: EdgeInsets.only(top: 12),
-                    child: FortalTextField(hintText: 'teammate@example.com'),
+                    child: UiTextField(hintText: 'teammate@example.com'),
                   ),
                 ),
               ),
@@ -69,8 +69,8 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
             spacing: 14,
             runSpacing: 14,
             children: [
-              for (final size in FortalPopoverSize.values)
-                FortalPopover(
+              for (final size in UiPopoverSize.values)
+                UiPopover(
                   size: size,
                   semanticLabel: 'Open ${enumLabel(size)} popover',
                   popoverChild: const SizedBox(
@@ -80,8 +80,8 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
                       crossAxisAlignment: .start,
                       spacing: 8,
                       children: [
-                        FortalText('Quick note'),
-                        FortalText(
+                        UiText('Quick note'),
+                        UiText(
                           'Popover content inherits the active Fortal scope.',
                         ),
                       ],
@@ -96,7 +96,7 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
           label: 'Tooltip',
           description:
               'Hover or long-press the trigger to reveal contextual help.',
-          child: FortalTooltip(
+          child: UiTooltip(
             tooltipSemantics: 'Keyboard shortcut Command K',
             tooltipChild: const Text('Search · ⌘K'),
             child: const _OverlayTrigger('Hover for shortcut'),
@@ -106,9 +106,9 @@ class _GalleryOverlaysPageState extends State<GalleryOverlaysPage> {
           label: 'Menu',
           description: 'Solid and soft menus at both supported density sizes.',
           child: GalleryEnumMatrix(
-            rows: FortalMenuVariant.values,
-            columns: FortalMenuSize.values,
-            cellBuilder: (context, variant, size) => FortalMenu<String>(
+            rows: UiMenuVariant.values,
+            columns: UiMenuSize.values,
+            cellBuilder: (context, variant, size) => UiMenu<String>(
               variant: variant,
               size: size,
               trigger: const RemixMenuTrigger(
@@ -167,5 +167,5 @@ class _OverlayTrigger extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      FortalBadge.surface(size: .size3, highContrast: true, label: label);
+      UiBadge.surface(size: .size3, highContrast: true, label: label);
 }

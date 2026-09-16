@@ -74,7 +74,7 @@ export 'src/rendering/remix_box_effects.dart'
 
 /// STYLER CONVENIENCES
 export 'src/utilities/remix_style.dart'
-    show RemixBoxStylerAnchors, RemixBoxStylerMixin;
+    show RemixBoxStylerAnchors, RemixBoxStylerMixin, RemixStyleSpecBuilder;
 export 'src/utilities/selected_mixin.dart'
     show SelectedWidgetStateVariantExtension;
 

@@ -6,7 +6,7 @@ import 'package:dashboard/widgets/analytics_charts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mix_chart/mix_chart.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:dashboard/ui/ui.dart';
 
 void main() {
   testWidgets('charts destination presents every Fortal chart family', (
@@ -32,10 +32,10 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.byType(FortalLineChart), findsNWidgets(4));
-    expect(find.byType(FortalBarChart), findsNWidgets(4));
+    expect(find.byType(UiLineChart), findsNWidgets(4));
+    expect(find.byType(UiBarChart), findsNWidgets(4));
     expect(find.byType(PieChart), findsNWidgets(4));
-    expect(find.byType(FortalPieChart), findsOneWidget);
+    expect(find.byType(UiPieChart), findsOneWidget);
 
     for (final title in const [
       'Revenue momentum',
@@ -69,15 +69,15 @@ void main() {
 
     final page = find.byKey(const ValueKey('charts-page'));
     final context = tester.element(page);
-    final palette = resolveFortalChartPalette(context);
+    final palette = resolveUiChartPalette(context);
 
-    for (final chart in tester.widgetList<FortalLineChart>(
-      find.byType(FortalLineChart),
+    for (final chart in tester.widgetList<UiLineChart>(
+      find.byType(UiLineChart),
     )) {
       expect(chart.palette, palette);
     }
-    for (final chart in tester.widgetList<FortalBarChart>(
-      find.byType(FortalBarChart),
+    for (final chart in tester.widgetList<UiBarChart>(
+      find.byType(UiBarChart),
     )) {
       expect(chart.palette, palette);
     }
@@ -86,12 +86,12 @@ void main() {
     }
 
     final quantitativeAxes = <ChartAxis>[
-      for (final chart in tester.widgetList<FortalLineChart>(
-        find.byType(FortalLineChart),
+      for (final chart in tester.widgetList<UiLineChart>(
+        find.byType(UiLineChart),
       ))
         ?chart.yAxis,
-      for (final chart in tester.widgetList<FortalBarChart>(
-        find.byType(FortalBarChart),
+      for (final chart in tester.widgetList<UiBarChart>(
+        find.byType(UiBarChart),
       ))
         ?chart.yAxis,
     ];
@@ -100,10 +100,10 @@ void main() {
       expect(tickCount, closeTo(tickCount.roundToDouble(), 0.0001));
     }
 
-    final comparison = tester.widget<FortalLineChart>(
+    final comparison = tester.widget<UiLineChart>(
       find.byWidgetPredicate(
         (widget) =>
-            widget is FortalLineChart &&
+            widget is UiLineChart &&
             widget.key == const ValueKey('charts-line-patterns'),
       ),
     );
@@ -111,10 +111,10 @@ void main() {
     expect(planLine.stroke!.spec.dashArray, [6, 4]);
     expect(planLine.marker!.spec.shape, ChartMarkerShape.square);
 
-    final grouped = tester.widget<FortalBarChart>(
+    final grouped = tester.widget<UiBarChart>(
       find.byWidgetPredicate(
         (widget) =>
-            widget is FortalBarChart &&
+            widget is UiBarChart &&
             widget.key == const ValueKey('charts-bar-grouped'),
       ),
     );
@@ -256,10 +256,10 @@ void main() {
   ) async {
     await _pumpCompactCharts(tester);
 
-    final chart = tester.widget<FortalBarChart>(
+    final chart = tester.widget<UiBarChart>(
       find.byWidgetPredicate(
         (widget) =>
-            widget is FortalBarChart &&
+            widget is UiBarChart &&
             widget.semanticsLabel == 'Monthly floating inventory changes',
       ),
     );
@@ -286,17 +286,17 @@ void main() {
 
     final viewportChart = find.byWidgetPredicate(
       (widget) =>
-          widget is FortalLineChart &&
+          widget is UiLineChart &&
           widget.semanticsLabel ==
               'Revenue chart with scalable horizontal viewport',
     );
     final badges = find.descendant(
       of: viewportChart,
-      matching: find.byType(FortalBadge),
+      matching: find.byType(UiBadge),
     );
     expect(badges, findsWidgets);
-    for (final badge in tester.widgetList<FortalBadge>(badges)) {
-      expect(badge.size, FortalBadgeSize.size1);
+    for (final badge in tester.widgetList<UiBadge>(badges)) {
+      expect(badge.size, UiBadgeSize.size1);
     }
 
     final rects = [
@@ -323,7 +323,7 @@ void main() {
 
     Future<List<Offset>> pumpAt(double width) async {
       await tester.pumpWidget(
-        FortalScope(
+        UiScope(
           child: MaterialApp(
             home: Align(
               alignment: Alignment.topLeft,
@@ -361,13 +361,11 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(
-      const FortalScope(child: MaterialApp(home: ChartsPage())),
+      const UiScope(child: MaterialApp(home: ChartsPage())),
     );
 
     Rect card(String title) => tester.getRect(
-      find
-          .ancestor(of: find.text(title), matching: find.byType(FortalCard))
-          .first,
+      find.ancestor(of: find.text(title), matching: find.byType(UiCard)).first,
     );
 
     final momentum = card('Revenue momentum');

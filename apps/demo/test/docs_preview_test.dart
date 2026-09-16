@@ -9,7 +9,7 @@ import 'package:demo/main.directories.g.dart';
 import 'package:demo/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 void main() {

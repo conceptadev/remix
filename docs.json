@@ -218,6 +218,44 @@
           "href": "/fortal/typography"
         }
       ]
+    },
+    {
+      "group": "Agent surfaces",
+      "collapsible": true,
+      "pages": [
+        {
+          "title": "Activity",
+          "href": "/agent/activity"
+        },
+        {
+          "title": "Answer",
+          "href": "/agent/answer"
+        },
+        {
+          "title": "Composer",
+          "href": "/agent/composer"
+        },
+        {
+          "title": "Execution",
+          "href": "/agent/execution"
+        },
+        {
+          "title": "Message",
+          "href": "/agent/message"
+        },
+        {
+          "title": "Permission",
+          "href": "/agent/permission"
+        },
+        {
+          "title": "Plan",
+          "href": "/agent/plan"
+        },
+        {
+          "title": "Transcript",
+          "href": "/agent/transcript"
+        }
+      ]
     }
   ]
 }

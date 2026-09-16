@@ -1,3 +1,10 @@
+# The installed Fortal widgets are generated parts, and the Widgetbook use
+# cases name them as `type:`. Emit those parts before Widgetbook reads them.
+global_options:
+  source_gen|combining_builder:
+    runs_before:
+      - widgetbook_generator|use_case_builder
+
 targets:
   $default:
     builders:

@@ -33,8 +33,8 @@ that:
 - exposes an idiomatic public API in the *target system's* vocabulary, not
   Remix's or Fortal's.
 
-`remix_fortal` is the in-repo precedent for the `packages/<name>` shape this
-skill describes: a standalone, separately versioned package that depends on
+Fortal (`registry_source/lib/src/fortal`, derived into the `remix_cli` preset)
+is the in-repo precedent for the shape this skill describes: a standalone, separately versioned package that depends on
 `remix`, owns its own token scope, and generates its widget catalog with
 `@MixWidget`. Follow that structure. Do not clone Fortal's *content* and swap
 colors — its values are hand-authored against a pinned Radix parity contract,

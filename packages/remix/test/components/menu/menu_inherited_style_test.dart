@@ -51,9 +51,7 @@ void main() {
                       ),
                     ],
                     style: MenuStyler().item(
-                      MenuItemStyler().label(
-                        TextStyler().color(Colors.red),
-                      ),
+                      MenuItemStyler().label(TextStyler().color(Colors.red)),
                     ),
                     styleSpec: raw
                         ? const MenuSpec(
@@ -105,10 +103,7 @@ void main() {
           rendered('Inherited')?.fontFamily,
           raw ? 'RawFont' : 'InheritedFont',
         );
-        expect(
-          rendered('Inherited')?.color,
-          raw ? Colors.blue : Colors.red,
-        );
+        expect(rendered('Inherited')?.color, raw ? Colors.blue : Colors.red);
         expect(rendered('Item override')?.fontSize, raw ? 21 : 31);
       }
       expect(tester.takeException(), isNull);

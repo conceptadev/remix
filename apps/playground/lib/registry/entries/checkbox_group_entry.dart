@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../../ui/ui.dart';
 
 import '../../widgets/comparison_view.dart';
 
@@ -25,7 +25,7 @@ extension on _Interest {
 }
 
 /// The group itself is unstyled — every visual comes from the item's checkbox
-/// recipe, so `fortalCheckboxStyle()` applies with no group-level style.
+/// recipe, so `playgroundCheckboxStyle()` applies with no group-level style.
 class _RemixCheckboxGroupPreview extends StatefulWidget {
   const _RemixCheckboxGroupPreview();
 
@@ -117,7 +117,7 @@ class _LabeledOption<T extends Object> extends StatelessWidget {
       value: value,
       label: label,
       enabled: enabled,
-      style: fortalCheckboxStyle(),
+      style: playgroundCheckboxStyle(),
     );
   }
 }

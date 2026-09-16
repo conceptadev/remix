@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../../ui/ui.dart';
 
 import '../../widgets/gallery_scaffold.dart';
 
@@ -31,10 +31,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           description:
               'All field variants and sizes with a leading icon and placeholder.',
           child: GalleryEnumMatrix(
-            rows: FortalTextFieldVariant.values,
-            columns: FortalTextFieldSize.values,
+            rows: UiTextFieldVariant.values,
+            columns: UiTextFieldSize.values,
             cellWidth: 210,
-            cellBuilder: (_, variant, size) => FortalTextField(
+            cellBuilder: (_, variant, size) => UiTextField(
               variant: variant,
               size: size,
               hintText: 'Type something…',
@@ -47,10 +47,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           description:
               'Multi-line input sharing the text field variants and sizes.',
           child: GalleryEnumMatrix(
-            rows: FortalTextAreaVariant.values,
-            columns: FortalTextAreaSize.values,
+            rows: UiTextAreaVariant.values,
+            columns: UiTextAreaSize.values,
             cellWidth: 230,
-            cellBuilder: (_, variant, size) => FortalTextArea(
+            cellBuilder: (_, variant, size) => UiTextArea(
               variant: variant,
               size: size,
               hintText: 'Add a note…',
@@ -61,10 +61,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           label: 'Segmented control',
           description: 'Exclusive selection in surface and classic treatments.',
           child: GalleryEnumMatrix(
-            rows: FortalSegmentedControlVariant.values,
-            columns: FortalSegmentedControlSize.values,
+            rows: UiSegmentedControlVariant.values,
+            columns: UiSegmentedControlSize.values,
             cellWidth: 250,
-            cellBuilder: (_, variant, size) => FortalSegmentedControl<String>(
+            cellBuilder: (_, variant, size) => UiSegmentedControl<String>(
               variant: variant,
               size: size,
               selectedValue: _density,
@@ -81,9 +81,9 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           label: 'Select',
           description: 'Every visual variant across the three sizes.',
           child: GalleryEnumMatrix(
-            rows: FortalSelectVariant.values,
-            columns: FortalSelectSize.values,
-            cellBuilder: (_, variant, size) => FortalSelect<String>(
+            rows: UiSelectVariant.values,
+            columns: UiSelectSize.values,
+            cellBuilder: (_, variant, size) => UiSelect<String>(
               variant: variant,
               size: size,
               trigger: const RemixSelectTrigger(placeholder: 'Fruit'),
@@ -102,10 +102,10 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           description:
               'Single-selection groups in soft and surface treatments.',
           child: GalleryEnumMatrix(
-            rows: FortalToggleGroupVariant.values,
-            columns: FortalToggleGroupSize.values,
+            rows: UiToggleGroupVariant.values,
+            columns: UiToggleGroupSize.values,
             cellWidth: 230,
-            cellBuilder: (_, variant, size) => FortalToggleGroup<String>(
+            cellBuilder: (_, variant, size) => UiToggleGroup<String>(
               variant: variant,
               size: size,
               selectedValue: _alignment,
@@ -137,9 +137,9 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           label: 'Checkbox',
           description: 'Classic, surface, and soft checkbox recipes.',
           child: GalleryEnumMatrix(
-            rows: FortalCheckboxVariant.values,
-            columns: FortalCheckboxSize.values,
-            cellBuilder: (_, variant, size) => FortalCheckbox(
+            rows: UiCheckboxVariant.values,
+            columns: UiCheckboxSize.values,
+            cellBuilder: (_, variant, size) => UiCheckbox(
               variant: variant,
               size: size,
               selected: _checked,
@@ -165,7 +165,7 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
                   ('sms', 'SMS'),
                   ('push', 'Push'),
                 ])
-                  FortalCheckboxGroupItem<String>(value: value, label: label),
+                  UiCheckboxGroupItem<String>(value: value, label: label),
               ],
             ),
           ),
@@ -174,14 +174,14 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           label: 'Radio',
           description: 'Radio selection shown across every variant and size.',
           child: GalleryEnumMatrix(
-            rows: FortalRadioVariant.values,
-            columns: FortalRadioSize.values,
+            rows: UiRadioVariant.values,
+            columns: UiRadioSize.values,
             cellBuilder: (_, variant, size) => RemixRadioGroup<int>(
               groupValue: _radio,
               onChanged: (value) {
                 if (value != null) setState(() => _radio = value);
               },
-              child: FortalRadio<int>(
+              child: UiRadio<int>(
                 variant: variant,
                 size: size,
                 value: 1,
@@ -194,9 +194,9 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           label: 'Switch',
           description: 'Binary settings controls with all visual treatments.',
           child: GalleryEnumMatrix(
-            rows: FortalSwitchVariant.values,
-            columns: FortalSwitchSize.values,
-            cellBuilder: (_, variant, size) => FortalSwitch(
+            rows: UiSwitchVariant.values,
+            columns: UiSwitchSize.values,
+            cellBuilder: (_, variant, size) => UiSwitch(
               variant: variant,
               size: size,
               selected: _switched,
@@ -209,12 +209,12 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
           label: 'Slider',
           description: 'Discrete single-thumb sliders in every Fortal recipe.',
           child: GalleryEnumMatrix(
-            rows: FortalSliderVariant.values,
-            columns: FortalSliderSize.values,
+            rows: UiSliderVariant.values,
+            columns: UiSliderSize.values,
             cellWidth: 210,
             cellBuilder: (_, variant, size) => SizedBox(
               width: 170,
-              child: FortalSlider(
+              child: UiSlider(
                 variant: variant,
                 size: size,
                 value: _slider,
@@ -236,20 +236,20 @@ class _GalleryFormsPageState extends State<GalleryFormsPage> {
             children: [
               SizedBox(
                 width: 240,
-                child: FortalTextField(
+                child: UiTextField(
                   error: true,
                   label: 'Workspace slug',
                   hintText: 'remix',
                   helperText: 'That slug is already in use.',
                 ),
               ),
-              FortalCheckbox(
+              UiCheckbox(
                 selected: null,
                 tristate: true,
                 semanticLabel: 'Indeterminate checkbox',
               ),
-              FortalCheckbox(selected: true, label: 'Labelled'),
-              FortalSwitch(
+              UiCheckbox(selected: true, label: 'Labelled'),
+              UiSwitch(
                 selected: false,
                 enabled: false,
                 semanticLabel: 'Disabled switch',

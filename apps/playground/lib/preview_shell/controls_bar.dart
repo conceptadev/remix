@@ -19,60 +19,80 @@ class ControlsBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final previewControls = <Widget>[
+      SegmentedButton<Brightness>(
+        segments: const [
+          ButtonSegment(value: .light, label: Text('Light')),
+          ButtonSegment(value: .dark, label: Text('Dark')),
+        ],
+        selected: {brightness},
+        onSelectionChanged: (selection) {
+          if (selection.isNotEmpty) {
+            onChange(brightness: selection.first);
+          }
+        },
+      ),
+      const SizedBox(width: 16),
+      _PresetChip(
+        label: 'Mobile',
+        onTap: () => onChange(size: ViewportPresets.mobile),
+      ),
+      const SizedBox(width: 8),
+      _PresetChip(
+        label: 'Tablet',
+        onTap: () => onChange(size: ViewportPresets.tablet),
+      ),
+      const SizedBox(width: 8),
+      _PresetChip(
+        label: 'Desktop',
+        onTap: () => onChange(size: ViewportPresets.desktop),
+      ),
+    ];
+    final sizeControls = <Widget>[
+      Text('W', style: textTheme.labelMedium),
+      const SizedBox(width: 6),
+      _SizeField(
+        initial: size.width.round(),
+        onSubmitted: (w) =>
+            onChange(size: Size(w.toDouble().clamp(200, 3000), size.height)),
+      ),
+      const SizedBox(width: 12),
+      Text('H', style: textTheme.labelMedium),
+      const SizedBox(width: 6),
+      _SizeField(
+        initial: size.height.round(),
+        onSubmitted: (h) =>
+            onChange(size: Size(size.width, h.toDouble().clamp(200, 3000))),
+      ),
+    ];
 
     return Material(
       elevation: 1,
       color: Theme.of(context).colorScheme.surface,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: Row(
-          children: [
-            SegmentedButton<Brightness>(
-              segments: const [
-                ButtonSegment(value: .light, label: Text('Light')),
-                ButtonSegment(value: .dark, label: Text('Dark')),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth >=
+                900 * MediaQuery.textScalerOf(context).scale(1)) {
+              return Row(
+                children: [...previewControls, const Spacer(), ...sizeControls],
+              );
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: previewControls),
+                ),
+                const SizedBox(height: 8),
+                Row(children: sizeControls),
               ],
-              selected: {brightness},
-              onSelectionChanged: (selection) {
-                if (selection.isNotEmpty) {
-                  onChange(brightness: selection.first);
-                }
-              },
-            ),
-            const SizedBox(width: 16),
-            _PresetChip(
-              label: 'Mobile',
-              onTap: () => onChange(size: ViewportPresets.mobile),
-            ),
-            const SizedBox(width: 8),
-            _PresetChip(
-              label: 'Tablet',
-              onTap: () => onChange(size: ViewportPresets.tablet),
-            ),
-            const SizedBox(width: 8),
-            _PresetChip(
-              label: 'Desktop',
-              onTap: () => onChange(size: ViewportPresets.desktop),
-            ),
-            const Spacer(),
-            Text('W', style: textTheme.labelMedium),
-            const SizedBox(width: 6),
-            _SizeField(
-              initial: size.width.round(),
-              onSubmitted: (w) => onChange(
-                size: Size(w.toDouble().clamp(200, 3000), size.height),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text('H', style: textTheme.labelMedium),
-            const SizedBox(width: 6),
-            _SizeField(
-              initial: size.height.round(),
-              onSubmitted: (h) => onChange(
-                size: Size(size.width, h.toDouble().clamp(200, 3000)),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -109,6 +129,14 @@ class _SizeFieldState extends State<_SizeField> {
   late final controller = TextEditingController(
     text: widget.initial.toString(),
   );
+
+  @override
+  void didUpdateWidget(_SizeField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initial != widget.initial) {
+      controller.text = widget.initial.toString();
+    }
+  }
 
   @override
   void dispose() {

@@ -202,21 +202,24 @@ dependency_overrides:
   });
 
   group('installed UI boundary', () {
-    test('accepts the exact registry output without build.yaml', () {
-      final app = Directory('${sandbox.path}/app');
-      _writeInstalledUi(app);
+    test(
+      'accepts exact registry output and scoped Agent builder configuration',
+      () {
+        final app = Directory('${sandbox.path}/app');
+        _writeInstalledUi(app);
 
-      expect(checker.installedUiProblem(app), isNull);
-    });
+        expect(checker.installedUiProblem(app), isNull);
+      },
+    );
 
-    test('rejects a generated consumer build.yaml', () {
+    test('rejects unexpected consumer builder configuration', () {
       final app = Directory('${sandbox.path}/app');
       _writeInstalledUi(app);
       File('${app.path}/build.yaml').writeAsStringSync('targets: {}\n');
 
       expect(
         checker.installedUiProblem(app),
-        contains('created a consumer build.yaml'),
+        contains('does not match the scoped Agent builder contract'),
       );
     });
 
@@ -320,6 +323,22 @@ const _registryItems = <String>[
   'toggle',
   'toggle_group',
   'tooltip',
+  'activity',
+  'answer',
+  'composer',
+  'execution',
+  'message',
+  'permission',
+  'plan',
+  'transcript',
+  'activity_recipe',
+  'answer_recipe',
+  'composer_recipe',
+  'execution_recipe',
+  'message_recipe',
+  'permission_recipe',
+  'plan_recipe',
+  'transcript_recipe',
 ];
 
 /// Items with no generated adapter: layouts and other plain compositions
@@ -332,15 +351,39 @@ void _writeInstalledUi(Directory app) {
     'theme/tokens.dart',
     'theme/theme_data.dart',
     'theme/theme_scope.dart',
+    'models/activity_item.dart',
+    'models/plan_item.dart',
+    'models/statuses.dart',
+    'support/disclosure.dart',
+    'support/functional_glyph.dart',
+    'support/live_edge.dart',
     for (final item in _registryItems)
       ...(item == 'icons'
           ? const ['icons.dart']
+          : item.endsWith('_recipe')
+          ? ['recipes/$item.dart']
           : [
               'components/$item.dart',
               if (!_nonGeneratedRegistryItems.contains(item))
                 'components/$item.g.dart',
             ]),
   ];
+  app.createSync(recursive: true);
+  File('${app.path}/build.yaml').writeAsStringSync('''targets:
+  \$default:
+    builders:
+      mix_generator:spec_styler_generator:
+        enabled: true
+        generate_for:
+          - lib/ui/components/activity.dart
+          - lib/ui/components/answer.dart
+          - lib/ui/components/composer.dart
+          - lib/ui/components/execution.dart
+          - lib/ui/components/message.dart
+          - lib/ui/components/permission.dart
+          - lib/ui/components/plan.dart
+          - lib/ui/components/transcript.dart
+''');
   for (final relative in files) {
     final file = File('${app.path}/lib/ui/$relative');
     file.parent.createSync(recursive: true);

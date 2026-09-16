@@ -107,14 +107,8 @@ ContextToken<Color> _dimmed(ColorToken source, double alpha) =>
 final _primaryHoverFill = _dimmed({{typePrefix}}Tokens.primary, _hoverAlpha);
 final _primaryPressedFill = _dimmed({{typePrefix}}Tokens.primary, _pressedAlpha);
 final _secondaryHoverFill = _dimmed({{typePrefix}}Tokens.secondary, _hoverAlpha);
-final _secondaryPressedFill = _dimmed(
-  {{typePrefix}}Tokens.secondary,
-  _pressedAlpha,
-);
-final _destructiveHoverFill = _dimmed(
-  {{typePrefix}}Tokens.destructive,
-  _hoverAlpha,
-);
+final _secondaryPressedFill = _dimmed({{typePrefix}}Tokens.secondary, _pressedAlpha);
+final _destructiveHoverFill = _dimmed({{typePrefix}}Tokens.destructive, _hoverAlpha);
 final _destructivePressedFill = _dimmed(
   {{typePrefix}}Tokens.destructive,
   _pressedAlpha,
@@ -156,17 +150,16 @@ _{{typePrefix}}IconButtonMetrics _metricsFor({{typePrefix}}IconButtonSize size) 
 ///
 /// The box is square and centered, so the control's footprint does not change
 /// with the glyph inside it.
-IconButtonStyler _base(_{{typePrefix}}IconButtonMetrics metrics) =>
-    IconButtonStyler()
-        .size(metrics.edge, metrics.edge)
-        .alignment(.center)
-        .borderRadius(.all({{typePrefix}}Tokens.radius()))
-        .icon(.size(metrics.iconSize))
-        .spinner(
-          .size(
-            metrics.iconSize,
-          ).opacity(_spinnerOpacity).duration(_spinnerDuration),
-        );
+IconButtonStyler _base(_{{typePrefix}}IconButtonMetrics metrics) => IconButtonStyler()
+    .size(metrics.edge, metrics.edge)
+    .alignment(.center)
+    .borderRadius(.all({{typePrefix}}Tokens.radius()))
+    .icon(.size(metrics.iconSize))
+    .spinner(
+      .size(
+        metrics.iconSize,
+      ).opacity(_spinnerOpacity).duration(_spinnerDuration),
+    );
 
 IconButtonStyler _variantStyle({{typePrefix}}IconButtonVariant variant) =>
     switch (variant) {

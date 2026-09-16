@@ -16,6 +16,7 @@ enum DashboardPage {
     'Overview',
     Icons.space_dashboard_outlined,
   ),
+  chat(DashboardSection.overview, 'Chat', Icons.chat_bubble_outline),
   customers(DashboardSection.data, 'Customers', Icons.people_outline),
   orders(DashboardSection.data, 'Orders', Icons.receipt_long_outlined),
   settings(DashboardSection.settings, 'Settings', Icons.settings_outlined),

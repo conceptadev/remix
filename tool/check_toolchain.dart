@@ -29,7 +29,6 @@ const _pureDartFloor = {'sdk': '>=3.12.0 <4.0.0'};
 const _consumerFloorPackages = {
   'packages/naked_ui',
   'packages/remix',
-  'packages/remix_fortal',
   'packages/remix_ui_icons',
 };
 

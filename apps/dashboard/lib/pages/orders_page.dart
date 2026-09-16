@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../data/models.dart';
 import '../data/orders.dart';
@@ -58,7 +58,7 @@ class _OrdersPageState extends State<OrdersPage> {
           PageHeader(
             title: 'Orders',
             description: 'Review transactions and fulfillment status.',
-            actions: FortalButton(
+            actions: UiButton(
               onPressed: () => showRemixToast(
                 context,
                 RemixToastData(
@@ -74,7 +74,7 @@ class _OrdersPageState extends State<OrdersPage> {
             alignment: .centerLeft,
             child: SingleChildScrollView(
               scrollDirection: .horizontal,
-              child: FortalSegmentedControl<_OrderFilter>(
+              child: UiSegmentedControl<_OrderFilter>(
                 semanticLabel: 'Filter orders by status',
                 selectedValue: _filter,
                 items: const [
@@ -97,7 +97,7 @@ class _OrdersPageState extends State<OrdersPage> {
               ),
             ),
           ),
-          FortalDataTable<Order>.surface(
+          UiDataTable<Order>.surface(
             key: const ValueKey('data-grid-orders'),
             rows: visible,
             columns: _columns,

@@ -168,7 +168,7 @@ TextFieldStyler _focusVisibleStyle() => TextFieldStyler().containerEffects(
 /// assistive technology either way.
 ///
 /// A theme with a dedicated danger *text* step would put it on the helper
-/// line here; this vocabulary has fifteen tokens and no such step.
+/// line here; this vocabulary has twenty tokens and no such step.
 TextFieldStyler _errorStyle() => TextFieldStyler().variant(
   ContextVariant.widgetState(.error),
   TextFieldStyler()

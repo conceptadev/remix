@@ -1,0 +1,251 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import 'tokens.dart';
+
+/// The concrete values behind [VanillaTokens] for one brightness.
+///
+/// This is application-owned data: change a hex value, add a field, or drop
+/// one, and only this layer moves. `VanillaThemeScope` turns an instance into the
+/// `MixScope` token map that every recipe resolves against.
+@immutable
+class VanillaThemeData {
+  /// Creates a theme with an explicit value for every token.
+  const VanillaThemeData({
+    required this.background,
+    required this.foreground,
+    required this.primary,
+    required this.primaryForeground,
+    required this.secondary,
+    required this.secondaryForeground,
+    required this.muted,
+    required this.mutedForeground,
+    required this.accent,
+    required this.accentForeground,
+    required this.destructive,
+    required this.destructiveForeground,
+    required this.border,
+    required this.focusRing,
+    required this.chart1,
+    required this.chart2,
+    required this.chart3,
+    required this.chart4,
+    required this.chart5,
+    required this.radius,
+  });
+
+  /// The neutral light theme.
+  const VanillaThemeData.light()
+    : background = const Color(0xFFFFFFFF),
+      foreground = const Color(0xFF171717),
+      primary = const Color(0xFF171717),
+      primaryForeground = const Color(0xFFFAFAFA),
+      secondary = const Color(0xFFF5F5F5),
+      secondaryForeground = const Color(0xFF171717),
+      muted = const Color(0xFFF5F5F5),
+      mutedForeground = const Color(0xFF737373),
+      accent = const Color(0xFFE5E5E5),
+      accentForeground = const Color(0xFF171717),
+      destructive = const Color(0xFFB91C1C),
+      destructiveForeground = const Color(0xFFFFFFFF),
+      border = const Color(0xFFE5E5E5),
+      focusRing = const Color(0xFF737373),
+      chart1 = const Color(0xFF2563EB),
+      chart2 = const Color(0xFFC2410C),
+      chart3 = const Color(0xFF047857),
+      chart4 = const Color(0xFF7E22CE),
+      chart5 = const Color(0xFFBE123C),
+      radius = const Radius.circular(8);
+
+  /// The neutral dark theme.
+  const VanillaThemeData.dark()
+    : background = const Color(0xFF0A0A0A),
+      foreground = const Color(0xFFFAFAFA),
+      primary = const Color(0xFFFAFAFA),
+      primaryForeground = const Color(0xFF171717),
+      secondary = const Color(0xFF262626),
+      secondaryForeground = const Color(0xFFFAFAFA),
+      muted = const Color(0xFF262626),
+      mutedForeground = const Color(0xFFA3A3A3),
+      accent = const Color(0xFF404040),
+      accentForeground = const Color(0xFFFAFAFA),
+      destructive = const Color(0xFFDC2626),
+      destructiveForeground = const Color(0xFFFFFFFF),
+      border = const Color(0xFF404040),
+      focusRing = const Color(0xFFA3A3A3),
+      chart1 = const Color(0xFF60A5FA),
+      chart2 = const Color(0xFFFB923C),
+      chart3 = const Color(0xFF34D399),
+      chart4 = const Color(0xFFC084FC),
+      chart5 = const Color(0xFFFB7185),
+      radius = const Radius.circular(8);
+
+  /// Value for [VanillaTokens.background].
+  final Color background;
+
+  /// Value for [VanillaTokens.foreground].
+  final Color foreground;
+
+  /// Value for [VanillaTokens.primary].
+  final Color primary;
+
+  /// Value for [VanillaTokens.primaryForeground].
+  final Color primaryForeground;
+
+  /// Value for [VanillaTokens.secondary].
+  final Color secondary;
+
+  /// Value for [VanillaTokens.secondaryForeground].
+  final Color secondaryForeground;
+
+  /// Value for [VanillaTokens.muted].
+  final Color muted;
+
+  /// Value for [VanillaTokens.mutedForeground].
+  final Color mutedForeground;
+
+  /// Value for [VanillaTokens.accent].
+  final Color accent;
+
+  /// Value for [VanillaTokens.accentForeground].
+  final Color accentForeground;
+
+  /// Value for [VanillaTokens.destructive].
+  final Color destructive;
+
+  /// Value for [VanillaTokens.destructiveForeground].
+  final Color destructiveForeground;
+
+  /// Value for [VanillaTokens.border].
+  final Color border;
+
+  /// Value for [VanillaTokens.focusRing].
+  final Color focusRing;
+
+  /// Value for [VanillaTokens.chart1].
+  final Color chart1;
+
+  /// Value for [VanillaTokens.chart2].
+  final Color chart2;
+
+  /// Value for [VanillaTokens.chart3].
+  final Color chart3;
+
+  /// Value for [VanillaTokens.chart4].
+  final Color chart4;
+
+  /// Value for [VanillaTokens.chart5].
+  final Color chart5;
+
+  /// Value for [VanillaTokens.radius].
+  final Radius radius;
+
+  /// This theme's values keyed by the token that resolves them.
+  ///
+  /// Returned unmodifiable so a caller cannot mutate a theme that widgets
+  /// already read from; use [copyWith] to derive a changed theme instead.
+  Map<MixToken<Object?>, Object> get tokens =>
+      Map<MixToken<Object?>, Object>.unmodifiable(<MixToken<Object?>, Object>{
+        VanillaTokens.background: background,
+        VanillaTokens.foreground: foreground,
+        VanillaTokens.primary: primary,
+        VanillaTokens.primaryForeground: primaryForeground,
+        VanillaTokens.secondary: secondary,
+        VanillaTokens.secondaryForeground: secondaryForeground,
+        VanillaTokens.muted: muted,
+        VanillaTokens.mutedForeground: mutedForeground,
+        VanillaTokens.accent: accent,
+        VanillaTokens.accentForeground: accentForeground,
+        VanillaTokens.destructive: destructive,
+        VanillaTokens.destructiveForeground: destructiveForeground,
+        VanillaTokens.border: border,
+        VanillaTokens.focusRing: focusRing,
+        VanillaTokens.chart1: chart1,
+        VanillaTokens.chart2: chart2,
+        VanillaTokens.chart3: chart3,
+        VanillaTokens.chart4: chart4,
+        VanillaTokens.chart5: chart5,
+        VanillaTokens.radius: radius,
+      });
+
+  /// Returns a copy of this theme with the given values replaced.
+  VanillaThemeData copyWith({
+    Color? background,
+    Color? foreground,
+    Color? primary,
+    Color? primaryForeground,
+    Color? secondary,
+    Color? secondaryForeground,
+    Color? muted,
+    Color? mutedForeground,
+    Color? accent,
+    Color? accentForeground,
+    Color? destructive,
+    Color? destructiveForeground,
+    Color? border,
+    Color? focusRing,
+    Color? chart1,
+    Color? chart2,
+    Color? chart3,
+    Color? chart4,
+    Color? chart5,
+    Radius? radius,
+  }) => VanillaThemeData(
+    background: background ?? this.background,
+    foreground: foreground ?? this.foreground,
+    primary: primary ?? this.primary,
+    primaryForeground: primaryForeground ?? this.primaryForeground,
+    secondary: secondary ?? this.secondary,
+    secondaryForeground: secondaryForeground ?? this.secondaryForeground,
+    muted: muted ?? this.muted,
+    mutedForeground: mutedForeground ?? this.mutedForeground,
+    accent: accent ?? this.accent,
+    accentForeground: accentForeground ?? this.accentForeground,
+    destructive: destructive ?? this.destructive,
+    destructiveForeground: destructiveForeground ?? this.destructiveForeground,
+    border: border ?? this.border,
+    focusRing: focusRing ?? this.focusRing,
+    chart1: chart1 ?? this.chart1,
+    chart2: chart2 ?? this.chart2,
+    chart3: chart3 ?? this.chart3,
+    chart4: chart4 ?? this.chart4,
+    chart5: chart5 ?? this.chart5,
+    radius: radius ?? this.radius,
+  );
+
+  List<Object?> get _fields => [
+    background,
+    foreground,
+    primary,
+    primaryForeground,
+    secondary,
+    secondaryForeground,
+    muted,
+    mutedForeground,
+    accent,
+    accentForeground,
+    destructive,
+    destructiveForeground,
+    border,
+    focusRing,
+    chart1,
+    chart2,
+    chart3,
+    chart4,
+    chart5,
+    radius,
+  ];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VanillaThemeData && listEquals(other._fields, _fields);
+
+  @override
+  int get hashCode => Object.hashAll(_fields);
+
+  @override
+  String toString() =>
+      'VanillaThemeData(background: $background, radius: $radius)';
+}

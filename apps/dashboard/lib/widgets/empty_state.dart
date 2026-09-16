@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import 'typography.dart';
 
@@ -34,17 +34,17 @@ class EmptyState extends StatelessWidget {
                 height: 46,
                 alignment: .center,
                 decoration: BoxDecoration(
-                  color: MixScope.tokenOf(FortalTokens.gray4, context),
+                  color: MixScope.tokenOf(UiTokens.gray4, context),
                   shape: .circle,
                 ),
                 child: Icon(
                   icon,
-                  color: MixScope.tokenOf(FortalTokens.gray9, context),
+                  color: MixScope.tokenOf(UiTokens.gray9, context),
                 ),
               ),
               // An empty state sits inside a page, so it stays a level-2
               // heading and only drops its visual size.
-              FortalHeading(
+              UiHeading(
                 title,
                 headingLevel: 2,
                 size: .size3,

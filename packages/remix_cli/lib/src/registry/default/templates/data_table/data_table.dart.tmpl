@@ -69,9 +69,7 @@ DataTableStyler {{valuePrefix}}DataTableStyle({
       ).fontWeight(FontWeight.w500).color({{typePrefix}}Tokens.foreground()),
     )
     .cellText(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
-    .footerLabel(
-      .fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()),
-    )
+    .footerLabel(.fontSize(_labelSize).color({{typePrefix}}Tokens.mutedForeground()))
     .sortIcon(.size(_iconSize).color({{typePrefix}}Tokens.mutedForeground()))
     .sortIconSpacing(_sortIconSpacing)
     .footer(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../widgets/chart_legend.dart';
 import '../widgets/dashboard_chart_card.dart';
@@ -13,10 +13,10 @@ class ChartsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolveFortalChartPalette(context);
-    final pageGap = MixScope.tokenOf(FortalTokens.space6, context);
+    final palette = resolveUiChartPalette(context);
+    final pageGap = MixScope.tokenOf(UiTokens.space6, context);
     final pagePadding = MediaQuery.sizeOf(context).width < 720
-        ? MixScope.tokenOf(FortalTokens.space5, context)
+        ? MixScope.tokenOf(UiTokens.space5, context)
         : pageGap;
 
     return KeyedSubtree(
@@ -85,8 +85,8 @@ class _ChartSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gap = MixScope.tokenOf(FortalTokens.space4, context);
-    final titleGap = MixScope.tokenOf(FortalTokens.space2, context);
+    final gap = MixScope.tokenOf(UiTokens.space4, context);
+    final titleGap = MixScope.tokenOf(UiTokens.space2, context);
     // Omit autoRows: Mix 1031 defaults implicit rows to content height.
     final GridBoxStyler gridStyle = .equalColumns(
       2,
@@ -115,7 +115,7 @@ Widget _revenueMomentum(List<Color> palette) {
   return DashboardChartCard(
     title: 'Revenue momentum',
     description: 'Area fill and markers preserve exact point values.',
-    chart: FortalLineChart(
+    chart: UiLineChart(
       palette: palette,
       showMarkers: true,
       semanticsLabel: 'Weekly revenue momentum',
@@ -153,7 +153,7 @@ Widget _revenueMomentum(List<Color> palette) {
 Widget _linePatterns(List<Color> palette) => DashboardChartCard(
   title: 'Per-series patterns',
   description: 'Solid circles and dashed squares reinforce color differences.',
-  chart: FortalLineChart(
+  chart: UiLineChart(
     key: const ValueKey('charts-line-patterns'),
     palette: palette,
     showMarkers: true,
@@ -193,7 +193,7 @@ Widget _linePatterns(List<Color> palette) => DashboardChartCard(
 Widget _stepGaps(List<Color> palette) => DashboardChartCard(
   title: 'Steps and gaps',
   description: 'Missing values remain honest gaps instead of invented data.',
-  chart: FortalLineChart(
+  chart: UiLineChart(
     palette: palette,
     showMarkers: true,
     semanticsLabel: 'Inventory levels with missing observations',
@@ -231,7 +231,7 @@ Widget _viewportLabels(List<Color> palette) => DashboardChartCard(
   description:
       'Tokenized widget labels stay readable while panning and zooming.',
   chart: LayoutBuilder(
-    builder: (context, constraints) => FortalLineChart(
+    builder: (context, constraints) => UiLineChart(
       palette: palette,
       showMarkers: true,
       semanticsLabel: 'Revenue chart with scalable horizontal viewport',
@@ -248,7 +248,7 @@ Widget _viewportLabels(List<Color> palette) => DashboardChartCard(
         max: 6,
         interval: constraints.maxWidth < 360 ? 3 : 1,
         labelFormatter: _weekdayLabel,
-        labelBuilder: (_, label) => FortalBadge.soft(
+        labelBuilder: (_, label) => UiBadge.soft(
           size: .size1,
           highContrast: true,
           label: label.formattedValue,
@@ -272,7 +272,7 @@ Widget _viewportLabels(List<Color> palette) => DashboardChartCard(
 Widget _groupedBars(List<Color> palette) => DashboardChartCard(
   title: 'Actual versus plan',
   description: 'Solid and outlined bars remain distinct without color.',
-  chart: FortalBarChart(
+  chart: UiBarChart(
     key: const ValueKey('charts-bar-grouped'),
     palette: palette,
     semanticsLabel: 'Monthly actual and planned revenue',
@@ -296,7 +296,7 @@ Widget _groupedBars(List<Color> palette) => DashboardChartCard(
 Widget _stackedBars(List<Color> palette) => DashboardChartCard(
   title: 'Revenue mix',
   description: 'Stacked segments expose composition and totals together.',
-  chart: FortalBarChart(
+  chart: UiBarChart(
     palette: palette,
     semanticsLabel: 'Monthly product and services revenue',
     groups: _stackedRevenue(palette),
@@ -314,7 +314,7 @@ Widget _stackedBars(List<Color> palette) => DashboardChartCard(
 Widget _floatingBars(List<Color> palette) => DashboardChartCard(
   title: 'Floating changes',
   description: 'Range bars encode gains and declines from a real baseline.',
-  chart: FortalBarChart(
+  chart: UiBarChart(
     palette: palette,
     semanticsLabel: 'Monthly floating inventory changes',
     groups: _floatingChanges(palette),
@@ -331,7 +331,7 @@ Widget _floatingBars(List<Color> palette) => DashboardChartCard(
 Widget _trackedBars(List<Color> palette) => DashboardChartCard(
   title: 'Tracks and labels',
   description: 'Visible tracks provide scale context before interaction.',
-  chart: FortalBarChart(
+  chart: UiBarChart(
     palette: palette,
     semanticsLabel: 'Monthly revenue against full-scale tracks',
     groups: _trackedRevenue(palette),
@@ -352,7 +352,7 @@ Widget _trafficPie(List<Color> palette) {
     description: 'Legend-first labels keep the plot clean and easy to scan.',
     chartPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
     chart: PieChart(
-      style: fortalPieChartStyle(
+      style: uiPieChartStyle(
         palette: palette,
       ).slice(PieSliceStyler().radius(72)),
       semanticsLabel: 'Traffic share by device',
@@ -386,7 +386,7 @@ class _InteractiveProductMixState extends State<_InteractiveProductMix> {
       description: 'Selection expands one stable slice and preserves its ID.',
       chartPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       chart: PieChart(
-        style: fortalPieChartStyle(
+        style: uiPieChartStyle(
           palette: widget.palette,
           centerRadius: 40,
         ).slice(PieSliceStyler().radius(36)),
@@ -409,9 +409,9 @@ class _InteractiveProductMixState extends State<_InteractiveProductMix> {
 
 Widget _badgePie(BuildContext context, List<Color> palette) {
   const icons = [Icons.phone_iphone, Icons.laptop_mac, Icons.tablet, Icons.tv];
-  final panel = MixScope.tokenOf(FortalTokens.colorPanel, context);
-  final border = MixScope.tokenOf(FortalTokens.grayStroke6, context);
-  final iconColor = MixScope.tokenOf(FortalTokens.gray12, context);
+  final panel = MixScope.tokenOf(UiTokens.colorPanel, context);
+  final border = MixScope.tokenOf(UiTokens.grayStroke6, context);
+  final iconColor = MixScope.tokenOf(UiTokens.gray12, context);
   final base = _channelSlices();
   final slices = [
     for (var index = 0; index < base.length; index++)
@@ -439,7 +439,7 @@ Widget _badgePie(BuildContext context, List<Color> palette) {
     description: 'Ordinary tokenized widgets can annotate individual slices.',
     chartPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
     chart: PieChart(
-      style: fortalPieChartStyle(
+      style: uiPieChartStyle(
         palette: palette,
         centerRadius: 34,
       ).slice(PieSliceStyler().radius(48).badgePosition(0.72)),
@@ -461,7 +461,7 @@ Widget _emptyPie(List<Color> palette) => DashboardChartCard(
   chart: Stack(
     alignment: .center,
     children: [
-      FortalPieChart(
+      UiPieChart(
         palette: palette,
         centerRadius: 52,
         semanticsLabel: 'No channel data',
@@ -473,7 +473,7 @@ Widget _emptyPie(List<Color> palette) => DashboardChartCard(
         children: [
           StyledIcon(
             icon: Icons.inbox_outlined,
-            style: IconStyler().size(20).color(FortalTokens.gray11()),
+            style: IconStyler().size(20).color(UiTokens.gray11()),
           ),
           StyledText('No data yet', style: dashboardText(.size1, tone: .muted)),
         ],
@@ -620,16 +620,16 @@ List<BarGroup> _trackedRevenue(List<Color> palette) {
                 .color(palette[0])
                 .label(
                   TextStyler()
-                      .style(FortalTokens.text1.mix())
+                      .style(UiTokens.text1.mix())
                       .fontWeight(.w700)
-                      .color(FortalTokens.gray12()),
+                      .color(UiTokens.gray12()),
                 )
                 .background(
                   BarBackgroundStyler()
                       .show(true)
                       .fromY(0)
                       .toY(70)
-                      .color(FortalTokens.grayA3()),
+                      .color(UiTokens.grayA3()),
                 ),
           ),
         ],

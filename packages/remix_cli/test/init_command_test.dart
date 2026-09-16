@@ -194,21 +194,13 @@ paths:
 
   test('rejects changing the preset of an initialized project', () async {
     await installer.initialize(
-      const InitOptions(
-        prefix: 'Ui',
-        preset: 'default',
-        uiPath: 'lib/ui',
-      ),
+      const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
     );
     final before = snapshotFiles(root);
 
     await expectLater(
       installer.initialize(
-        const InitOptions(
-          prefix: 'Ui',
-          preset: 'fortal',
-          uiPath: 'lib/ui',
-        ),
+        const InitOptions(prefix: 'Ui', preset: 'fortal', uiPath: 'lib/ui'),
       ),
       throwsA(
         isA<FormatException>().having(

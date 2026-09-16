@@ -1,0 +1,303 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../models/plan_item.dart';
+import '../models/statuses.dart';
+import '../support/disclosure.dart';
+import '../support/functional_glyph.dart';
+import '../support/live_edge.dart';
+
+part 'plan.g.dart';
+
+typedef {{typePrefix}}PlanStatusBuilder =
+    Widget Function(BuildContext context, {{typePrefix}}PlanItem item);
+typedef {{typePrefix}}PlanStatusLabelBuilder = String Function({{typePrefix}}PlanItem item);
+typedef {{typePrefix}}PlanIndicatorBuilder =
+    Widget Function(BuildContext context, bool expanded);
+
+/// Toggleable task plan with lifecycle-aware uncontrolled disclosure state.
+class {{typePrefix}}Plan extends StatefulWidget {
+  const {{typePrefix}}Plan({
+    super.key,
+    required this.items,
+    this.title = 'Plan',
+    this.emptyLabel = 'No tasks yet',
+    this.semanticLabel = 'Task plan',
+    this.collapseOnComplete = true,
+    this.expanded,
+    this.defaultExpanded = true,
+    this.onExpandedChanged,
+    this.statusBuilder,
+    this.statusLabelBuilder,
+    this.indicatorBuilder,
+    this.followOutput = true,
+    this.followThreshold = 48,
+    this.onFollowChanged,
+    this.disclosureStyle = const DisclosureStyler.create(),
+    this.style = const {{typePrefix}}PlanStyler.create(),
+    this.styleSpec,
+  });
+
+  final List<{{typePrefix}}PlanItem> items;
+  final String title;
+  final String emptyLabel;
+  final String semanticLabel;
+  final bool collapseOnComplete;
+  final bool? expanded;
+  final bool defaultExpanded;
+  final ValueChanged<bool>? onExpandedChanged;
+  final {{typePrefix}}PlanStatusBuilder? statusBuilder;
+  final {{typePrefix}}PlanStatusLabelBuilder? statusLabelBuilder;
+  final {{typePrefix}}PlanIndicatorBuilder? indicatorBuilder;
+  final bool followOutput;
+  final double followThreshold;
+  final ValueChanged<bool>? onFollowChanged;
+  final DisclosureStyler disclosureStyle;
+  final {{typePrefix}}PlanStyler style;
+  final {{typePrefix}}PlanSpec? styleSpec;
+
+  int get settledCount => items.where((item) => item.status.isDone).length;
+  bool get isWorking => items.any((item) => !item.status.isDone);
+
+  @override
+  State<{{typePrefix}}Plan> createState() => _{{typePrefix}}PlanState();
+}
+
+class _{{typePrefix}}PlanState extends State<{{typePrefix}}Plan> {
+  late final {{typePrefix}}DisclosureEngine _disclosure;
+
+  bool get _expanded => _disclosure.value;
+
+  @override
+  void initState() {
+    super.initState();
+    _disclosure = {{typePrefix}}DisclosureEngine(
+      value: widget.expanded,
+      defaultValue: widget.defaultExpanded,
+    );
+  }
+
+  @override
+  void didUpdateWidget({{typePrefix}}Plan oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _disclosure.reconcile(widget.expanded);
+    final wasWorking = oldWidget.isWorking;
+    final working = widget.isWorking;
+    if (wasWorking && !working && widget.collapseOnComplete) {
+      _request(false);
+    } else if (!wasWorking && working) {
+      _request(true);
+    }
+  }
+
+  void _request(bool next) {
+    if (_disclosure.request(next)) setState(() {});
+    widget.onExpandedChanged?.call(next);
+  }
+
+  String _statusLabel({{typePrefix}}PlanItem item) =>
+      widget.statusLabelBuilder?.call(item) ??
+      switch (item.status) {
+        {{typePrefix}}PlanItemStatus.pending => 'Pending',
+        {{typePrefix}}PlanItemStatus.inProgress => 'In progress',
+        {{typePrefix}}PlanItemStatus.completed => 'Completed',
+        {{typePrefix}}PlanItemStatus.cancelled => 'Cancelled',
+      };
+
+  {{typePrefix}}FunctionalGlyphKind _statusGlyph({{typePrefix}}PlanItemStatus status) =>
+      switch (status) {
+        {{typePrefix}}PlanItemStatus.pending => .pending,
+        {{typePrefix}}PlanItemStatus.inProgress => .active,
+        {{typePrefix}}PlanItemStatus.completed => .completed,
+        {{typePrefix}}PlanItemStatus.cancelled => .cancelled,
+      };
+
+  StyleSpec<BoxSpec> _statusContainer(
+    {{typePrefix}}PlanSpec spec,
+    {{typePrefix}}PlanItemStatus status,
+  ) => switch (status) {
+    {{typePrefix}}PlanItemStatus.pending => spec.pendingItem,
+    {{typePrefix}}PlanItemStatus.inProgress => spec.activeItem,
+    {{typePrefix}}PlanItemStatus.completed => spec.completedItem,
+    {{typePrefix}}PlanItemStatus.cancelled => spec.cancelledItem,
+  };
+
+  StyleSpec<IconSpec> _statusStyle(
+    {{typePrefix}}PlanSpec spec,
+    {{typePrefix}}PlanItemStatus status,
+  ) => switch (status) {
+    {{typePrefix}}PlanItemStatus.pending => spec.pendingStatus,
+    {{typePrefix}}PlanItemStatus.inProgress => spec.activeStatus,
+    {{typePrefix}}PlanItemStatus.completed => spec.completedStatus,
+    {{typePrefix}}PlanItemStatus.cancelled => spec.cancelledStatus,
+  };
+
+  Widget _defaultStatus(
+    BuildContext context,
+    {{typePrefix}}PlanSpec spec,
+    {{typePrefix}}PlanItem item,
+  ) {
+    return StyleSpecBuilder<IconSpec>(
+      styleSpec: _statusStyle(spec, item.status),
+      builder: (context, iconSpec) =>
+          {{typePrefix}}FunctionalGlyph(kind: _statusGlyph(item.status), spec: iconSpec),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<{{typePrefix}}PlanSpec>(
+      style: widget.style,
+      styleSpec: widget.styleSpec,
+      builder: (context, spec) => Semantics(
+        container: true,
+        explicitChildNodes: true,
+        label: widget.semanticLabel,
+        child: RemixDisclosure(
+          expanded: _expanded,
+          onExpandedChanged: _request,
+          semanticLabel: widget.title,
+          style: widget.disclosureStyle,
+          triggerBuilder: (context, state, trigger) => Row(
+            children: [
+              Expanded(child: trigger!),
+              {{typePrefix}}DisclosureIndicator(
+                styleSpec: spec.indicator,
+                expanded: state.isExpanded,
+                builder: widget.indicatorBuilder,
+              ),
+            ],
+          ),
+          trigger: Row(
+            children: [
+              Expanded(
+                child: StyledText(widget.title, styleSpec: spec.summaryTitle),
+              ),
+              StyledText(
+                '${widget.settledCount}/${widget.items.length}',
+                styleSpec: spec.count,
+              ),
+            ],
+          ),
+          content: Box(
+            styleSpec: spec.viewport,
+            child: widget.items.isEmpty
+                ? StyledText(widget.emptyLabel, styleSpec: spec.itemDetail)
+                : {{typePrefix}}LiveEdgeScrollView(
+                    followOutput: widget.followOutput,
+                    followThreshold: widget.followThreshold,
+                    onFollowChanged: widget.onFollowChanged,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final item in widget.items)
+                          Semantics(
+                            container: true,
+                            excludeSemantics: true,
+                            label: [
+                              item.title,
+                              if (item.detail != null) item.detail!,
+                              _statusLabel(item),
+                            ].join(', '),
+                            child: Box(
+                              styleSpec: _statusContainer(spec, item.status),
+                              child: RowBox(
+                                key: ValueKey('{{valuePrefix}}-plan-item-${item.id}'),
+                                styleSpec: spec.item,
+                                children: [
+                                  widget.statusBuilder?.call(context, item) ??
+                                      _defaultStatus(context, spec, item),
+                                  Expanded(
+                                    child: StyledText(
+                                      item.title,
+                                      styleSpec: spec.itemTitle,
+                                    ),
+                                  ),
+                                  if (item.detail != null)
+                                    StyledText(
+                                      item.detail!,
+                                      styleSpec: spec.itemDetail,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+@MixableSpec(target: {{typePrefix}}Plan.new)
+@immutable
+final class {{typePrefix}}PlanSpec with _${{typePrefix}}PlanSpec {
+  @override
+  final StyleSpec<BoxSpec> viewport;
+  @override
+  final StyleSpec<FlexBoxSpec> item;
+  @override
+  final StyleSpec<TextSpec> summaryTitle;
+  @override
+  final StyleSpec<TextSpec> itemTitle;
+  @override
+  final StyleSpec<TextSpec> itemDetail;
+  @override
+  final StyleSpec<TextSpec> count;
+  @override
+  final StyleSpec<IconSpec> indicator;
+  @override
+  final StyleSpec<BoxSpec> pendingItem;
+  @override
+  final StyleSpec<BoxSpec> activeItem;
+  @override
+  final StyleSpec<BoxSpec> completedItem;
+  @override
+  final StyleSpec<BoxSpec> cancelledItem;
+  @override
+  final StyleSpec<IconSpec> pendingStatus;
+  @override
+  final StyleSpec<IconSpec> activeStatus;
+  @override
+  final StyleSpec<IconSpec> completedStatus;
+  @override
+  final StyleSpec<IconSpec> cancelledStatus;
+
+  const {{typePrefix}}PlanSpec({
+    StyleSpec<BoxSpec>? viewport,
+    StyleSpec<FlexBoxSpec>? item,
+    StyleSpec<TextSpec>? summaryTitle,
+    StyleSpec<TextSpec>? itemTitle,
+    StyleSpec<TextSpec>? itemDetail,
+    StyleSpec<TextSpec>? count,
+    StyleSpec<IconSpec>? indicator,
+    StyleSpec<BoxSpec>? pendingItem,
+    StyleSpec<BoxSpec>? activeItem,
+    StyleSpec<BoxSpec>? completedItem,
+    StyleSpec<BoxSpec>? cancelledItem,
+    StyleSpec<IconSpec>? pendingStatus,
+    StyleSpec<IconSpec>? activeStatus,
+    StyleSpec<IconSpec>? completedStatus,
+    StyleSpec<IconSpec>? cancelledStatus,
+  }) : viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
+       item = item ?? const StyleSpec(spec: FlexBoxSpec()),
+       summaryTitle = summaryTitle ?? const StyleSpec(spec: TextSpec()),
+       itemTitle = itemTitle ?? const StyleSpec(spec: TextSpec()),
+       itemDetail = itemDetail ?? const StyleSpec(spec: TextSpec()),
+       count = count ?? const StyleSpec(spec: TextSpec()),
+       indicator = indicator ?? const StyleSpec(spec: IconSpec()),
+       pendingItem = pendingItem ?? const StyleSpec(spec: BoxSpec()),
+       activeItem = activeItem ?? const StyleSpec(spec: BoxSpec()),
+       completedItem = completedItem ?? const StyleSpec(spec: BoxSpec()),
+       cancelledItem = cancelledItem ?? const StyleSpec(spec: BoxSpec()),
+       pendingStatus = pendingStatus ?? const StyleSpec(spec: IconSpec()),
+       activeStatus = activeStatus ?? const StyleSpec(spec: IconSpec()),
+       completedStatus = completedStatus ?? const StyleSpec(spec: IconSpec()),
+       cancelledStatus = cancelledStatus ?? const StyleSpec(spec: IconSpec());
+}

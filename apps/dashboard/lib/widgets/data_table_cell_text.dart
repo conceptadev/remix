@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import 'typography.dart';
 
@@ -13,12 +13,12 @@ class DataTableCellText extends StatelessWidget {
 
   // Only two styles exist, and a table renders one per cell per build.
   static final _primary = dashboardTextLine(
-    FortalTextSize.size2,
-    weight: FortalTextWeight.medium,
+    UiTextSize.size2,
+    weight: UiTextWeight.medium,
   );
   static final _secondary = dashboardTextLine(
-    FortalTextSize.size2,
-    weight: FortalTextWeight.regular,
+    UiTextSize.size2,
+    weight: UiTextWeight.regular,
     tone: TextTone.muted,
   );
 

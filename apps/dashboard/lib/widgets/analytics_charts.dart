@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import 'chart_legend.dart';
 import 'dashboard_chart_card.dart';
@@ -11,9 +11,9 @@ class AnalyticsCharts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = resolveFortalChartPalette(context);
-    final gap = MixScope.tokenOf(FortalTokens.space4, context);
-    final chartInset = MixScope.tokenOf(FortalTokens.space2, context);
+    final palette = resolveUiChartPalette(context);
+    final gap = MixScope.tokenOf(UiTokens.space4, context);
+    final chartInset = MixScope.tokenOf(UiTokens.space2, context);
     final slices = _channelSlices();
     // Omit autoRows: Mix 1031 defaults implicit rows to content height.
     final GridBoxStyler gridStyle = .equalColumns(3)
@@ -29,7 +29,7 @@ class AnalyticsCharts extends StatelessWidget {
           title: 'Revenue trend',
           description: 'Seven-day net revenue',
           chartPadding: EdgeInsets.zero,
-          chart: FortalLineChart(
+          chart: UiLineChart(
             palette: palette,
             semanticsLabel: 'Seven-day net revenue',
             showMarkers: true,
@@ -65,7 +65,7 @@ class AnalyticsCharts extends StatelessWidget {
               ),
             ],
           ),
-          chart: FortalBarChart(
+          chart: UiBarChart(
             key: const ValueKey('overview-order-chart'),
             palette: palette,
             semanticsLabel: 'Quarterly actual and planned orders',
@@ -93,7 +93,7 @@ class AnalyticsCharts extends StatelessWidget {
             items: percentagePieLegendItems(slices: slices, palette: palette),
           ),
           chart: PieChart(
-            style: fortalPieChartStyle(
+            style: uiPieChartStyle(
               palette: palette,
               centerRadius: 44,
             ).slice(PieSliceStyler().radius(36)),

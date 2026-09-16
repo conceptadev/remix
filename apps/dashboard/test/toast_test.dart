@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:dashboard/ui/ui.dart';
 
 void main() {
   testWidgets('visible toast follows live Fortal theme changes', (
@@ -28,7 +28,7 @@ void main() {
 
     final themeScope = tester.widget<ThemeScope>(find.byType(ThemeScope));
     themeScope.onChanged(
-      themeScope.settings.copyWith(accentColor: FortalAccentColor.green),
+      themeScope.settings.copyWith(accentColor: UiAccentColor.green),
     );
     await tester.pump();
 
@@ -36,7 +36,7 @@ void main() {
         .widget<Icon>(find.byIcon(Icons.check_circle_outline))
         .color;
     final expected = MixScope.tokenOf(
-      FortalTokens.accent11,
+      UiTokens.accent11,
       tester.element(find.byType(DashboardShell)),
     );
 
@@ -136,7 +136,7 @@ void main() {
         barrierLabel: 'Dismiss',
         builder: (context) {
           dialogContext = context;
-          return const FortalDialog(
+          return const UiDialog(
             title: 'Invite teammates',
             description: 'Share this workspace with your collaborators.',
           );
@@ -182,7 +182,7 @@ void main() {
 
     expect(style.decoration, anyOf(isNull, TextDecoration.none));
     expect(style.fontFamily, isNot('monospace'));
-    expect(style.color, MixScope.tokenOf(FortalTokens.gray12, context));
+    expect(style.color, MixScope.tokenOf(UiTokens.gray12, context));
 
     await tester.pump(const Duration(seconds: 4));
     await _settle(tester);
@@ -194,7 +194,7 @@ Future<BuildContext> _pumpDashboard(WidgetTester tester) async {
     const DashboardApp(
       initialSettings: ThemeSettings(
         appearance: ThemeMode.light,
-        accentColor: FortalAccentColor.blue,
+        accentColor: UiAccentColor.blue,
       ),
     ),
   );
@@ -203,7 +203,7 @@ Future<BuildContext> _pumpDashboard(WidgetTester tester) async {
 
 /// Advances past the toast entrance/exit transitions (180ms / 120ms) without
 /// `pumpAndSettle()`, which never completes on the full [DashboardApp]: the
-/// gallery display page's `FortalSkeleton` keeps a `repeat(reverse: true)`
+/// gallery display page's `UiSkeleton` keeps a `repeat(reverse: true)`
 /// shimmer animation running even while offstage in the shell's
 /// `IndexedStack`.
 Future<void> _settle(WidgetTester tester) async {

@@ -1,6 +1,6 @@
 import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Catalog', type: FortalHeading)

@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      mix_generator:spec_styler_generator:
+        enabled: true
+        generate_for:
+          - lib/ui/components/activity.dart
+          - lib/ui/components/answer.dart
+          - lib/ui/components/composer.dart
+          - lib/ui/components/execution.dart
+          - lib/ui/components/message.dart
+          - lib/ui/components/permission.dart
+          - lib/ui/components/plan.dart
+          - lib/ui/components/transcript.dart

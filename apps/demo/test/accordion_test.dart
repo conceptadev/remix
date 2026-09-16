@@ -2,7 +2,7 @@ import 'package:demo/components/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 
 void main() {
   testWidgets('catalog presents each accordion item as a separate panel', (

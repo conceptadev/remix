@@ -362,8 +362,8 @@ the child of `MaterialApp.builder` with `AcmeScope`. Routes and dialogs then
 inherit its tokens and text defaults. The scope example lives in
 `lib/ui/theme/theme_scope.dart`.
 
-These are application files, not forwarding wrappers around
-`package:remix_fortal`. The authored recipes and pinned Radix Themes 3.3.0
+These are application files, not forwarding wrappers around a package. The
+authored recipes and pinned Radix Themes 3.3.0
 color data are copied from the same source used by the repository's parity
 suite. `remix` remains the behavior and styling-engine boundary;
 `mix_annotations`, `build_runner`, and `mix_generator` support adapter
@@ -691,3 +691,29 @@ takes focus, for its selection handles. `MaterialApp`, `CupertinoApp`, and any
 
 If generation or analysis fails *after* installation, the authored source stays
 on disk for inspection. Fix the reported problem and rerun the same command.
+
+
+## Agent surfaces in both presets
+
+`activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
+and `transcript` install unstyled, application-owned behavior source in either
+the default or Fortal preset. Each `<component>_recipe` item adds a complete
+preset-specific recipe bundle. The
+private authoring source (`registry_source`) is not a consumer dependency. The shared `models` files
+are exported from the local UI barrel; `support` helpers install transitively
+without barrel exports. Appearance remains host-owned.
+
+```shell
+dart run remix_cli:remix add composer
+```
+
+These surfaces use `@MixableSpec`. The CLI enables the supported Mix generator's
+opt-in spec-styler builder for their installed source paths in `build.yaml`,
+preserving other builder settings and comments. Explicit exclusions or disabled
+generation are reported before writes. `--dry-run` and `--diff` remain read-only.
+Agent recipes extend both existing presets; they do not constitute a third preset
+or claim Radix component parity.
+
+Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
+`execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and
+`transcript_recipe`. Each installs only its component and styled-control closure.

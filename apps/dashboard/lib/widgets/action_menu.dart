@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 @immutable
 class DashboardAction {
@@ -18,7 +18,7 @@ class DashboardAction {
 /// An example-local action menu for product controls whose trigger is richer
 /// than the standard label/icon surface.
 ///
-/// The component gallery continues to use [FortalMenu] directly. This wrapper
+/// The component gallery continues to use [UiMenu] directly. This wrapper
 /// names a repeated product concept and centralizes the width and action
 /// mapping for avatar, profile-row, and kebab triggers.
 class DashboardActionMenu extends StatelessWidget {
@@ -49,10 +49,10 @@ class DashboardActionMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final contentInset = FortalTokens.space1.resolve(context);
+    final contentInset = UiTokens.space1.resolve(context);
     final itemWidth = width - contentInset * 2;
 
-    return FortalMenu<String>(
+    return UiMenu<String>(
       size: .size1,
       positioning: positioning,
       trigger: RemixMenuTrigger.builder(

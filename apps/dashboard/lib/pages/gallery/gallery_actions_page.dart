@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../../ui/ui.dart';
 
 import '../../widgets/gallery_scaffold.dart';
 
@@ -25,9 +25,9 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           description:
               'Classic, solid, soft, surface, outline, and ghost actions.',
           child: GalleryEnumMatrix(
-            rows: FortalButtonVariant.values,
-            columns: FortalButtonSize.values,
-            cellBuilder: (context, variant, size) => FortalButton(
+            rows: UiButtonVariant.values,
+            columns: UiButtonSize.values,
+            cellBuilder: (context, variant, size) => UiButton(
               variant: variant,
               size: size,
               onPressed: () => showRemixToast(
@@ -46,9 +46,9 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           description:
               'Compact icon-only controls with complete focus semantics.',
           child: GalleryEnumMatrix(
-            rows: FortalIconButtonVariant.values,
-            columns: FortalIconButtonSize.values,
-            cellBuilder: (context, variant, size) => FortalIconButton(
+            rows: UiIconButtonVariant.values,
+            columns: UiIconButtonSize.values,
+            cellBuilder: (context, variant, size) => UiIconButton(
               variant: variant,
               size: size,
               semanticLabel: 'Add item',
@@ -67,9 +67,9 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
           label: 'Toggle',
           description: 'Ghost and outline toggles remain fully interactive.',
           child: GalleryEnumMatrix(
-            rows: FortalToggleVariant.values,
-            columns: FortalToggleSize.values,
-            cellBuilder: (_, variant, size) => FortalToggle(
+            rows: UiToggleVariant.values,
+            columns: UiToggleSize.values,
+            cellBuilder: (_, variant, size) => UiToggle(
               variant: variant,
               size: size,
               selected: _selected,
@@ -87,13 +87,13 @@ class _GalleryActionsPageState extends State<GalleryActionsPage> {
             spacing: 12,
             runSpacing: 12,
             children: [
-              const FortalButton(
+              const UiButton(
                 enabled: false,
                 onPressed: null,
                 label: 'Disabled',
               ),
-              FortalButton(loading: true, onPressed: () {}, label: 'Saving'),
-              FortalIconButton(
+              UiButton(loading: true, onPressed: () {}, label: 'Saving'),
+              UiIconButton(
                 enabled: false,
                 semanticLabel: 'Disabled favorite',
                 onPressed: () {},

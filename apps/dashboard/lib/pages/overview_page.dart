@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../data/activity.dart';
 import '../data/models.dart';
@@ -20,10 +20,10 @@ class OverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pagePadding = MixScope.tokenOf(FortalTokens.space6, context);
-    final pageGap = MixScope.tokenOf(FortalTokens.space5, context);
-    final metricGap = MixScope.tokenOf(FortalTokens.space4, context);
-    final bandGap = MixScope.tokenOf(FortalTokens.space5, context);
+    final pagePadding = MixScope.tokenOf(UiTokens.space6, context);
+    final pageGap = MixScope.tokenOf(UiTokens.space5, context);
+    final metricGap = MixScope.tokenOf(UiTokens.space4, context);
+    final bandGap = MixScope.tokenOf(UiTokens.space5, context);
     // Omit autoRows: Mix 1031 defaults implicit rows to content height.
     final GridBoxStyler metricsStyle = .equalColumns(4)
         .gap(metricGap)
@@ -97,7 +97,7 @@ class _ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalCard(
+    return UiCard(
       size: .size2,
       child: Column(
         crossAxisAlignment: .stretch,
@@ -107,7 +107,7 @@ class _ActivityCard extends StatelessWidget {
           for (final (index, event) in activityEvents.indexed) ...[
             _ActivityRow(event),
             if (index != activityEvents.length - 1)
-              const FortalDivider(size: .size4),
+              const UiDivider(size: .size4),
           ],
         ],
       ),
@@ -122,10 +122,10 @@ class _ActivityRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, accent) = switch (event.kind) {
-      .customer => (Icons.person_add_alt, FortalAccentColor.blue),
-      .order => (Icons.local_shipping_outlined, FortalAccentColor.indigo),
-      .payment => (Icons.payments_outlined, FortalAccentColor.green),
-      .alert => (Icons.error_outline, FortalAccentColor.amber),
+      .customer => (Icons.person_add_alt, UiAccentColor.blue),
+      .order => (Icons.local_shipping_outlined, UiAccentColor.indigo),
+      .payment => (Icons.payments_outlined, UiAccentColor.green),
+      .alert => (Icons.error_outline, UiAccentColor.amber),
     };
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 11),
@@ -138,7 +138,7 @@ class _ActivityRow extends StatelessWidget {
               crossAxisAlignment: .start,
               spacing: 2,
               children: [
-                FortalText(event.title, size: .size2, weight: .medium),
+                UiText(event.title, size: .size2, weight: .medium),
                 StyledText(
                   event.detail,
                   style: dashboardText(.size1, tone: .muted),
@@ -165,12 +165,12 @@ class _ActivityIcon extends StatelessWidget {
   const _ActivityIcon({required this.icon, required this.accent});
 
   final IconData icon;
-  final FortalAccentColor accent;
+  final UiAccentColor accent;
 
   @override
   Widget build(BuildContext context) => AppAccentScope(
     accent: accent,
-    child: FortalAvatar.soft(icon: icon, size: .size2),
+    child: UiAvatar.soft(icon: icon, size: .size2),
   );
 }
 
@@ -180,7 +180,7 @@ class _RecentOrders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FortalCard(
+    return UiCard(
       size: .size2,
       child: Column(
         crossAxisAlignment: .stretch,
@@ -189,7 +189,7 @@ class _RecentOrders extends StatelessWidget {
           Row(
             children: [
               const Expanded(child: SectionLabel('Recent orders')),
-              FortalButton.ghost(
+              UiButton.ghost(
                 key: const ValueKey('overview-view-orders'),
                 size: .size1,
                 onPressed: onViewOrders,
@@ -198,7 +198,7 @@ class _RecentOrders extends StatelessWidget {
               ),
             ],
           ),
-          FortalDataTable<Order>.surface(
+          UiDataTable<Order>.surface(
             rows: orders.take(5).toList(),
             semanticLabel: 'Recent orders',
             minimumWidth: 560,

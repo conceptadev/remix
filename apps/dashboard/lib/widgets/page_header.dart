@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import 'typography.dart';
 
 /// The title, description, and optional actions at the top of a page.
 ///
-/// Titles are [FortalHeading] so the page publishes a real heading tree: the
+/// Titles are [UiHeading] so the page publishes a real heading tree: the
 /// page title is level 1 and every card or section title below it is level 2.
 /// The visual size is chosen independently of that level, exactly as Radix
 /// separates `as` from `size`.
@@ -32,7 +32,7 @@ class PageHeader extends StatelessWidget {
             crossAxisAlignment: .start,
             spacing: 4,
             children: [
-              FortalHeading(title, size: .size6, weight: .bold),
+              UiHeading(title, size: .size6, weight: .bold),
               StyledText(
                 description,
                 style: dashboardText(.size2, tone: .muted),
@@ -53,7 +53,7 @@ class SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      FortalHeading(label, headingLevel: 2, size: .size4, weight: .medium);
+      UiHeading(label, headingLevel: 2, size: .size4, weight: .medium);
 }
 
 /// A [SectionLabel] with supporting copy beneath it.

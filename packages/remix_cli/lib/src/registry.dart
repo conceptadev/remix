@@ -7,6 +7,14 @@ import 'package:yaml/yaml.dart';
 
 const bundledPresets = <String>{'default', 'fortal'};
 
+/// Stands in for the consumer's configured UI path in every registry target.
+///
+/// Targets are stored independent of where a project installs, so one registry
+/// serves every `uiPath`; the installer swaps this prefix for the configured
+/// directory. Both the validator and that swap need the same spelling, and the
+/// swap also needs its length.
+const uiTargetPrefix = '@ui/';
+
 abstract interface class RegistryAssetLoader {
   Future<String> read(Uri uri);
 }
@@ -323,10 +331,15 @@ void _exactKeys(
 }
 
 void _validateTarget(String target) {
-  if (!target.startsWith('@ui/')) {
-    throw FormatException('Registry target $target must start with @ui/.');
+  if (!target.startsWith(uiTargetPrefix)) {
+    throw FormatException(
+      'Registry target $target must start with $uiTargetPrefix.',
+    );
   }
-  _validateRelative(target.substring(4), label: 'registry target');
+  _validateRelative(
+    target.substring(uiTargetPrefix.length),
+    label: 'registry target',
+  );
 }
 
 void _validateRelative(String value, {required String label, String? prefix}) {

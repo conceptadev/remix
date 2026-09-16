@@ -28,26 +28,23 @@ part 'menu.g.dart';
 /// by depth: an override that must beat a row's hover fill has to be declared
 /// as a hover fragment too.
 @MixWidget(target: RemixMenu.new)
-MenuStyler {{valuePrefix}}MenuStyle({
-  MenuStyler style = const MenuStyler.create(),
-}) => MenuStyler()
-    .trigger(_triggerStyle())
-    .overlay(
-      FlexBoxStyler()
-          .direction(.vertical)
-          .mainAxisSize(.min)
-          .color({{typePrefix}}Tokens.background())
-          .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
-          .borderRadius(.all({{typePrefix}}Tokens.radius()))
-          .padding(.all(_panelPadding))
-          .minWidth(_panelMinWidth),
-    )
-    .containerEffects(
-      .behindContent(.shadows([_shadow])),
-    )
-    .item(_itemStyle())
-    .divider(_dividerStyle())
-    .merge(style);
+MenuStyler {{valuePrefix}}MenuStyle({MenuStyler style = const MenuStyler.create()}) =>
+    MenuStyler()
+        .trigger(_triggerStyle())
+        .overlay(
+          FlexBoxStyler()
+              .direction(.vertical)
+              .mainAxisSize(.min)
+              .color({{typePrefix}}Tokens.background())
+              .border(.color({{typePrefix}}Tokens.border()).width(_borderWidth))
+              .borderRadius(.all({{typePrefix}}Tokens.radius()))
+              .padding(.all(_panelPadding))
+              .minWidth(_panelMinWidth),
+        )
+        .containerEffects(.behindContent(.shadows([_shadow])))
+        .item(_itemStyle())
+        .divider(_dividerStyle())
+        .merge(style);
 
 /// Width of the panel and trigger outlines.
 const _borderWidth = 1.0;

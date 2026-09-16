@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 @immutable
 class ThemeSettings {
@@ -13,23 +13,23 @@ class ThemeSettings {
   });
 
   final ThemeMode appearance;
-  final FortalAccentColor accentColor;
-  final FortalGrayColor grayColor;
-  final FortalPanelBackground panelBackground;
-  final FortalRadius radius;
-  final FortalScaling scaling;
+  final UiAccentColor accentColor;
+  final UiGrayColor grayColor;
+  final UiPanelBackground panelBackground;
+  final UiRadius radius;
+  final UiScaling scaling;
 
   ThemeMode get themeMode => appearance;
 
-  // ThemeMode.system is app state rather than a FortalThemeConfig value, so the
+  // ThemeMode.system is app state rather than a UiThemeConfig value, so the
   // dashboard keeps a concrete settings object that can be copied atomically.
   ThemeSettings copyWith({
     ThemeMode? appearance,
-    FortalAccentColor? accentColor,
-    FortalGrayColor? grayColor,
-    FortalPanelBackground? panelBackground,
-    FortalRadius? radius,
-    FortalScaling? scaling,
+    UiAccentColor? accentColor,
+    UiGrayColor? grayColor,
+    UiPanelBackground? panelBackground,
+    UiRadius? radius,
+    UiScaling? scaling,
   }) {
     return ThemeSettings(
       appearance: appearance ?? this.appearance,

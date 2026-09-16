@@ -64,6 +64,34 @@ const _defaultRegistryItems = <String>[
   'toggle',
   'toggle_group',
   'tooltip',
+  ..._agentRegistryItems,
+];
+
+const _agentComponentItems = <String>[
+  'activity',
+  'answer',
+  'composer',
+  'execution',
+  'message',
+  'permission',
+  'plan',
+  'transcript',
+];
+
+const _agentRecipeItems = <String>[
+  'activity_recipe',
+  'answer_recipe',
+  'composer_recipe',
+  'execution_recipe',
+  'message_recipe',
+  'permission_recipe',
+  'plan_recipe',
+  'transcript_recipe',
+];
+
+const _agentRegistryItems = <String>[
+  ..._agentComponentItems,
+  ..._agentRecipeItems,
 ];
 
 /// Generated adapters compared byte-for-byte against a committed snapshot.
@@ -125,6 +153,7 @@ const _fortalRegistryItems = <String>[
   'toggle_group',
   'tooltip',
   'typography',
+  ..._agentRegistryItems,
 ];
 
 const _defaultPreset = _PresetContract(
@@ -134,6 +163,18 @@ const _defaultPreset = _PresetContract(
   themeFiles: ['tokens.dart', 'theme_data.dart', 'theme_scope.dart'],
   generatedSnapshots: _generatedSnapshots,
   nonGeneratedItems: {'sidebar_layout'},
+  sharedItems: {
+    'models': [
+      'models/activity_item.dart',
+      'models/plan_item.dart',
+      'models/statuses.dart',
+    ],
+    'support': [
+      'support/disclosure.dart',
+      'support/functional_glyph.dart',
+      'support/live_edge.dart',
+    ],
+  },
 );
 
 const _fortalPreset = _PresetContract(
@@ -159,6 +200,18 @@ const _fortalPreset = _PresetContract(
     'sidebar_layout',
     'typography',
   },
+  sharedItems: {
+    'models': [
+      'models/activity_item.dart',
+      'models/plan_item.dart',
+      'models/statuses.dart',
+    ],
+    'support': [
+      'support/disclosure.dart',
+      'support/functional_glyph.dart',
+      'support/live_edge.dart',
+    ],
+  },
 );
 
 const _requiredRuntimeDependencies = <String>[
@@ -168,7 +221,7 @@ const _requiredRuntimeDependencies = <String>[
   'remix_ui_icons',
 ];
 const _requiredDevDependencies = <String>['build_runner', 'mix_generator'];
-const _forbiddenDependencies = <String>['mix', 'naked_ui', 'remix_fortal'];
+const _forbiddenDependencies = <String>['mix', 'naked_ui', 'registry_source'];
 const _allowedImportPackages = <String>[
   'flutter',
   'remix',
@@ -185,6 +238,7 @@ final class _PresetContract {
     required this.themeFiles,
     this.nonGeneratedItems = const {},
     this.generatedSnapshots = const {},
+    this.sharedItems = const {},
   });
 
   final String name;
@@ -193,13 +247,17 @@ final class _PresetContract {
   final List<String> themeFiles;
   final Set<String> nonGeneratedItems;
   final Map<String, String> generatedSnapshots;
+  final Map<String, List<String>> sharedItems;
 
   List<String> get installedUiFiles => [
     'ui.dart',
     for (final file in themeFiles) 'theme/$file',
+    for (final files in sharedItems.values) ...files,
     for (final item in registryItems)
       ...(item == 'icons'
           ? const ['icons.dart']
+          : item.endsWith('_recipe')
+          ? ['recipes/$item.dart']
           : [
               'components/$item.dart',
               if (!nonGeneratedItems.contains(item)) 'components/$item.g.dart',
@@ -208,7 +266,9 @@ final class _PresetContract {
 
   List<String> get generatedAppFiles => [
     for (final item in registryItems)
-      if (item != 'icons' && !nonGeneratedItems.contains(item))
+      if (item != 'icons' &&
+          !item.endsWith('_recipe') &&
+          !nonGeneratedItems.contains(item))
         'lib/ui/components/$item.g.dart',
   ];
 }
@@ -474,6 +534,14 @@ Future<_Failure?> _checkInTemporaryApp({
   );
   if (init != null) return _Failure('remix init failed in the fresh app');
 
+  final independent = await _checkIndependentAgentItems(
+    sdk: sdk,
+    app: app,
+    preset: preset.name,
+    environment: environment,
+  );
+  if (independent != null) return independent;
+
   for (final item in preset.registryItems) {
     final add = await _runProcess(
       sdk.dart,
@@ -616,6 +684,68 @@ Future<_Failure?> _checkInTemporaryApp({
     dependencySource: 'current checkout',
     environment: environment,
   );
+}
+
+/// Each surface must compile with only its own dependency closure. The full
+/// gallery installs every item and would otherwise mask an omitted dependency.
+Future<_Failure?> _checkIndependentAgentItems({
+  required _Toolchain sdk,
+  required Directory app,
+  required String preset,
+  required Map<String, String> environment,
+}) async {
+  final pubspec = File('${app.path}/pubspec.yaml').readAsStringSync();
+  final override = File('${app.path}/pubspec_overrides.yaml');
+  for (final item in _agentRegistryItems) {
+    final isolated = Directory('${app.parent.path}/independent_$item')
+      ..createSync();
+    File('${isolated.path}/pubspec.yaml').writeAsStringSync(pubspec);
+    if (override.existsSync()) {
+      override.copySync('${isolated.path}/pubspec_overrides.yaml');
+    }
+    Directory('${isolated.path}/lib').createSync();
+    File(
+      '${isolated.path}/lib/main.dart',
+    ).writeAsStringSync('void main() {}\n');
+    for (final command in [
+      ['pub', 'get'],
+      [
+        'run',
+        'remix_cli:remix',
+        'init',
+        '--prefix',
+        'Solo',
+        '--preset',
+        preset,
+      ],
+      ['run', 'remix_cli:remix', 'add', item],
+    ]) {
+      final failure = await _runProcess(
+        sdk.dart,
+        command,
+        workingDirectory: isolated.path,
+        environment: environment,
+      );
+      if (failure != null)
+        return _Failure('Independent $item install failed: ${failure.message}');
+    }
+    final ui = Directory('${isolated.path}/lib/ui');
+    final files = ui
+        .listSync(recursive: true)
+        .whereType<File>()
+        .map(
+          (file) =>
+              file.path.substring(ui.path.length + 1).replaceAll('\\', '/'),
+        )
+        .toSet();
+    final problems = _installedReferenceProblems(ui, files);
+    if (problems.isNotEmpty)
+      return _Failure('Independent $item: ${problems.join('; ')}');
+    _step(
+      'Independent $item installed, generated, and analyzed with its own dependencies.',
+    );
+  }
+  return null;
 }
 
 void _writeCheckoutOverride(Directory app, Directory remixSource) {
@@ -764,13 +894,17 @@ _Failure? _verifyRegistryCoverage(
     return _Failure('registry.yaml is not in the expected shape.');
   }
 
-  // `theme` is every component's registry dependency, so the CLI installs it
-  // on the first `add` rather than as an item of its own.
+  // Foundations arrive through dependency closure. Their exact files are
+  // still asserted by the installed inventory, not exempted from coverage.
   final bundled = {
     for (final key in (document['items'] as YamlMap).keys)
-      if (key is String && key != 'theme') key,
+      if (key is String) key,
   };
-  final installed = preset.registryItems.toSet();
+  final installed = {
+    'theme',
+    ...preset.sharedItems.keys,
+    ...preset.registryItems,
+  };
   final problems = <String>[
     for (final item in bundled.difference(installed))
       'registry.yaml has $item, which this check never installs',
@@ -955,8 +1089,28 @@ bool _isFlutterSdkDeclaration(Object? declaration) =>
     declaration is YamlMap && declaration['sdk'] == 'flutter';
 
 _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
-  if (File('${app.path}/build.yaml').existsSync()) {
-    return _Failure('remix_cli created a consumer build.yaml');
+  final buildConfig = File('${app.path}/build.yaml');
+  final expected = {
+    'targets': {
+      r'$default': {
+        'builders': {
+          'mix_generator:spec_styler_generator': {
+            'enabled': true,
+            'generate_for': [
+              for (final item in _agentComponentItems)
+                'lib/ui/components/$item.dart',
+            ]..sort(),
+          },
+        },
+      },
+    },
+  };
+  if (!buildConfig.existsSync() ||
+      _canonicalYaml(loadYaml(buildConfig.readAsStringSync())) !=
+          _canonicalYaml(expected)) {
+    return _Failure(
+      'consumer build.yaml does not match the scoped Agent builder contract',
+    );
   }
   final uiRoot = Directory('${app.path}/lib/ui');
   if (!uiRoot.existsSync()) {
@@ -970,13 +1124,13 @@ _Failure? _verifyInstalledUi(Directory app, _PresetContract preset) {
           .map((file) => _relativePath(uiRoot, file))
           .toList()
         ..sort();
-  final expected = [...preset.installedUiFiles]..sort();
+  final expectedFiles = [...preset.installedUiFiles]..sort();
   final problems = <String>[];
-  for (final relative in expected) {
+  for (final relative in expectedFiles) {
     if (!found.contains(relative)) problems.add('installed UI lacks $relative');
   }
   for (final relative in found) {
-    if (!expected.contains(relative)) {
+    if (!expectedFiles.contains(relative)) {
       problems.add('installed UI has an unexpected file: $relative');
     }
   }
@@ -1324,4 +1478,13 @@ final class _Failure {
 
   final String message;
   final int exitCode;
+}
+
+String _canonicalYaml(Object? value) {
+  if (value is Map) {
+    final keys = value.keys.cast<String>().toList()..sort();
+    return '{${keys.map((key) => '${jsonEncode(key)}:${_canonicalYaml(value[key])}').join(',')}}';
+  }
+  if (value is List) return '[${value.map(_canonicalYaml).join(',')}]';
+  return jsonEncode(value);
 }

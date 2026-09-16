@@ -8,7 +8,7 @@ const dashboardDisclosureAnimationStyle = AnimationStyle(
 
 /// Dashboard trigger composition shared by standalone Fortal disclosures.
 ///
-/// `FortalDisclosure` deliberately leaves its trailing affordance to the
+/// `UiDisclosure` deliberately leaves its trailing affordance to the
 /// caller. This widget gives every dashboard disclosure the same expanding
 /// chevron while preserving arbitrary trigger content.
 class DashboardDisclosureTrigger extends StatelessWidget {

@@ -1,0 +1,65 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../components/button.dart';
+import '../components/card.dart';
+import '../components/data_list.dart';
+import '../components/disclosure.dart';
+import '../components/permission.dart';
+import '../theme/theme.dart';
+
+@immutable
+final class {{typePrefix}}AgentPermissionRecipe {
+  const {{typePrefix}}AgentPermissionRecipe({
+    required this.style,
+    required this.surfaceStyle,
+    required this.detailsStyle,
+    required this.parametersStyle,
+    required this.allowOnceStyle,
+    required this.alwaysAllowStyle,
+    required this.denyStyle,
+  });
+  final {{typePrefix}}PermissionStyler style;
+  final CardStyler surfaceStyle;
+  final DisclosureStyler detailsStyle;
+  final DataListStyler parametersStyle;
+  final ButtonStyler allowOnceStyle;
+  final ButtonStyler alwaysAllowStyle;
+  final ButtonStyler denyStyle;
+}
+
+{{typePrefix}}AgentPermissionRecipe {{valuePrefix}}AgentPermissionRecipe({
+  {{typePrefix}}PermissionStyler style = const {{typePrefix}}PermissionStyler.create(),
+  CardStyler surfaceStyle = const CardStyler.create(),
+  DisclosureStyler detailsStyle = const DisclosureStyler.create(),
+  DataListStyler parametersStyle = const DataListStyler.create(),
+  ButtonStyler allowOnceStyle = const ButtonStyler.create(),
+  ButtonStyler alwaysAllowStyle = const ButtonStyler.create(),
+  ButtonStyler denyStyle = const ButtonStyler.create(),
+}) => {{typePrefix}}AgentPermissionRecipe(
+  style: {{typePrefix}}PermissionStyler(
+    header: FlexBoxStyler().spacing(8),
+    actions: FlexBoxStyler().spacing(8).padding(.only(top: 8)),
+    title: TextStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .fontWeight(FontWeight.w600),
+    tool: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+    description: TextStyler()
+        .color({{typePrefix}}Tokens.gray11())
+        .wrap(.padding(.symmetric(vertical: 8))),
+    status: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+    detailsLabel: TextStyler().color({{typePrefix}}Tokens.gray12()).fontSize(13),
+    toolIcon: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+    statusIcon: IconStyler().color({{typePrefix}}Tokens.accent9()).size(12),
+    indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+  ).merge(style),
+  surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
+  detailsStyle: {{valuePrefix}}DisclosureStyle(style: detailsStyle),
+  parametersStyle: {{valuePrefix}}DataListStyle(style: parametersStyle),
+  allowOnceStyle: {{valuePrefix}}ButtonStyle(style: allowOnceStyle),
+  alwaysAllowStyle: {{valuePrefix}}ButtonStyle(
+    variant: .outline,
+    style: alwaysAllowStyle,
+  ),
+  denyStyle: {{valuePrefix}}ButtonStyle(variant: .ghost, style: denyStyle),
+);

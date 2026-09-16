@@ -13,27 +13,29 @@ import 'package:remix/remix.dart';
 /// ```
 abstract final class PlaygroundTokens {
   /// Page background the application paints behind its content.
-  static const background = ColorToken('ui.color.background');
+  static const background = ColorToken('playground.color.background');
 
   /// Default content color used on top of [background].
-  static const foreground = ColorToken('ui.color.foreground');
+  static const foreground = ColorToken('playground.color.foreground');
 
   /// Highest-emphasis fill.
-  static const primary = ColorToken('ui.color.primary');
+  static const primary = ColorToken('playground.color.primary');
 
   /// Content color used on top of [primary].
-  static const primaryForeground = ColorToken('ui.color.primary-foreground');
+  static const primaryForeground = ColorToken(
+    'playground.color.primary-foreground',
+  );
 
   /// Medium-emphasis fill.
-  static const secondary = ColorToken('ui.color.secondary');
+  static const secondary = ColorToken('playground.color.secondary');
 
   /// Content color used on top of [secondary].
   static const secondaryForeground = ColorToken(
-    'ui.color.secondary-foreground',
+    'playground.color.secondary-foreground',
   );
 
   /// De-emphasized surface.
-  static const muted = ColorToken('ui.color.muted');
+  static const muted = ColorToken('playground.color.muted');
 
   /// De-emphasized content color.
   ///
@@ -42,24 +44,28 @@ abstract final class PlaygroundTokens {
   /// it for text on [background], and for glyphs and other non-text marks
   /// anywhere; text that lands on a `muted` surface takes [foreground]. Raise
   /// this value here and that restriction goes away everywhere at once.
-  static const mutedForeground = ColorToken('ui.color.muted-foreground');
+  static const mutedForeground = ColorToken(
+    'playground.color.muted-foreground',
+  );
 
   /// Interaction surface for otherwise transparent controls.
-  static const accent = ColorToken('ui.color.accent');
+  static const accent = ColorToken('playground.color.accent');
 
   /// Content color used on top of [accent].
-  static const accentForeground = ColorToken('ui.color.accent-foreground');
+  static const accentForeground = ColorToken(
+    'playground.color.accent-foreground',
+  );
 
   /// Destructive fill for irreversible actions.
-  static const destructive = ColorToken('ui.color.destructive');
+  static const destructive = ColorToken('playground.color.destructive');
 
   /// Content color used on top of [destructive].
   static const destructiveForeground = ColorToken(
-    'ui.color.destructive-foreground',
+    'playground.color.destructive-foreground',
   );
 
   /// Hairline separator and control outline color.
-  static const border = ColorToken('ui.color.border');
+  static const border = ColorToken('playground.color.border');
 
   /// Focus ring color drawn for keyboard focus.
   ///
@@ -68,7 +74,7 @@ abstract final class PlaygroundTokens {
   /// talking rather than the brand, and it clears the 3:1 non-text floor on
   /// both pages. Give it a brand color here and every control's focus ring
   /// follows; nothing else reads this token.
-  static const focusRing = ColorToken('ui.color.focus-ring');
+  static const focusRing = ColorToken('playground.color.focus-ring');
 
   /// First categorical chart series color.
   ///
@@ -76,22 +82,22 @@ abstract final class PlaygroundTokens {
   /// The shipped themes keep one hue per series in both brightnesses, and
   /// every value clears 4.5:1 against [background]. That also keeps pie labels,
   /// which are drawn in [background], readable on their slice.
-  static const chart1 = ColorToken('ui.color.chart-1');
+  static const chart1 = ColorToken('playground.color.chart-1');
 
   /// Second categorical chart series color. See [chart1].
-  static const chart2 = ColorToken('ui.color.chart-2');
+  static const chart2 = ColorToken('playground.color.chart-2');
 
   /// Third categorical chart series color. See [chart1].
-  static const chart3 = ColorToken('ui.color.chart-3');
+  static const chart3 = ColorToken('playground.color.chart-3');
 
   /// Fourth categorical chart series color. See [chart1].
-  static const chart4 = ColorToken('ui.color.chart-4');
+  static const chart4 = ColorToken('playground.color.chart-4');
 
   /// Fifth categorical chart series color. See [chart1].
-  static const chart5 = ColorToken('ui.color.chart-5');
+  static const chart5 = ColorToken('playground.color.chart-5');
 
   /// Corner radius shared by the application's controls.
-  static const radius = RadiusToken('ui.radius');
+  static const radius = RadiusToken('playground.radius');
 
   /// The chart series colors in the order charts assign them.
   static const chart = <ColorToken>[chart1, chart2, chart3, chart4, chart5];

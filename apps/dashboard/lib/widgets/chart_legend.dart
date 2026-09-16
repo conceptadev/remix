@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix_chart/mix_chart.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import 'typography.dart';
 
@@ -60,8 +60,8 @@ class ChartLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemGap = MixScope.tokenOf(FortalTokens.space2, context);
-    final groupGap = MixScope.tokenOf(FortalTokens.space4, context);
+    final itemGap = MixScope.tokenOf(UiTokens.space2, context);
+    final groupGap = MixScope.tokenOf(UiTokens.space4, context);
 
     return Semantics(
       container: true,
@@ -98,7 +98,7 @@ class _LegendMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = MixScope.tokenOf(FortalTokens.radius2, context).x;
+    final radius = MixScope.tokenOf(UiTokens.radius2, context).x;
     final key = ValueKey('legend-pattern-${item.id}-${item.pattern.name}');
 
     return switch (item.pattern) {

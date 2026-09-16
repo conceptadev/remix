@@ -8,6 +8,218 @@ import 'package:open_code_fixture/ui/ui.dart';
 import 'package:remix/remix.dart';
 
 void main() {
+  group('installed Agent behavior', () {
+    testWidgets('composer submits and clears through Remix controls', (
+      tester,
+    ) async {
+      final submitted = <String>[];
+      await _pumpInstalledAgent(
+        tester,
+        AcmeComposer(initialValue: '  Explain this  ', onSubmit: submitted.add),
+      );
+      await tester.tap(find.byType(RemixIconButton));
+      await tester.pump();
+      expect(submitted, ['Explain this']);
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        isEmpty,
+      );
+    });
+
+    testWidgets('message collapse retains body and toggles explicit overflow', (
+      tester,
+    ) async {
+      await _pumpInstalledAgent(
+        tester,
+        AcmeMessage(
+          role: AcmeRole.assistant,
+          child: AcmeMessageCollapsible(
+            style: AcmeMessageCollapsibleStyler(collapsedHeight: 20),
+            child: const SizedBox(height: 100, child: Text('Full message')),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Full message'), findsOneWidget);
+      expect(find.text('Show more'), findsOneWidget);
+      await tester.tap(find.text('Show more'));
+      await tester.pumpAndSettle();
+      expect(find.text('Show less'), findsOneWidget);
+    });
+
+    testWidgets('plan collapses on completion and can be reopened', (
+      tester,
+    ) async {
+      final changes = <bool>[];
+      Future<void> pump(AcmePlanItemStatus status) => _pumpInstalledAgent(
+        tester,
+        AcmePlan(
+          items: [
+            AcmePlanItem(id: 'step', title: 'Installed step', status: status),
+          ],
+          onExpandedChanged: changes.add,
+        ),
+      );
+      await pump(.inProgress);
+      expect(find.text('Installed step'), findsOneWidget);
+      await pump(.completed);
+      await tester.pumpAndSettle();
+      expect(find.text('Installed step'), findsNothing);
+      await tester.tap(find.text('Plan'));
+      await tester.pumpAndSettle();
+      expect(find.text('Installed step'), findsOneWidget);
+      expect(changes, [false, true]);
+    });
+
+    testWidgets('activity stays open while working even under host control', (
+      tester,
+    ) async {
+      final changes = <bool>[];
+      Future<void> pump(AcmeRunStatus status) => _pumpInstalledAgent(
+        tester,
+        AcmeActivity(
+          status: status,
+          expanded: false,
+          onExpandedChanged: changes.add,
+          items: const [
+            AcmeActivityItem(id: 'step', title: 'Installed activity'),
+          ],
+        ),
+      );
+      await pump(.working);
+      await tester.tap(find.text('Activity'));
+      await tester.pump();
+      expect(changes, isEmpty);
+      expect(find.text('Installed activity'), findsOneWidget);
+      await pump(.complete);
+      await tester.pumpAndSettle();
+      expect(changes, [false]);
+      expect(find.text('Installed activity'), findsNothing);
+    });
+
+    testWidgets('execution settles its disclosure and exposes retry', (
+      tester,
+    ) async {
+      var retries = 0;
+      Future<void> pump(AcmeExecutionStatus status) => _pumpInstalledAgent(
+        tester,
+        AcmeExecution(
+          tool: 'terminal.run',
+          title: 'Installed execution',
+          status: status,
+          onRetry: () => retries++,
+          child: const Text('Command output'),
+        ),
+      );
+      await pump(.running);
+      expect(find.text('Command output'), findsOneWidget);
+      await pump(.error);
+      await tester.pumpAndSettle();
+      expect(find.text('Command output'), findsNothing);
+      await tester.tap(find.text('Installed execution'));
+      await tester.pumpAndSettle();
+      expect(find.text('Command output'), findsOneWidget);
+      await tester.tap(find.bySemanticsLabel('Retry execution'));
+      expect(retries, 1);
+    });
+
+    testWidgets(
+      'answer requests a source reset without overriding host state',
+      (tester) async {
+        final requests = <bool>[];
+        Future<void> pump(int stream, AcmeAnswerStatus status) =>
+            _pumpInstalledAgent(
+              tester,
+              AcmeAnswer(
+                streamId: stream,
+                status: status,
+                sourcesExpanded: true,
+                onSourcesExpandedChanged: requests.add,
+                sourcesContent: const Text('Installed source'),
+                child: const Text('Answer'),
+              ),
+            );
+        await pump(0, .complete);
+        await pump(1, .streaming);
+        expect(requests, [false]);
+        expect(find.text('Installed source'), findsOneWidget);
+      },
+    );
+
+    testWidgets('permission submits once for each request identity', (
+      tester,
+    ) async {
+      var allows = 0;
+      Future<void> pump(int requestId) => _pumpInstalledAgent(
+        tester,
+        AcmePermission(
+          requestId: requestId,
+          tool: 'terminal.run',
+          onAllowOnce: () => allows++,
+        ),
+      );
+      await pump(0);
+      await tester.tap(find.text('Allow once'));
+      await tester.pump();
+      await tester.tap(find.text('Allow once'));
+      expect(allows, 1);
+      await pump(1);
+      await tester.tap(find.text('Allow once'));
+      expect(allows, 2);
+    });
+
+    testWidgets('transcript releases the live edge while the reader scrolls', (
+      tester,
+    ) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      final changes = <bool>[];
+      Future<void> pump(int count) => _pumpInstalledAgent(
+        tester,
+        SizedBox(
+          width: 300,
+          height: 120,
+          child: AcmeTranscript(
+            controller: controller,
+            onFollowChanged: changes.add,
+            children: [
+              for (var index = 0; index < count; index++)
+                SizedBox(height: 30, child: Text('Row $index')),
+            ],
+          ),
+        ),
+      );
+      await pump(20);
+      await tester.pump();
+      expect(
+        controller.offset,
+        closeTo(controller.position.maxScrollExtent, 0.5),
+      );
+      await tester.drag(find.byType(ListView), const Offset(0, 160));
+      await tester.pump();
+      expect(changes, [false]);
+      final reading = controller.offset;
+      await pump(25);
+      await tester.pump();
+      expect(controller.offset, closeTo(reading, 0.5));
+      await tester.drag(find.byType(ListView), const Offset(0, -2000));
+      await tester.pump();
+      expect(changes, [false, true]);
+    });
+
+    test('public model exports retain value semantics after renaming', () {
+      expect(
+        const AcmePlanItem(id: 'one', title: 'Step'),
+        const AcmePlanItem(id: 'one', title: 'Step'),
+      );
+      const child = SizedBox(height: 12);
+      expect(
+        const AcmeActivityItem(id: 'one', title: 'Step', child: child),
+        const AcmeActivityItem(id: 'one', title: 'Step', child: child),
+      );
+    });
+  });
+
   group('AcmeThemeData exact values', () {
     test('light carries the declared palette', () {
       const theme = AcmeThemeData.light();
@@ -6090,3 +6302,17 @@ double _contrastRatio(Color first, Color second) {
 
   return (lighter + 0.05) / (darker + 0.05);
 }
+
+Future<void> _pumpInstalledAgent(WidgetTester tester, Widget child) =>
+    _pumpInScope(
+      tester,
+      Overlay.wrap(
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: DefaultTextStyle(
+            style: const TextStyle(fontSize: 14, color: Color(0xFF171717)),
+            child: child,
+          ),
+        ),
+      ),
+    );

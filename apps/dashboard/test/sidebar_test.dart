@@ -8,7 +8,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:dashboard/ui/ui.dart';
 
 const _sections = <RemixSidebarSection<DashboardPage>>[
   RemixSidebarSection(
@@ -188,7 +188,7 @@ void main() {
       MaterialApp(
         home: MediaQuery(
           data: const MediaQueryData(padding: insets),
-          child: FortalScope(
+          child: UiScope(
             child: Row(
               children: [
                 Sidebar(selected: DashboardPage.overview, onSelected: (_) {}),
@@ -201,8 +201,8 @@ void main() {
 
     final panel = tester.getRect(find.byType(Sidebar));
     final brand = tester.getRect(find.byKey(const ValueKey('dashboard-brand')));
-    final generated = tester.widget<FortalSidebar<DashboardPage>>(
-      find.byType(FortalSidebar<DashboardPage>),
+    final generated = tester.widget<UiSidebar<DashboardPage>>(
+      find.byType(UiSidebar<DashboardPage>),
     );
 
     // The painted panel reaches the display edge while its content clears the
@@ -215,7 +215,7 @@ void main() {
   testWidgets('builds in scrolling and fixed-height column hosts', (
     tester,
   ) async {
-    FortalSidebar<DashboardPage> buildPanel() => FortalSidebar(
+    UiSidebar<DashboardPage> buildPanel() => UiSidebar(
       sections: _sections,
       selectedValue: DashboardPage.overview,
       onSelected: (_) {},
@@ -257,7 +257,7 @@ void main() {
           ).copyWith(textScaler: const TextScaler.linear(2)),
           child: SizedBox(
             width: 256,
-            child: FortalSidebar<DashboardPage>(
+            child: UiSidebar<DashboardPage>(
               sections: const [
                 RemixSidebarSection(
                   label: 'Workspace',
@@ -291,7 +291,7 @@ void main() {
         textDirection: TextDirection.rtl,
         child: SizedBox(
           width: 256,
-          child: FortalSidebar<DashboardPage>(
+          child: UiSidebar<DashboardPage>(
             sections: _sections,
             selectedValue: DashboardPage.overview,
             onSelected: (_) {},
@@ -330,7 +330,7 @@ Future<void> _pumpSidebar(
 }) {
   return _pumpPage(
     tester,
-    FortalSidebar<DashboardPage>(
+    UiSidebar<DashboardPage>(
       sections: sections,
       selectedValue: selectedValue,
       onSelected: onSelected ?? (_) {},
@@ -342,7 +342,7 @@ Future<void> _pumpSidebar(
 Future<void> _pumpPage(WidgetTester tester, Widget page) {
   return tester.pumpWidget(
     MaterialApp(
-      builder: (context, child) => FortalScope(child: child!),
+      builder: (context, child) => UiScope(child: child!),
       home: Scaffold(body: page),
     ),
   );

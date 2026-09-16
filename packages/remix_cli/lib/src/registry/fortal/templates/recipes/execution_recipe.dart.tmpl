@@ -1,0 +1,62 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../components/card.dart';
+import '../components/disclosure.dart';
+import '../components/execution.dart';
+import '../components/icon_button.dart';
+import '../theme/theme.dart';
+
+@immutable
+final class {{typePrefix}}AgentExecutionRecipe {
+  const {{typePrefix}}AgentExecutionRecipe({
+    required this.style,
+    required this.surfaceStyle,
+    required this.disclosureStyle,
+    required this.copyStyle,
+    required this.retryStyle,
+  });
+  final {{typePrefix}}ExecutionStyler style;
+  final CardStyler surfaceStyle;
+  final DisclosureStyler disclosureStyle;
+  final IconButtonStyler copyStyle;
+  final IconButtonStyler retryStyle;
+}
+
+{{typePrefix}}AgentExecutionRecipe {{valuePrefix}}AgentExecutionRecipe({
+  {{typePrefix}}ExecutionStyler style = const {{typePrefix}}ExecutionStyler.create(),
+  CardStyler surfaceStyle = const CardStyler.create(),
+  DisclosureStyler disclosureStyle = const DisclosureStyler.create(),
+  IconButtonStyler copyStyle = const IconButtonStyler.create(),
+  IconButtonStyler retryStyle = const IconButtonStyler.create(),
+}) => {{typePrefix}}AgentExecutionRecipe(
+  style: {{typePrefix}}ExecutionStyler(
+    header: FlexBoxStyler().spacing(8),
+    output: BoxStyler()
+        .color({{typePrefix}}Tokens.gray3())
+        .borderRadius(.circular(6))
+        .padding(.all(12)),
+    actions: FlexBoxStyler().spacing(6).padding(.only(top: 8)),
+    tool: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+    title: TextStyler()
+        .color({{typePrefix}}Tokens.gray12())
+        .fontWeight(FontWeight.w600),
+    meta: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+    status: TextStyler().color({{typePrefix}}Tokens.gray11()).fontSize(12),
+    toolIcon: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+    statusIcon: IconStyler().color({{typePrefix}}Tokens.accent9()).size(12),
+    indicator: IconStyler().color({{typePrefix}}Tokens.gray12()).size(16),
+  ).merge(style),
+  surfaceStyle: {{valuePrefix}}CardStyle(size: .size2, style: surfaceStyle),
+  disclosureStyle: {{valuePrefix}}DisclosureStyle(style: disclosureStyle),
+  copyStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .ghost,
+    size: .size1,
+    style: copyStyle,
+  ),
+  retryStyle: {{valuePrefix}}IconButtonStyle(
+    variant: .ghost,
+    size: .size1,
+    style: retryStyle,
+  ),
+);

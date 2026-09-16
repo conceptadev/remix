@@ -31,7 +31,7 @@ import 'package:demo/components/toggle_group.dart' as toggle_group;
 import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 
 /// Every catalog use case, by the component it reviews.
 ///

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../data/models.dart';
 import '../utils/text.dart';
@@ -19,10 +19,10 @@ class StatusBadge extends StatelessWidget {
     key: key,
     label: capitalize(status.name),
     accent: switch (status) {
-      OrderStatus.paid => FortalAccentColor.green,
-      OrderStatus.pending => FortalAccentColor.amber,
-      OrderStatus.refunded => FortalAccentColor.red,
-      OrderStatus.cancelled => FortalAccentColor.gray,
+      OrderStatus.paid => UiAccentColor.green,
+      OrderStatus.pending => UiAccentColor.amber,
+      OrderStatus.refunded => UiAccentColor.red,
+      OrderStatus.cancelled => UiAccentColor.gray,
     },
   );
 
@@ -31,18 +31,18 @@ class StatusBadge extends StatelessWidget {
         key: key,
         label: capitalize(status.name),
         accent: switch (status) {
-          CustomerStatus.active => FortalAccentColor.green,
-          CustomerStatus.invited => FortalAccentColor.blue,
-          CustomerStatus.suspended => FortalAccentColor.red,
+          CustomerStatus.active => UiAccentColor.green,
+          CustomerStatus.invited => UiAccentColor.blue,
+          CustomerStatus.suspended => UiAccentColor.red,
         },
       );
 
   final String label;
-  final FortalAccentColor accent;
+  final UiAccentColor accent;
 
   @override
   Widget build(BuildContext context) => AppAccentScope(
     accent: accent,
-    child: FortalBadge(highContrast: true, label: label),
+    child: UiBadge(highContrast: true, label: label),
   );
 }

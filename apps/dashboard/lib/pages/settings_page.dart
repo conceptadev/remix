@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../widgets/app_accent_scope.dart';
 import '../widgets/disclosure_trigger.dart';
@@ -49,7 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: 'Settings',
                 description: 'Manage your profile, preferences, and workspace.',
               ),
-              FortalCard(
+              UiCard(
                 size: .size3,
                 child: Column(
                   crossAxisAlignment: .stretch,
@@ -63,12 +63,12 @@ class _SettingsPageState extends State<SettingsPage> {
                     GridBox(
                       style: profileFields,
                       children: [
-                        FortalTextField(
+                        UiTextField(
                           controller: _nameController,
                           label: 'Name',
                           hintText: 'Your name',
                         ),
-                        FortalTextField(
+                        UiTextField(
                           controller: _emailController,
                           label: 'Email',
                           helperText: 'Domain verification is pending.',
@@ -77,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
-                    FortalSelect<String>(
+                    UiSelect<String>(
                       trigger: const RemixSelectTrigger(
                         placeholder: 'Language',
                       ),
@@ -104,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     _PreferenceRow(
                       title: 'Product updates',
                       description: 'News about features and improvements.',
-                      trailing: FortalSwitch(
+                      trailing: UiSwitch(
                         selected: _productUpdates,
                         semanticLabel: 'Receive product updates',
                         onChanged: (value) =>
@@ -115,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       title: 'Weekly digest',
                       description:
                           'A summary of workspace activity each Monday.',
-                      trailing: FortalCheckbox(
+                      trailing: UiCheckbox(
                         selected: _weeklyDigest,
                         semanticLabel: 'Receive weekly digest',
                         onChanged: (value) =>
@@ -124,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     Align(
                       alignment: .centerLeft,
-                      child: FortalButton(
+                      child: UiButton(
                         onPressed: () => showRemixToast(
                           context,
                           RemixToastData(
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
-              FortalCard(
+              UiCard(
                 size: .size3,
                 child: Column(
                   crossAxisAlignment: .stretch,
@@ -149,7 +149,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       description:
                           'Tune every Fortal theme parameter in real time.',
                     ),
-                    FortalCallout(
+                    UiCallout(
                       icon: Icons.auto_awesome_outlined,
                       text: 'Changes apply live across the entire dashboard.',
                     ),
@@ -159,7 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               AppAccentScope(
                 accent: .red,
-                child: FortalDisclosure.soft(
+                child: UiDisclosure.soft(
                   key: const ValueKey('settings-danger-zone'),
                   size: .size3,
                   animationStyle: dashboardDisclosureAnimationStyle,
@@ -179,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       Align(
                         alignment: .centerLeft,
-                        child: FortalButton.outline(
+                        child: UiButton.outline(
                           onPressed: _confirmDelete,
                           label: 'Delete workspace',
                         ),
@@ -199,18 +199,18 @@ class _SettingsPageState extends State<SettingsPage> {
     final confirmed = await showRemixDialog<bool>(
       context: context,
       barrierLabel: 'Dismiss',
-      builder: (context) => FortalDialog(
+      builder: (context) => UiDialog(
         title: 'Delete workspace?',
         description:
             'This demo keeps your data safe, but a real action would be permanent.',
         actions: [
-          FortalButton.soft(
+          UiButton.soft(
             onPressed: () => Navigator.of(context).pop(false),
             label: 'Cancel',
           ),
           AppAccentScope(
             accent: .red,
-            child: FortalButton(
+            child: UiButton(
               onPressed: () => Navigator.of(context).pop(true),
               label: 'Delete',
             ),
@@ -248,7 +248,7 @@ class _PreferenceRow extends StatelessWidget {
           crossAxisAlignment: .start,
           spacing: 2,
           children: [
-            FortalText(title, size: .size2, weight: .medium),
+            UiText(title, size: .size2, weight: .medium),
             StyledText(description, style: dashboardText(.size1, tone: .muted)),
           ],
         ),

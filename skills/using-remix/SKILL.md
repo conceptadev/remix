@@ -28,12 +28,12 @@ is configured.
 | Accessible component behavior with a custom visual system | `remix`; use `Remix*` widgets and `*Styler`s |
 | Ready-made Radix-inspired visuals | `remix_cli` with `preset: fortal`; use the configured scope and prefixed widgets |
 | Fortal tokens with a customized composition | installed Fortal source plus `remix`; apply the prefixed recipe to a `Remix*` widget |
-| Agent-run surfaces (composer, transcript, permission, plan) | `remix_agent`; use `Agent*` widgets. It depends on `remix` only, has no registry item, and takes its appearance from the application's installed recipes. |
+| Agent-run surfaces (composer, transcript, permission, plan) | `remix_cli` items `composer`, `transcript`, `permission`, `plan`, … plus their `<component>_recipe`; use the prefixed installed widgets. They depend on `remix` only and take their appearance from the installed recipes. |
 | A visual system unrelated to Fortal | base Remix styling; do not initialize the Fortal preset |
 
 Remix ships no theme. Fortal is optional application-owned source installed by
-the CLI. The repository's `remix_fortal` workspace package is its analyzed
-authoring and parity surface, not a dependency for new consumer applications.
+the CLI. The repository's `registry_source` package is the analyzed authoring
+and parity source of every preset, never a dependency of a consumer application.
 Preserve an existing legacy `remix_fortal` dependency unless the user asks to
 migrate it; do not add that dependency to a new consumer.
 

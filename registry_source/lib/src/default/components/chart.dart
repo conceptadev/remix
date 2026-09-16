@@ -1,0 +1,232 @@
+import 'dart:math' as math;
+
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:mix_chart/mix_chart.dart';
+import 'package:remix/remix.dart';
+
+import '../theme/tokens.dart';
+
+part 'chart.g.dart';
+
+const _defaultPaletteToken = ContextToken<List<Color>>(
+  resolveVanillaChartPalette,
+);
+const _tooltipBorderToken = ContextToken<BorderSide>(_resolveTooltipBorder);
+const _tooltipRadiusToken = ContextToken<BorderRadius>(_resolveTooltipRadius);
+const _tooltipPaddingToken = ContextToken<EdgeInsets>(_resolveTooltipPadding);
+const _barRadiusToken = ContextToken<BorderRadius>(_resolveBarRadius);
+
+/// Returns the categorical palette shared by this application's charts.
+///
+/// The colors are the theme's `chart1` through `chart5` tokens in series
+/// order, so editing them in `VanillaThemeData` restyles every chart.
+/// Pass `palette` to one recipe or generated widget for a local override.
+List<Color> resolveVanillaChartPalette(BuildContext context) =>
+    List<Color>.unmodifiable([
+      for (final token in VanillaTokens.chart) token.resolve(context),
+    ]);
+
+/// The application's line and area chart recipe.
+///
+/// `mix_chart` owns the data model, rendering, interaction, and semantics.
+/// This file owns the palette, axes, grid, line, markers, and tooltip. Give the
+/// generated [VanillaLineChart] a bounded height because charts have no
+/// intrinsic height.
+///
+/// [style] merges last, so one call site can replace any part of the recipe.
+@MixWidget(target: LineChart.new)
+LineChartStyler vanillaLineChartStyle({
+  bool showMarkers = false,
+  List<Color>? palette,
+  LineChartStyler style = const LineChartStyler.create(),
+}) => LineChartStyler()
+    .frame(_chartFrameStyle())
+    .axis(_chartAxisStyle())
+    .topAxis(_hiddenAxisStyle())
+    .rightAxis(_hiddenAxisStyle())
+    .grid(_chartGridStyle())
+    .series(
+      LineSeriesStyler()
+          .curve(.curved)
+          .smoothness(0.18)
+          .preventCurveOvershooting(true)
+          .roundStrokeCap(true)
+          .roundStrokeJoin(true)
+          .stroke(ChartStrokeStyler().width(_lineWidth))
+          .marker(
+            ChartMarkerStyler()
+                .show(showMarkers)
+                .radius(_markerRadius)
+                .borderColor(VanillaTokens.background())
+                .borderWidth(_markerBorderWidth),
+          ),
+    )
+    .tooltip(_chartTooltipStyle())
+    .merge(LineChartStyler.create(palette: _paletteProp(palette)))
+    .merge(style);
+
+/// The application's grouped, stacked, and floating bar chart recipe.
+///
+/// `mix_chart` owns the bar data and behavior. This recipe supplies the shared
+/// visual treatment. Give the generated [VanillaBarChart] a bounded
+/// height because charts have no intrinsic height.
+///
+/// [style] merges last, so one call site can replace any part of the recipe.
+@MixWidget(target: BarChart.new)
+BarChartStyler vanillaBarChartStyle({
+  List<Color>? palette,
+  BarChartStyler style = const BarChartStyler.create(),
+}) => BarChartStyler()
+    .frame(_chartFrameStyle())
+    .axis(_chartAxisStyle())
+    .topAxis(_hiddenAxisStyle())
+    .rightAxis(_hiddenAxisStyle())
+    .grid(_chartGridStyle())
+    .bar(
+      BarStyler.create(
+        borderRadius: Prop.token(_barRadiusToken),
+      ).width(_barWidth),
+    )
+    .groupSpacing(_barGroupSpacing)
+    .barSpacing(_barSpacing)
+    .tooltip(_chartTooltipStyle())
+    .merge(BarChartStyler.create(palette: _paletteProp(palette)))
+    .merge(style);
+
+/// The application's pie and donut chart recipe.
+///
+/// A positive [centerRadius] creates a donut. Labels stay hidden by default;
+/// a caller-owned legend keeps category names readable with any custom
+/// palette. Give the generated [VanillaPieChart] a bounded width and
+/// height because charts have no intrinsic size.
+///
+/// [style] merges last, so one call site can replace any part of the recipe.
+@MixWidget(target: PieChart.new)
+PieChartStyler vanillaPieChartStyle({
+  double centerRadius = 0,
+  bool showLabels = false,
+  List<Color>? palette,
+  PieChartStyler style = const PieChartStyler.create(),
+}) => PieChartStyler()
+    .frame(_chartFrameStyle())
+    .centerRadius(centerRadius)
+    .centerColor(VanillaTokens.background())
+    .sliceSpacing(_sliceSpacing)
+    .selectedSliceRadiusOffset(_selectedSliceOffset)
+    .slice(
+      PieSliceStyler()
+          .showLabel(showLabels)
+          .cornerRadius(_sliceRadius)
+          .label(
+            TextStyler()
+                .fontSize(_labelSize)
+                .fontWeight(FontWeight.w600)
+                .color(VanillaTokens.background()),
+          ),
+    )
+    .tooltip(_chartTooltipStyle())
+    .merge(PieChartStyler.create(palette: _paletteProp(palette)))
+    .merge(style);
+
+/// Width of a line series.
+const _lineWidth = 2.0;
+
+/// Radius of an optional line marker.
+const _markerRadius = 3.0;
+
+/// Border that separates a line marker from the plot behind it.
+const _markerBorderWidth = 2.0;
+
+/// Width of each bar before a caller override.
+const _barWidth = 16.0;
+
+/// Space between bar groups.
+const _barGroupSpacing = 12.0;
+
+/// Space between bars in one group.
+const _barSpacing = 6.0;
+
+/// Gap between pie slices.
+const _sliceSpacing = 2.0;
+
+/// Extra radius applied to a selected pie slice.
+const _selectedSliceOffset = 4.0;
+
+/// Corner radius applied to each pie slice.
+const _sliceRadius = 2.0;
+
+/// Axis, tooltip, and optional pie-label text size.
+const _labelSize = 12.0;
+
+/// Maximum corner radius for bars.
+const _maxBarRadius = 4.0;
+
+/// Maximum corner radius for the tooltip surface.
+const _maxTooltipRadius = 12.0;
+
+Prop<List<Color>> _paletteProp(List<Color>? palette) => palette == null
+    ? Prop.token(_defaultPaletteToken)
+    : Prop.value(List<Color>.unmodifiable(palette));
+
+ChartFrameStyler _chartFrameStyle() => ChartFrameStyler()
+    .backgroundColor(MixColors.transparent)
+    .showBorder(false)
+    .clip(true);
+
+ChartAxisStyler _chartAxisStyle() => ChartAxisStyler()
+    .showLabels(true)
+    .label(
+      TextStyler().fontSize(_labelSize).color(VanillaTokens.mutedForeground()),
+    )
+    .labelSpace(8)
+    .fitInside(true)
+    .fitInsideDistance(4)
+    .drawBelowEverything(true);
+
+ChartAxisStyler _hiddenAxisStyle() => ChartAxisStyler().showLabels(false);
+
+ChartGridStyler _chartGridStyle() => ChartGridStyler()
+    .show(true)
+    .showHorizontal(true)
+    .showVertical(false)
+    .stroke(ChartStrokeStyler().color(VanillaTokens.border()).width(1));
+
+ChartTooltipStyler _chartTooltipStyle() =>
+    ChartTooltipStyler.create(
+          border: Prop.token(_tooltipBorderToken),
+          borderRadius: Prop.token(_tooltipRadiusToken),
+          padding: Prop.token(_tooltipPaddingToken),
+        )
+        .backgroundColor(VanillaTokens.background())
+        .margin(8)
+        .maxWidth(280)
+        .fitHorizontally(true)
+        .fitVertically(true)
+        .text(
+          TextStyler()
+              .fontSize(_labelSize)
+              .fontWeight(FontWeight.w500)
+              .color(VanillaTokens.foreground()),
+        );
+
+BorderSide _resolveTooltipBorder(BuildContext context) =>
+    BorderSide(color: VanillaTokens.border.resolve(context), width: 1);
+
+BorderRadius _resolveTooltipRadius(BuildContext context) =>
+    BorderRadius.all(_clampedThemeRadius(context, _maxTooltipRadius));
+
+EdgeInsets _resolveTooltipPadding(BuildContext context) =>
+    const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+
+BorderRadius _resolveBarRadius(BuildContext context) =>
+    BorderRadius.all(_clampedThemeRadius(context, _maxBarRadius));
+
+Radius _clampedThemeRadius(BuildContext context, double maximum) {
+  final radius = VanillaTokens.radius.resolve(context);
+
+  return Radius.elliptical(
+    math.min(radius.x, maximum),
+    math.min(radius.y, maximum),
+  );
+}

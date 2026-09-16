@@ -1,0 +1,51 @@
+---
+title: Plan
+description: A task plan with per-item progress and lifecycle-aware disclosure.
+---
+
+A task plan with per-item progress and lifecycle-aware disclosure.
+
+This is an [Open Code](/open-code) component: it installs into your application,
+not as a separate Agent runtime package. The names below assume prefix `Ui`.
+
+## Install
+
+In a Flutter application with the project-local CLI configured:
+
+```shell
+dart run remix_cli:remix init --prefix Ui --preset fortal
+dart run remix_cli:remix add plan_recipe
+```
+
+Use `--preset default` when initializing a default-preset application. Do not
+reinitialize an existing application with a different preset. Installing
+`plan_recipe` includes its component and required theme/control dependencies.
+Use `add plan` instead when you want the bare component and will provide styles.
+
+Import `ui/ui.dart` from your application and render under its `UiScope`.
+
+## Behavior
+
+Pass `UiPlanItem` values to `items`. Statuses are `pending`, `inProgress`, `completed`, and `cancelled`. Completed and cancelled items are settled; the plan can collapse when all settle. Set `collapseOnComplete` to change that behavior. Supply `expanded` with `onExpandedChanged` for controlled disclosure, or use `defaultExpanded` for initial internal state.
+
+## Recipe bundle
+
+`uiAgentPlanRecipe()` returns these styles:
+
+| Bundle field | Style type |
+|---|---|
+| `style` | `UiPlanStyler` |
+| `disclosureStyle` | `DisclosureStyler` |
+
+Pass the bundle's styles to the corresponding component parameters. Each
+factory accepts same-named overrides, merged after the preset defaults.
+Child-control styles must be passed through unchanged so hover, focus, and
+disabled styles resolve in the child's context.
+
+## Review and customize
+
+The dashboard's **Workspace → Chat** demonstrates this surface alongside the
+other Agent components. Its responses and tool activity are simulated locally.
+Edit your installed source to customize it; `dart run remix_cli:remix add
+plan_recipe --diff` previews authored-source differences without overwriting
+local edits.

@@ -1,0 +1,50 @@
+---
+title: Transcript
+description: A chronological scroll surface with reader-aware output following.
+---
+
+A chronological scroll surface with reader-aware output following.
+
+This is an [Open Code](/open-code) component: it installs into your application,
+not as a separate Agent runtime package. The names below assume prefix `Ui`.
+
+## Install
+
+In a Flutter application with the project-local CLI configured:
+
+```shell
+dart run remix_cli:remix init --prefix Ui --preset fortal
+dart run remix_cli:remix add transcript_recipe
+```
+
+Use `--preset default` when initializing a default-preset application. Do not
+reinitialize an existing application with a different preset. Installing
+`transcript_recipe` includes its component and required theme/control dependencies.
+Use `add transcript` instead when you want the bare component and will provide styles.
+
+Import `ui/ui.dart` from your application and render under its `UiScope`.
+
+## Behavior
+
+Use `UiTranscript(children: ...)` or `UiTranscript.builder` with `itemCount` and `itemBuilder`. Give it bounded height, such as an `Expanded` child within a finite-height column. `onFollowChanged` reports reader release; an explicit false-to-true `followOutput` transition resumes following. The host can expose a return-to-latest action and supply a `ScrollController`. `busy` and `busyLabel` describe ongoing work; they do not start a runner.
+
+## Recipe bundle
+
+`uiAgentTranscriptRecipe()` returns these styles:
+
+| Bundle field | Style type |
+|---|---|
+| `style` | `UiTranscriptStyler` |
+
+Pass the bundle's styles to the corresponding component parameters. Each
+factory accepts same-named overrides, merged after the preset defaults.
+Child-control styles must be passed through unchanged so hover, focus, and
+disabled styles resolve in the child's context.
+
+## Review and customize
+
+The dashboard's **Workspace → Chat** demonstrates this surface alongside the
+other Agent components. Its responses and tool activity are simulated locally.
+Edit your installed source to customize it; `dart run remix_cli:remix add
+transcript_recipe --diff` previews authored-source differences without overwriting
+local edits.

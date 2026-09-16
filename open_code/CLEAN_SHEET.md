@@ -30,7 +30,8 @@ order, adds its hosted dependencies, exports the authored files, and generates
 **Since:** the styled component catalog has grown on the same two mechanisms —
 one authored file plus one generated part per item, every item depending on
 `theme`. Nothing in the decision below changed to accommodate them: no schema
-field, no installer branch, and no addition to the fifteen theme tokens.
+field and no installer branch. The token vocabulary moved once, when the chart
+item added `chart1`-`chart5` to reach the current twenty.
 Compound components (a checkbox group option, a tab bar with its tabs and
 panels) fit by declaring more than one `@MixWidget` in the same file. The
 current catalog is listed in `docs/open-code.mdx`.
@@ -109,13 +110,15 @@ the MVP has an update system.
 Runtime dependencies are `remix` and `mix_annotations`. Mix and Naked UI arrive
 through Remix, which avoids choosing a direct Mix version that Remix was not
 compiled against. Installing the optional chart item adds `mix_chart` directly;
-it never adds `remix_fortal`. Development dependencies are `build_runner` and
+it never adds the authoring source package. Development dependencies are `build_runner` and
 `mix_generator`.
 
 Chart is deliberately one item with three adapters. `mix_chart` owns the hard
-chart contract. The installed file owns presentation and resolves only the
-existing fifteen theme tokens. This keeps `remix add chart` compatible with a
-theme installed and customized before chart support existed.
+chart contract. The installed file owns presentation and resolves theme
+tokens only: `background`, `foreground`, `mutedForeground`, `border`, `radius`,
+and the five `chart1`-`chart5` entries the chart item added to the vocabulary.
+A theme installed before those five existed does not carry them, and authored
+files are preserved on normal runs, so such a theme needs them added by hand.
 
 The recurring costs are visible:
 
@@ -137,3 +140,22 @@ hosted consumer check.
 The first public release still requires package bootstrap and hosted CLI
 verification. Until then, use a checkout or staged package with checkout Remix.
 The [release instructions](RELEASING.md) define the order and required checks.
+
+
+## Agent source distribution
+
+Both catalogs include eight domain-specific Agent surfaces. Unlike visual
+`@MixWidget` recipes, these copy the private authoring package's
+(`registry_source/lib/src/agent`) behavior and empty anatomy specs into the
+application, and each preset styles them through recipes authored in its own
+source package. They still compose the
+public Remix primitives; they do not copy Remix internals or introduce a
+private runtime dependency. Applications own the installed domain behavior as
+well as its appearance. The scope of future source-update diffs includes that
+behavior.
+
+The supported Mix spec-styler builder is opt-in, so these installs enable it
+for their source paths in consumer `build.yaml`. This is a deliberate extension
+to the original recipe-only, no-build-config contract. Existing configuration
+is preserved, conflicts are rejected during preflight, and configuration changes
+appear in dry-run/diff. Registry schema and preset selection are unchanged.

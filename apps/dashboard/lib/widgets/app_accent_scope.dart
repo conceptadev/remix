@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 /// Applies an app-owned local Fortal accent without owning the surface.
 ///
@@ -9,10 +9,10 @@ import 'package:remix_fortal/remix_fortal.dart';
 class AppAccentScope extends StatelessWidget {
   const AppAccentScope({super.key, required this.accent, required this.child});
 
-  final FortalAccentColor accent;
+  final UiAccentColor accent;
   final Widget child;
 
   @override
   Widget build(BuildContext context) =>
-      FortalScope(accent: accent, hasBackground: false, child: child);
+      UiScope(accent: accent, hasBackground: false, child: child);
 }

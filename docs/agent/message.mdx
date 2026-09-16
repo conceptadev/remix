@@ -1,0 +1,53 @@
+---
+title: Message
+description: A transcript message with role, content, and optional surrounding slots.
+---
+
+A transcript message with role, content, and optional surrounding slots.
+
+This is an [Open Code](/open-code) component: it installs into your application,
+not as a separate Agent runtime package. The names below assume prefix `Ui`.
+
+## Install
+
+In a Flutter application with the project-local CLI configured:
+
+```shell
+dart run remix_cli:remix init --prefix Ui --preset fortal
+dart run remix_cli:remix add message_recipe
+```
+
+Use `--preset default` when initializing a default-preset application. Do not
+reinitialize an existing application with a different preset. Installing
+`message_recipe` includes its component and required theme/control dependencies.
+Use `add message` instead when you want the bare component and will provide styles.
+
+Import `ui/ui.dart` from your application and render under its `UiScope`.
+
+## Behavior
+
+Use `UiMessage` for a row with host-provided content and `UiRole.user` or `.assistant`. The recipe also provides `collapsibleStyle` and `toggleStyle` for `UiMessageCollapsible`; those belong on the collapsible component, not the message row. The application retains conversation history and stable widget keys.
+
+## Recipe bundle
+
+`uiAgentMessageRecipe()` returns these styles:
+
+| Bundle field | Style type |
+|---|---|
+| `style` | `UiMessageStyler` |
+| `surfaceStyle` | `CardStyler` |
+| `collapsibleStyle` | `UiMessageCollapsibleStyler` |
+| `toggleStyle` | `ButtonStyler` |
+
+Pass the bundle's styles to the corresponding component parameters. Each
+factory accepts same-named overrides, merged after the preset defaults.
+Child-control styles must be passed through unchanged so hover, focus, and
+disabled styles resolve in the child's context.
+
+## Review and customize
+
+The dashboard's **Workspace → Chat** demonstrates this surface alongside the
+other Agent components. Its responses and tool activity are simulated locally.
+Edit your installed source to customize it; `dart run remix_cli:remix add
+message_recipe --diff` previews authored-source differences without overwriting
+local edits.

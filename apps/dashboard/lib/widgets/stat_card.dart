@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import 'app_accent_scope.dart';
 import 'typography.dart';
@@ -41,10 +41,10 @@ class StatCard extends StatelessWidget {
                 style: dashboardText(.size2, tone: .muted),
               ),
             ),
-            FortalAvatar.soft(icon: icon, size: .size2),
+            UiAvatar.soft(icon: icon, size: .size2),
           ],
         ),
-        FortalText(value, size: .size7, weight: .bold),
+        UiText(value, size: .size7, weight: .bold),
         Wrap(
           spacing: 8,
           runSpacing: 6,
@@ -52,7 +52,7 @@ class StatCard extends StatelessWidget {
           children: [
             AppAccentScope(
               accent: positive ? .green : .red,
-              child: FortalBadge(
+              child: UiBadge(
                 highContrast: true,
                 label:
                     '${positive ? '↑' : '↓'} ${delta.abs().toStringAsFixed(1)}%',
@@ -65,7 +65,7 @@ class StatCard extends StatelessWidget {
           ],
         ),
         if (progress case final value?)
-          FortalProgress(
+          UiProgress(
             value: value / 100,
             size: .size1,
             semanticsLabel: '$label progress',
@@ -73,6 +73,6 @@ class StatCard extends StatelessWidget {
       ],
     );
 
-    return FortalCard(size: .size2, child: column);
+    return UiCard(size: .size2, child: column);
   }
 }

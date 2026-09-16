@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 
 /// Helper function for creating consistent widget previews.
 ///

@@ -1,9 +1,25 @@
+import 'dart:io';
+
 import 'package:path/path.dart' as p;
 import 'package:remix_cli/src/registry.dart';
 import 'package:remix_cli/src/template_renderer.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('bundledPresets matches the preset trees on disk', () {
+    // `dart test` runs with the package root as the current directory.
+    final onDisk = Directory(p.join('lib', 'src', 'registry'))
+        .listSync()
+        .whereType<Directory>()
+        .map((directory) => p.basename(directory.path))
+        .toSet();
+
+    // bundledPresets gates both loadBundled and `--preset` validation, so a
+    // tree shipped without an entry here is unreachable behind "Unknown
+    // preset", and an entry without a tree fails only once someone selects it.
+    expect(onDisk, bundledPresets);
+  });
+
   test(
     'bundled registry resolves theme before button and loads assets',
     () async {
@@ -51,7 +67,7 @@ void main() {
     // sidebar_layout composes an already-installed sidebar into its row and
     // compact sheet without ever importing components/sidebar.dart (its
     // `sidebar` field stays generically typed as `Widget`), so this
-    // dependency comes from build_fortal_preset.dart's manual override, not
+    // dependency comes from build_registry.dart's manual override, not
     // from import inference. Regression coverage for that gap: a fresh
     // `remix add sidebar_layout` on the fortal preset must still pull in a
     // working Sidebar, matching the default preset's registry.yaml.
@@ -136,6 +152,50 @@ items:
       );
     },
   );
+
+  test('template prose states the theme vocabulary\'s real size', () async {
+    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+    // The real size is one required parameter per token on the theme data
+    // constructor. Counting `required this.` is enough: the template declares
+    // them nowhere else.
+    final themeData = catalog.items['theme']!.files.singleWhere(
+      (file) => file.source.endsWith('theme_data.dart.tmpl'),
+    );
+    final tokenCount = RegExp(
+      r'^\s+required this\.',
+      multiLine: true,
+    ).allMatches(await catalog.readTemplate(themeData)).length;
+    expect(tokenCount, 20);
+
+    // Two templates state that size in prose, and templates are copied verbatim
+    // into consumer source. `chart1`-`chart5` were added for the chart item and
+    // both sentences stayed at fifteen, because nothing compared them.
+    const spellings = {
+      15: 'fifteen',
+      16: 'sixteen',
+      17: 'seventeen',
+      18: 'eighteen',
+      19: 'nineteen',
+      20: 'twenty',
+    };
+    final expected = spellings[tokenCount];
+    expect(expected, isNotNull, reason: 'spell $tokenCount in `spellings`');
+    final spelled = RegExp('\\b(${spellings.values.join('|')})\\b');
+
+    for (final name in const ['card', 'textfield']) {
+      final source = await catalog.readTemplate(
+        catalog.items[name]!.files.single,
+      );
+      expect(
+        spelled.allMatches(source).map((match) => match[1]).toSet(),
+        {expected},
+        reason:
+            "$name's prose must say the vocabulary has $tokenCount tokens, and "
+            'say it once',
+      );
+    }
+  });
 
   test(
     'sidebar_layout is a plain layout with no Spec or generated adapter',
@@ -333,45 +393,108 @@ items:
     },
   );
 
-  test('every item resolves theme first and owns its expected files', () async {
-    final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+  test(
+    'every item resolves its foundations and owns its expected files',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
 
-    // Both directions. Checking only that each listed name exists would let a
-    // new registry item ship with no surface pinned and no rendering asserted.
-    expect(
-      catalog.items.keys.where((name) => name != 'theme').toSet(),
-      _componentSurfaces.keys.toSet(),
-    );
+      // Both directions. Checking only that each listed name exists would let a
+      // new registry item ship with no surface pinned and no rendering asserted.
+      expect(catalog.items.keys.toSet(), {
+        'theme',
+        'models',
+        'support',
+        ..._componentSurfaces.keys,
+        ..._agentSurfaces.keys,
+        ..._agentRecipeNames,
+      });
 
-    for (final name in _componentSurfaces.keys) {
-      final item = catalog.items[name];
-      expect(item, isNotNull, reason: name);
-      // Dependency-first order, and `theme` always leads because every
-      // component declares it. Compound items retain their dependency-first
-      // order, including both toast controls and the sidebar layout's panel.
-      expect(catalog.resolve(name).map((item) => item.name), switch (name) {
-        'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
-        'sidebar' => ['theme', 'toggle', 'tooltip', name],
-        'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
-        'toast' => ['theme', 'button', 'icon_button', name],
-        _ => ['theme', name],
-      }, reason: name);
-      if (name == 'icons') {
-        expect(item!.files.single.target, '@ui/icons.dart');
-        expect(item.generated, isEmpty);
-        expect(item.exports, ['icons.dart']);
-      } else if (name == 'sidebar_layout') {
-        // A layout, not a styled component: no Spec, no generated adapter.
-        expect(item!.files.single.target, '@ui/components/$name.dart');
-        expect(item.generated, isEmpty);
-        expect(item.exports, ['components/$name.dart']);
-      } else {
-        expect(item!.files.single.target, '@ui/components/$name.dart');
-        expect(item.generated, ['@ui/components/$name.g.dart']);
-        expect(item.exports, ['components/$name.dart']);
+      for (final name in [..._componentSurfaces.keys, ..._agentSurfaces.keys]) {
+        final item = catalog.items[name];
+        expect(item, isNotNull, reason: name);
+        // Agent model foundations can precede theme. Every component still
+        // reaches the single Remix floor through theme, in dependency order.
+        expect(catalog.resolve(name).map((item) => item.name), switch (name) {
+          'composer' || 'transcript' => ['theme', 'support', name],
+          'activity' ||
+          'answer' ||
+          'execution' ||
+          'message' ||
+          'permission' ||
+          'plan' => ['models', 'theme', 'support', name],
+          'data_table' => ['theme', 'checkbox', 'icon_button', 'select', name],
+          'sidebar' => ['theme', 'toggle', 'tooltip', name],
+          'sidebar_layout' => ['theme', 'toggle', 'tooltip', 'sidebar', name],
+          'toast' => ['theme', 'button', 'icon_button', name],
+          _ => ['theme', name],
+        }, reason: name);
+        if (name == 'icons') {
+          expect(item!.files.single.target, '@ui/icons.dart');
+          expect(item.generated, isEmpty);
+          expect(item.exports, ['icons.dart']);
+        } else if (name == 'sidebar_layout') {
+          // A layout, not a styled component: no Spec, no generated adapter.
+          expect(item!.files.single.target, '@ui/components/$name.dart');
+          expect(item.generated, isEmpty);
+          expect(item.exports, ['components/$name.dart']);
+        } else {
+          expect(item!.files.single.target, '@ui/components/$name.dart');
+          expect(item.generated, ['@ui/components/$name.g.dart']);
+          expect(item.exports, ['components/$name.dart']);
+        }
       }
-    }
-  });
+      for (final name in _agentRecipeNames) {
+        final item = catalog.items[name]!;
+        expect(item.files.single.target, '@ui/recipes/$name.dart');
+        expect(item.generated, isEmpty);
+        expect(item.exports, ['recipes/$name.dart']);
+        expect(catalog.resolve(name).map((item) => item.name), contains(name));
+      }
+    },
+  );
+
+  test(
+    'Agent foundations export only public models and preserve source layout',
+    () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+      expect(catalog.items['models']!.files.map((file) => file.target), [
+        '@ui/models/activity_item.dart',
+        '@ui/models/plan_item.dart',
+        '@ui/models/statuses.dart',
+      ]);
+      expect(catalog.items['support']!.files.map((file) => file.target), [
+        '@ui/support/disclosure.dart',
+        '@ui/support/functional_glyph.dart',
+        '@ui/support/live_edge.dart',
+      ]);
+      expect(catalog.items['support']!.exports, isEmpty);
+      expect(catalog.items['models']!.exports, [
+        'models/activity_item.dart',
+        'models/plan_item.dart',
+        'models/statuses.dart',
+      ]);
+      for (final entry in _agentSurfaces.entries) {
+        final source = await catalog.readTemplate(
+          catalog.items[entry.key]!.files.single,
+        );
+        for (final prefix in ['Acme', 'Ui']) {
+          final rendered = const TemplateRenderer().render(
+            source,
+            typePrefix: prefix,
+            valuePrefix: prefix.toLowerCase(),
+          );
+          for (final widget in entry.value) {
+            expect(
+              rendered,
+              contains(
+                RegExp('^class $prefix$widget extends ', multiLine: true),
+              ),
+            );
+          }
+        }
+      }
+    },
+  );
 
   test('both prefixes render every configured public surface', () async {
     final catalog = await RegistryCatalog.loadBundled(preset: 'default');
@@ -425,6 +548,27 @@ items:
     }
   });
 
+  test('both presets render prefixed Agent recipe bundles', () async {
+    for (final preset in ['default', 'fortal']) {
+      final catalog = await RegistryCatalog.loadBundled(preset: preset);
+      for (final name in _agentRecipeNames) {
+        final source = await catalog.readTemplate(
+          catalog.items[name]!.files.single,
+        );
+        final rendered = const TemplateRenderer().render(
+          source,
+          typePrefix: 'Acme',
+          valuePrefix: 'acme',
+        );
+        final component = name.split('_').first;
+        final type = '${component[0].toUpperCase()}${component.substring(1)}';
+        expect(rendered, contains('class AcmeAgent${type}Recipe'));
+        expect(rendered, contains('acmeAgent${type}Recipe('));
+        expect(rendered, isNot(contains('package:remix_agent')));
+      }
+    }
+  });
+
   test('bundled templates stay inside the allowed import boundary', () async {
     final catalog = await RegistryCatalog.loadBundled(preset: 'default');
     const allowedPackages = {
@@ -450,7 +594,10 @@ items:
           } else if (!uri.startsWith('dart:')) {
             expect(uri, isNot(startsWith('/')), reason: file.source);
             final resolved = p.posix.normalize(
-              p.posix.join(p.posix.dirname(file.target.substring(4)), uri),
+              p.posix.join(
+                p.posix.dirname(file.target.substring(uiTargetPrefix.length)),
+                uri,
+              ),
             );
             expect(resolved, isNot(startsWith('../')), reason: file.source);
           }
@@ -534,3 +681,25 @@ final class _NoopLoader implements RegistryAssetLoader {
   @override
   Future<String> read(Uri uri) => throw StateError('Unexpected read of $uri');
 }
+
+const _agentRecipeNames = <String>{
+  'activity_recipe',
+  'answer_recipe',
+  'composer_recipe',
+  'execution_recipe',
+  'message_recipe',
+  'permission_recipe',
+  'plan_recipe',
+  'transcript_recipe',
+};
+
+const _agentSurfaces = <String, List<String>>{
+  'activity': ['Activity'],
+  'answer': ['Answer'],
+  'composer': ['Composer'],
+  'execution': ['Execution'],
+  'message': ['Message', 'MessageGroup', 'MessageCollapsible'],
+  'permission': ['Permission'],
+  'plan': ['Plan'],
+  'transcript': ['Transcript'],
+};

@@ -6,7 +6,7 @@ import 'package:dashboard/shell/sidebar.dart';
 import 'package:dashboard/shell/sidebar_sections.dart';
 import 'package:dashboard/shell/top_bar.dart';
 import 'package:dashboard/theme/theme_settings.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:dashboard/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -32,10 +32,10 @@ void main() {
   final toggle = find.byKey(const ValueKey('dashboard-sidebar-toggle')).first;
   double width(WidgetTester tester) =>
       tester.getSize(find.byType(Sidebar)).width;
-  // `TopBar` sits inside `FortalSidebarLayout`'s `header` slot in both
+  // `TopBar` sits inside `UiSidebarLayout`'s `header` slot in both
   // presentations, so it is always a descendant of the scope the layout
   // re-provides.
-  bool isCompactSheetOpen(WidgetTester tester) => FortalSidebarLayoutScope.of(
+  bool isCompactSheetOpen(WidgetTester tester) => UiSidebarLayoutScope.of(
     tester.element(find.byType(TopBar)),
   ).isCompactOpen;
 
@@ -80,7 +80,7 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    for (final scaling in FortalScaling.values) {
+    for (final scaling in UiScaling.values) {
       await tester.pumpWidget(
         DashboardApp(
           key: ValueKey(scaling),
@@ -93,7 +93,7 @@ void main() {
       final trigger = find.byKey(const ValueKey('sidebar-account-trigger'));
       final avatar = find.descendant(
         of: trigger,
-        matching: find.byType(FortalAvatar),
+        matching: find.byType(UiAvatar),
       );
       expect(
         tester.getCenter(avatar).dx,

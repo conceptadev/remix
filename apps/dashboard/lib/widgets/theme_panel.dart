@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../theme/theme_scope.dart';
 import '../theme/theme_settings.dart';
@@ -24,7 +24,7 @@ class ThemePanel extends StatelessWidget {
       required ThemeSettings Function(T value) apply,
     }) => _Control(
       label: label,
-      child: FortalSegmentedControl<T>(
+      child: UiSegmentedControl<T>(
         size: .size1,
         selectedValue: selectedValue,
         semanticLabel: label,
@@ -52,7 +52,7 @@ class ThemePanel extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                for (final accent in FortalAccentColor.values)
+                for (final accent in UiAccentColor.values)
                   _AccentSwatch(
                     key: ValueKey('accent-${accent.name}'),
                     accent: accent,
@@ -65,11 +65,11 @@ class ThemePanel extends StatelessWidget {
           ),
           _Control(
             label: 'Gray color',
-            child: FortalSelect<FortalGrayColor>(
+            child: UiSelect<UiGrayColor>(
               trigger: const RemixSelectTrigger(placeholder: 'Choose gray'),
               selectedValue: settings.grayColor,
               items: [
-                for (final gray in FortalGrayColor.values)
+                for (final gray in UiGrayColor.values)
                   RemixSelectItem(value: gray, label: enumLabel(gray)),
               ],
               onChanged: (value) {
@@ -79,21 +79,21 @@ class ThemePanel extends StatelessWidget {
               },
             ),
           ),
-          choice<FortalPanelBackground>(
+          choice<UiPanelBackground>(
             label: 'Panel background',
             selectedValue: settings.panelBackground,
-            items: _enumSegmentedItems(FortalPanelBackground.values),
+            items: _enumSegmentedItems(UiPanelBackground.values),
             apply: (value) => settings.copyWith(panelBackground: value),
           ),
           Row(
             spacing: 10,
             children: [
               Expanded(
-                child: choice<FortalRadius>(
+                child: choice<UiRadius>(
                   label: 'Radius',
                   selectedValue: settings.radius,
                   items: _enumSegmentedItems(
-                    FortalRadius.values,
+                    UiRadius.values,
                     labelBuilder: _radiusLabel,
                   ),
                   apply: (value) => settings.copyWith(radius: value),
@@ -103,9 +103,9 @@ class ThemePanel extends StatelessWidget {
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: MixScope.tokenOf(FortalTokens.accent9, context),
+                  color: MixScope.tokenOf(UiTokens.accent9, context),
                   borderRadius: BorderRadius.all(
-                    MixScope.tokenOf(FortalTokens.radius3, context),
+                    MixScope.tokenOf(UiTokens.radius3, context),
                   ),
                 ),
               ),
@@ -113,11 +113,11 @@ class ThemePanel extends StatelessWidget {
           ),
           SingleChildScrollView(
             scrollDirection: .horizontal,
-            child: choice<FortalScaling>(
+            child: choice<UiScaling>(
               label: 'Scaling',
               selectedValue: settings.scaling,
               items: _enumSegmentedItems(
-                FortalScaling.values,
+                UiScaling.values,
                 labelBuilder: _scalingLabel,
               ),
               apply: (value) => settings.copyWith(scaling: value),
@@ -125,7 +125,7 @@ class ThemePanel extends StatelessWidget {
           ),
           Align(
             alignment: .centerLeft,
-            child: FortalButton.ghost(
+            child: UiButton.ghost(
               key: const ValueKey('theme-reset'),
               size: .size1,
               onPressed: () => scope.onChanged(const ThemeSettings()),
@@ -150,7 +150,7 @@ List<RemixSegmentedControlItem<T>> _enumSegmentedItems<T extends Enum>(
     ),
 ];
 
-String _radiusLabel(FortalRadius radius) => switch (radius) {
+String _radiusLabel(UiRadius radius) => switch (radius) {
   .none => 'None',
   .small => 'S',
   .medium => 'M',
@@ -158,8 +158,7 @@ String _radiusLabel(FortalRadius radius) => switch (radius) {
   .full => 'Full',
 };
 
-String _scalingLabel(FortalScaling scaling) =>
-    '${(scaling.factor * 100).round()}%';
+String _scalingLabel(UiScaling scaling) => '${(scaling.factor * 100).round()}%';
 
 class _Control extends StatelessWidget {
   const _Control({required this.label, required this.child});
@@ -171,7 +170,7 @@ class _Control extends StatelessWidget {
     crossAxisAlignment: .start,
     spacing: 8,
     children: [
-      FortalText(label, size: .size2, weight: .medium),
+      UiText(label, size: .size2, weight: .medium),
       child,
     ],
   );
@@ -193,8 +192,8 @@ class _AccentSwatch extends StatelessWidget {
   });
 
   static final _ring = ToggleStyler().border(
-    .color(FortalTokens.focus8())
-        .width(FortalTokens.focusRingWidth())
+    .color(UiTokens.focus8())
+        .width(UiTokens.focusRingWidth())
         .strokeAlign(BorderSide.strokeAlignOutside),
   );
 
@@ -207,18 +206,16 @@ class _AccentSwatch extends StatelessWidget {
                 .borderRadius(.all(const Radius.circular(15))),
             icon: .size(15),
           )
-          .color(FortalTokens.accent9())
+          .color(UiTokens.accent9())
           .iconColor(Colors.transparent)
-          .onHovered(ToggleStyler().color(FortalTokens.accent10()))
-          .onPressed(ToggleStyler().color(FortalTokens.accent10()))
+          .onHovered(ToggleStyler().color(UiTokens.accent10()))
+          .onPressed(ToggleStyler().color(UiTokens.accent10()))
           .onSelected(
-            ToggleStyler()
-                .iconColor(FortalTokens.accentContrast())
-                .merge(_ring),
+            ToggleStyler().iconColor(UiTokens.accentContrast()).merge(_ring),
           )
           .onFocusVisible(_ring);
 
-  final FortalAccentColor accent;
+  final UiAccentColor accent;
   final bool selected;
   final VoidCallback onPressed;
 

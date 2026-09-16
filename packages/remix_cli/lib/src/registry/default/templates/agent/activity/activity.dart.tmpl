@@ -1,0 +1,310 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:mix_annotations/mix_annotations.dart';
+import 'package:remix/remix.dart';
+
+import '../models/activity_item.dart';
+import '../models/statuses.dart';
+import '../support/disclosure.dart';
+import '../support/functional_glyph.dart';
+import '../support/live_edge.dart';
+
+part 'activity.g.dart';
+
+typedef {{typePrefix}}ActivityStatusBuilder =
+    Widget Function(BuildContext context, {{typePrefix}}ActivityItem item);
+typedef {{typePrefix}}ActivityStatusLabelBuilder =
+    String Function({{typePrefix}}ActivityItem item);
+typedef {{typePrefix}}ActivityIndicatorBuilder =
+    Widget Function(BuildContext context, bool expanded);
+
+/// Activity ledger that is forced open and non-toggleable only while working.
+class {{typePrefix}}Activity extends StatefulWidget {
+  const {{typePrefix}}Activity({
+    super.key,
+    required this.items,
+    this.status = {{typePrefix}}RunStatus.working,
+    this.title = 'Activity',
+    this.semanticLabel = 'Activity',
+    this.collapseOnComplete = true,
+    this.expanded,
+    this.defaultExpanded = true,
+    this.onExpandedChanged,
+    this.statusBuilder,
+    this.statusLabelBuilder,
+    this.indicatorBuilder,
+    this.followOutput = true,
+    this.followThreshold = 48,
+    this.onFollowChanged,
+    this.disclosureStyle = const DisclosureStyler.create(),
+    this.style = const {{typePrefix}}ActivityStyler.create(),
+    this.styleSpec,
+  });
+
+  final List<{{typePrefix}}ActivityItem> items;
+  final {{typePrefix}}RunStatus status;
+  final String title;
+  final String semanticLabel;
+  final bool collapseOnComplete;
+  final bool? expanded;
+  final bool defaultExpanded;
+  final ValueChanged<bool>? onExpandedChanged;
+  final {{typePrefix}}ActivityStatusBuilder? statusBuilder;
+  final {{typePrefix}}ActivityStatusLabelBuilder? statusLabelBuilder;
+  final {{typePrefix}}ActivityIndicatorBuilder? indicatorBuilder;
+  final bool followOutput;
+  final double followThreshold;
+  final ValueChanged<bool>? onFollowChanged;
+  final DisclosureStyler disclosureStyle;
+  final {{typePrefix}}ActivityStyler style;
+  final {{typePrefix}}ActivitySpec? styleSpec;
+
+  bool get isWorking => status == {{typePrefix}}RunStatus.working;
+
+  /// Number of completed rows in the activity ledger.
+  int get settledCount => items
+      .where((item) => item.status == {{typePrefix}}ActivityItemStatus.complete)
+      .length;
+
+  @override
+  State<{{typePrefix}}Activity> createState() => _{{typePrefix}}ActivityState();
+}
+
+class _{{typePrefix}}ActivityState extends State<{{typePrefix}}Activity> {
+  late final {{typePrefix}}DisclosureEngine _disclosure;
+
+  bool get _expanded => widget.isWorking ? true : (_disclosure.value);
+
+  @override
+  void initState() {
+    super.initState();
+    _disclosure = {{typePrefix}}DisclosureEngine(
+      value: widget.expanded,
+      defaultValue: widget.defaultExpanded,
+    );
+  }
+
+  @override
+  void didUpdateWidget({{typePrefix}}Activity oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _disclosure.reconcile(widget.expanded);
+    if (!oldWidget.isWorking && widget.isWorking) {
+      _request(true, lifecycle: true);
+    } else if (oldWidget.isWorking &&
+        !widget.isWorking &&
+        widget.collapseOnComplete) {
+      _request(false, lifecycle: true);
+    }
+  }
+
+  void _request(bool next, {bool lifecycle = false}) {
+    if (widget.isWorking && !lifecycle) return;
+    if (_disclosure.request(next)) setState(() {});
+    widget.onExpandedChanged?.call(next);
+  }
+
+  String _statusLabel({{typePrefix}}ActivityItem item) =>
+      widget.statusLabelBuilder?.call(item) ??
+      switch (item.status) {
+        {{typePrefix}}ActivityItemStatus.pending => 'Pending',
+        {{typePrefix}}ActivityItemStatus.active => 'Active',
+        {{typePrefix}}ActivityItemStatus.complete => 'Complete',
+      };
+
+  {{typePrefix}}FunctionalGlyphKind _statusGlyph({{typePrefix}}ActivityItemStatus status) =>
+      switch (status) {
+        {{typePrefix}}ActivityItemStatus.pending => .pending,
+        {{typePrefix}}ActivityItemStatus.active => .active,
+        {{typePrefix}}ActivityItemStatus.complete => .completed,
+      };
+
+  StyleSpec<BoxSpec> _statusContainer(
+    {{typePrefix}}ActivitySpec spec,
+    {{typePrefix}}ActivityItemStatus status,
+  ) => switch (status) {
+    {{typePrefix}}ActivityItemStatus.pending => spec.pendingItem,
+    {{typePrefix}}ActivityItemStatus.active => spec.activeItem,
+    {{typePrefix}}ActivityItemStatus.complete => spec.completedItem,
+  };
+
+  StyleSpec<IconSpec> _statusStyle(
+    {{typePrefix}}ActivitySpec spec,
+    {{typePrefix}}ActivityItemStatus status,
+  ) => switch (status) {
+    {{typePrefix}}ActivityItemStatus.pending => spec.pendingStatus,
+    {{typePrefix}}ActivityItemStatus.active => spec.activeStatus,
+    {{typePrefix}}ActivityItemStatus.complete => spec.completedStatus,
+  };
+
+  Widget _defaultStatus(
+    BuildContext context,
+    {{typePrefix}}ActivitySpec spec,
+    {{typePrefix}}ActivityItem item,
+  ) => StyleSpecBuilder<IconSpec>(
+    styleSpec: _statusStyle(spec, item.status),
+    builder: (context, iconSpec) =>
+        {{typePrefix}}FunctionalGlyph(kind: _statusGlyph(item.status), spec: iconSpec),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixStyleSpecBuilder<{{typePrefix}}ActivitySpec>(
+      style: widget.style,
+      styleSpec: widget.styleSpec,
+      builder: (context, spec) => Semantics(
+        container: true,
+        explicitChildNodes: true,
+        label: widget.semanticLabel,
+        child: RemixDisclosure(
+          expanded: _expanded,
+          enabled: !widget.isWorking,
+          onExpandedChanged: _request,
+          semanticLabel: widget.title,
+          style: widget.disclosureStyle,
+          triggerBuilder: (context, state, trigger) => Row(
+            children: [
+              Expanded(child: trigger!),
+              // Preserve the count alignment and expansion cue while working.
+              // RemixDisclosure keeps the forced-open header non-toggleable.
+              {{typePrefix}}DisclosureIndicator(
+                styleSpec: spec.indicator,
+                expanded: state.isExpanded,
+                builder: widget.indicatorBuilder,
+              ),
+            ],
+          ),
+          trigger: Row(
+            children: [
+              Expanded(
+                child: StyledText(widget.title, styleSpec: spec.summaryTitle),
+              ),
+              StyledText(
+                '${widget.settledCount}/${widget.items.length}',
+                styleSpec: spec.count,
+              ),
+            ],
+          ),
+          content: Box(
+            styleSpec: spec.viewport,
+            child: {{typePrefix}}LiveEdgeScrollView(
+              followOutput: widget.followOutput,
+              followThreshold: widget.followThreshold,
+              onFollowChanged: widget.onFollowChanged,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final item in widget.items)
+                    Semantics(
+                      container: true,
+                      explicitChildNodes: true,
+                      label: [
+                        item.title,
+                        if (item.detail != null) item.detail!,
+                        _statusLabel(item),
+                      ].join(', '),
+                      child: Box(
+                        styleSpec: _statusContainer(spec, item.status),
+                        child: RowBox(
+                          key: ValueKey('{{valuePrefix}}-activity-item-${item.id}'),
+                          styleSpec: spec.item,
+                          children: [
+                            ExcludeSemantics(
+                              child:
+                                  widget.statusBuilder?.call(context, item) ??
+                                  _defaultStatus(context, spec, item),
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ExcludeSemantics(
+                                    child: StyledText(
+                                      item.title,
+                                      styleSpec: spec.itemTitle,
+                                    ),
+                                  ),
+                                  if (item.detail != null)
+                                    ExcludeSemantics(
+                                      child: StyledText(
+                                        item.detail!,
+                                        styleSpec: spec.itemDetail,
+                                      ),
+                                    ),
+                                  if (item.child != null) item.child!,
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+@MixableSpec(target: {{typePrefix}}Activity.new)
+@immutable
+final class {{typePrefix}}ActivitySpec with _${{typePrefix}}ActivitySpec {
+  @override
+  final StyleSpec<BoxSpec> viewport;
+  @override
+  final StyleSpec<FlexBoxSpec> item;
+  @override
+  final StyleSpec<TextSpec> summaryTitle;
+  @override
+  final StyleSpec<TextSpec> itemTitle;
+  @override
+  final StyleSpec<TextSpec> itemDetail;
+  @override
+  final StyleSpec<TextSpec> count;
+  @override
+  final StyleSpec<IconSpec> indicator;
+  @override
+  final StyleSpec<BoxSpec> pendingItem;
+  @override
+  final StyleSpec<BoxSpec> activeItem;
+  @override
+  final StyleSpec<BoxSpec> completedItem;
+  @override
+  final StyleSpec<IconSpec> pendingStatus;
+  @override
+  final StyleSpec<IconSpec> activeStatus;
+  @override
+  final StyleSpec<IconSpec> completedStatus;
+
+  const {{typePrefix}}ActivitySpec({
+    StyleSpec<BoxSpec>? viewport,
+    StyleSpec<FlexBoxSpec>? item,
+    StyleSpec<TextSpec>? summaryTitle,
+    StyleSpec<TextSpec>? itemTitle,
+    StyleSpec<TextSpec>? itemDetail,
+    StyleSpec<TextSpec>? count,
+    StyleSpec<IconSpec>? indicator,
+    StyleSpec<BoxSpec>? pendingItem,
+    StyleSpec<BoxSpec>? activeItem,
+    StyleSpec<BoxSpec>? completedItem,
+    StyleSpec<IconSpec>? pendingStatus,
+    StyleSpec<IconSpec>? activeStatus,
+    StyleSpec<IconSpec>? completedStatus,
+  }) : viewport = viewport ?? const StyleSpec(spec: BoxSpec()),
+       item = item ?? const StyleSpec(spec: FlexBoxSpec()),
+       summaryTitle = summaryTitle ?? const StyleSpec(spec: TextSpec()),
+       itemTitle = itemTitle ?? const StyleSpec(spec: TextSpec()),
+       itemDetail = itemDetail ?? const StyleSpec(spec: TextSpec()),
+       count = count ?? const StyleSpec(spec: TextSpec()),
+       indicator = indicator ?? const StyleSpec(spec: IconSpec()),
+       pendingItem = pendingItem ?? const StyleSpec(spec: BoxSpec()),
+       activeItem = activeItem ?? const StyleSpec(spec: BoxSpec()),
+       completedItem = completedItem ?? const StyleSpec(spec: BoxSpec()),
+       pendingStatus = pendingStatus ?? const StyleSpec(spec: IconSpec()),
+       activeStatus = activeStatus ?? const StyleSpec(spec: IconSpec()),
+       completedStatus = completedStatus ?? const StyleSpec(spec: IconSpec());
+}

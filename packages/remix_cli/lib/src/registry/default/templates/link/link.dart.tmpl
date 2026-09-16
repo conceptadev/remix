@@ -33,22 +33,21 @@ part 'link.g.dart';
 /// by depth: an override that must beat the recipe's hover color has to be
 /// declared as a hover fragment too (`LinkStyler().onHovered(...)`).
 @MixWidget(target: RemixLink.new)
-LinkStyler {{valuePrefix}}LinkStyle({
-  LinkStyler style = const LinkStyler.create(),
-}) => LinkStyler()
-    .label(
-      .color({{typePrefix}}Tokens.foreground())
-          .decoration(TextDecoration.underline)
-          .decorationColor({{typePrefix}}Tokens.border()),
-    )
-    // Hover and keyboard focus both promote the underline to full strength
-    // rather than adding one: an underline that appears on hover moves the
-    // text's baseline box on some platforms, and a link that is only
-    // underlined while hovered is invisible to a keyboard user.
-    .onHovered(_emphasized())
-    .onFocusVisible(_emphasized())
-    .onDisabled(_disabledStyle())
-    .merge(style);
+LinkStyler {{valuePrefix}}LinkStyle({LinkStyler style = const LinkStyler.create()}) =>
+    LinkStyler()
+        .label(
+          .color({{typePrefix}}Tokens.foreground())
+              .decoration(TextDecoration.underline)
+              .decorationColor({{typePrefix}}Tokens.border()),
+        )
+        // Hover and keyboard focus both promote the underline to full strength
+        // rather than adding one: an underline that appears on hover moves the
+        // text's baseline box on some platforms, and a link that is only
+        // underlined while hovered is invisible to a keyboard user.
+        .onHovered(_emphasized())
+        .onFocusVisible(_emphasized())
+        .onDisabled(_disabledStyle())
+        .merge(style);
 
 /// Opacity applied to the whole link while disabled.
 const _disabledOpacity = 0.5;

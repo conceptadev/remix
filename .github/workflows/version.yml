@@ -3,8 +3,8 @@ name: Prepare Version Bump
 # Pushes a branch that sets Remix to one explicit version and writes its
 # changelog from conventional commits. It never tags and never publishes:
 # `publish.yml` fires on a tag push, so the tag is pushed by hand after this PR
-# is reviewed and merged. remix_fortal is an unpublished authoring package and
-# is deliberately outside this workflow.
+# is reviewed and merged. registry_source is the unpublished authoring source
+# and is deliberately outside this workflow.
 #
 # It pushes a branch and prints its compare link rather than opening the pull
 # request itself. Opening one from a workflow needs "Allow GitHub Actions to
@@ -89,7 +89,7 @@ jobs:
           # Disable dependent constraint and version propagation too: melos
           # otherwise rewrites and can version workspace dependents even when
           # the initial package filter selects only Remix, which would pull the
-          # unpublished remix_fortal authoring package back into releases.
+          # unpublished registry_source authoring package back into releases.
           dart run melos version \
             --scope=remix \
             --no-dependent-constraints \
@@ -108,7 +108,7 @@ jobs:
           # The Fortal preset copies its dependency floors from the default
           # registry. Rebuild it immediately after the default floor moves so
           # the two committed registry trees cannot disagree.
-          dart run tool/build_fortal_preset.dart
+          dart run tool/build_registry.dart
 
           # Verify the released Remix version and registry floor agree. This
           # also fails when the sync step above did not run.

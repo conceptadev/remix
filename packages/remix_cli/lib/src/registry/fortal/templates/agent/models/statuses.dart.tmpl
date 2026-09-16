@@ -1,0 +1,146 @@
+/// Status of a long-running turn or activity ledger.
+enum {{typePrefix}}RunStatus {
+  /// Work is in progress. Disclosures stay open.
+  working,
+
+  /// Work finished. Disclosures may collapse.
+  complete,
+}
+
+/// Status of a streamed answer.
+enum {{typePrefix}}AnswerStatus {
+  /// Tokens are still arriving.
+  streaming,
+
+  /// The answer finished successfully.
+  complete,
+
+  /// The answer failed.
+  error,
+}
+
+/// Status of an in-transcript tool permission.
+///
+/// This is a machine, not a boolean loading flag. Actions are offered only
+/// while [pending].
+enum {{typePrefix}}PermissionStatus {
+  /// Waiting for a human decision.
+  pending,
+
+  /// A decision was submitted and is being recorded.
+  deciding,
+
+  /// The host accepted this invocation.
+  allowed,
+
+  /// The approved tool is executing.
+  running,
+
+  /// The approved tool finished.
+  complete,
+
+  /// The host refused this invocation.
+  denied,
+
+  /// Permission or execution failed.
+  error,
+}
+
+/// Status of a tool execution disclosure.
+enum {{typePrefix}}ExecutionStatus {
+  /// Output is still arriving.
+  running,
+
+  /// The tool finished successfully.
+  success,
+
+  /// The tool failed.
+  error,
+
+  /// The host or runtime cancelled the tool.
+  cancelled,
+}
+
+/// Status of one item in a task plan.
+enum {{typePrefix}}PlanItemStatus {
+  /// Not started.
+  pending,
+
+  /// Currently underway.
+  inProgress,
+
+  /// Finished successfully.
+  completed,
+
+  /// Abandoned or skipped.
+  cancelled,
+}
+
+/// Status of one row in an activity ledger.
+enum {{typePrefix}}ActivityItemStatus {
+  /// Not yet started.
+  pending,
+
+  /// The current step.
+  active,
+
+  /// Finished.
+  complete,
+}
+
+/// Who authored a transcript row.
+enum {{typePrefix}}Role {
+  /// The human operator.
+  user,
+
+  /// The assistant replying to the operator.
+  assistant,
+}
+
+/// Whether a permission or execution is still occupying the operator.
+extension {{typePrefix}}PermissionStatusX on {{typePrefix}}PermissionStatus {
+  /// True until a terminal outcome. [pending] is working (HITL in flight)
+  /// but does not keep parameter details open.
+  bool get isWorking => !isSettled;
+
+  /// True after a terminal decision or outcome.
+  bool get isSettled =>
+      this == {{typePrefix}}PermissionStatus.complete ||
+      this == {{typePrefix}}PermissionStatus.denied ||
+      this == {{typePrefix}}PermissionStatus.error;
+
+  /// True while parameter details stay open without a user toggle.
+  /// Pending starts closed.
+  bool get keepsDetailsOpen =>
+      this == {{typePrefix}}PermissionStatus.deciding ||
+      this == {{typePrefix}}PermissionStatus.allowed ||
+      this == {{typePrefix}}PermissionStatus.running;
+}
+
+/// Working vs settled for an execution disclosure.
+extension {{typePrefix}}ExecutionStatusX on {{typePrefix}}ExecutionStatus {
+  /// True while output should stay expanded.
+  bool get isWorking => this == {{typePrefix}}ExecutionStatus.running;
+
+  /// True after a terminal outcome.
+  bool get isSettled => !isWorking;
+}
+
+/// Working vs settled for a streamed answer.
+extension {{typePrefix}}AnswerStatusX on {{typePrefix}}AnswerStatus {
+  /// True while tokens are still arriving.
+  bool get isStreaming => this == {{typePrefix}}AnswerStatus.streaming;
+
+  /// True when completion actions may appear.
+  bool get showsActions =>
+      this == {{typePrefix}}AnswerStatus.complete || this == {{typePrefix}}AnswerStatus.error;
+}
+
+/// Working vs settled for a plan item.
+extension {{typePrefix}}PlanItemStatusX on {{typePrefix}}PlanItemStatus {
+  bool get isActive => this == {{typePrefix}}PlanItemStatus.inProgress;
+
+  bool get isDone =>
+      this == {{typePrefix}}PlanItemStatus.completed ||
+      this == {{typePrefix}}PlanItemStatus.cancelled;
+}

@@ -93,7 +93,7 @@ class _ViewportFrame extends StatelessWidget {
       ),
     );
 
-    // Note: FortalScope is applied by the component registry wrapper.
+    // Note: the theme scope is applied by the component registry wrapper.
     return Stack(
       children: [
         frame,

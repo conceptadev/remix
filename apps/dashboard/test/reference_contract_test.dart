@@ -17,7 +17,7 @@ import 'package:dashboard/widgets/theme_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:dashboard/ui/ui.dart';
 
 void main() {
   group('gallery preset contracts', () {
@@ -46,31 +46,27 @@ void main() {
     ) async {
       await _pumpPage(tester, const GalleryActionsPage());
 
-      _expectCartesian<FortalButton, FortalButtonVariant, FortalButtonSize>(
+      _expectCartesian<UiButton, UiButtonVariant, UiButtonSize>(
         tester,
         within: _sectionChild(tester, 'Button'),
-        rows: FortalButtonVariant.values,
-        columns: FortalButtonSize.values,
+        rows: UiButtonVariant.values,
+        columns: UiButtonSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<
-        FortalIconButton,
-        FortalIconButtonVariant,
-        FortalIconButtonSize
-      >(
+      _expectCartesian<UiIconButton, UiIconButtonVariant, UiIconButtonSize>(
         tester,
         within: _sectionChild(tester, 'Icon button'),
-        rows: FortalIconButtonVariant.values,
-        columns: FortalIconButtonSize.values,
+        rows: UiIconButtonVariant.values,
+        columns: UiIconButtonSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalToggle, FortalToggleVariant, FortalToggleSize>(
+      _expectCartesian<UiToggle, UiToggleVariant, UiToggleSize>(
         tester,
         within: _sectionChild(tester, 'Toggle'),
-        rows: FortalToggleVariant.values,
-        columns: FortalToggleSize.values,
+        rows: UiToggleVariant.values,
+        columns: UiToggleSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
@@ -81,99 +77,83 @@ void main() {
     ) async {
       await _pumpPage(tester, const GalleryFormsPage());
 
-      _expectCartesian<
-        FortalTextField,
-        FortalTextFieldVariant,
-        FortalTextFieldSize
-      >(
+      _expectCartesian<UiTextField, UiTextFieldVariant, UiTextFieldSize>(
         tester,
         within: _sectionChild(tester, 'Text field'),
-        rows: FortalTextFieldVariant.values,
-        columns: FortalTextFieldSize.values,
+        rows: UiTextFieldVariant.values,
+        columns: UiTextFieldSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<
-        FortalTextArea,
-        FortalTextAreaVariant,
-        FortalTextAreaSize
-      >(
+      _expectCartesian<UiTextArea, UiTextAreaVariant, UiTextAreaSize>(
         tester,
         within: _sectionChild(tester, 'Text area'),
-        rows: FortalTextAreaVariant.values,
-        columns: FortalTextAreaSize.values,
+        rows: UiTextAreaVariant.values,
+        columns: UiTextAreaSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
       _expectCartesian<
-        FortalSegmentedControl<String>,
-        FortalSegmentedControlVariant,
-        FortalSegmentedControlSize
+        UiSegmentedControl<String>,
+        UiSegmentedControlVariant,
+        UiSegmentedControlSize
       >(
         tester,
         within: _sectionChild(tester, 'Segmented control'),
-        rows: FortalSegmentedControlVariant.values,
-        columns: FortalSegmentedControlSize.values,
+        rows: UiSegmentedControlVariant.values,
+        columns: UiSegmentedControlSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<
-        FortalSelect<String>,
-        FortalSelectVariant,
-        FortalSelectSize
-      >(
+      _expectCartesian<UiSelect<String>, UiSelectVariant, UiSelectSize>(
         tester,
         within: _sectionChild(tester, 'Select'),
-        rows: FortalSelectVariant.values,
-        columns: FortalSelectSize.values,
+        rows: UiSelectVariant.values,
+        columns: UiSelectSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
       _expectCartesian<
-        FortalToggleGroup<String>,
-        FortalToggleGroupVariant,
-        FortalToggleGroupSize
+        UiToggleGroup<String>,
+        UiToggleGroupVariant,
+        UiToggleGroupSize
       >(
         tester,
         within: _sectionChild(tester, 'Toggle group'),
-        rows: FortalToggleGroupVariant.values,
-        columns: FortalToggleGroupSize.values,
+        rows: UiToggleGroupVariant.values,
+        columns: UiToggleGroupSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<
-        FortalCheckbox,
-        FortalCheckboxVariant,
-        FortalCheckboxSize
-      >(
+      _expectCartesian<UiCheckbox, UiCheckboxVariant, UiCheckboxSize>(
         tester,
         within: _sectionChild(tester, 'Checkbox'),
-        rows: FortalCheckboxVariant.values,
-        columns: FortalCheckboxSize.values,
+        rows: UiCheckboxVariant.values,
+        columns: UiCheckboxSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalRadio<int>, FortalRadioVariant, FortalRadioSize>(
+      _expectCartesian<UiRadio<int>, UiRadioVariant, UiRadioSize>(
         tester,
         within: _sectionChild(tester, 'Radio'),
-        rows: FortalRadioVariant.values,
-        columns: FortalRadioSize.values,
+        rows: UiRadioVariant.values,
+        columns: UiRadioSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalSwitch, FortalSwitchVariant, FortalSwitchSize>(
+      _expectCartesian<UiSwitch, UiSwitchVariant, UiSwitchSize>(
         tester,
         within: _sectionChild(tester, 'Switch'),
-        rows: FortalSwitchVariant.values,
-        columns: FortalSwitchSize.values,
+        rows: UiSwitchVariant.values,
+        columns: UiSwitchSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalSlider, FortalSliderVariant, FortalSliderSize>(
+      _expectCartesian<UiSlider, UiSliderVariant, UiSliderSize>(
         tester,
         within: _sectionChild(tester, 'Slider'),
-        rows: FortalSliderVariant.values,
-        columns: FortalSliderSize.values,
+        rows: UiSliderVariant.values,
+        columns: UiSliderSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
@@ -184,55 +164,51 @@ void main() {
     ) async {
       await _pumpPage(tester, const GalleryDisplayPage());
 
-      _expectCartesian<FortalAvatar, FortalAvatarVariant, FortalAvatarSize>(
+      _expectCartesian<UiAvatar, UiAvatarVariant, UiAvatarSize>(
         tester,
         within: _sectionChild(tester, 'Avatar'),
-        rows: FortalAvatarVariant.values,
-        columns: FortalAvatarSize.values,
+        rows: UiAvatarVariant.values,
+        columns: UiAvatarSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalBadge, FortalBadgeVariant, FortalBadgeSize>(
+      _expectCartesian<UiBadge, UiBadgeVariant, UiBadgeSize>(
         tester,
         within: _sectionChild(tester, 'Badge'),
-        rows: FortalBadgeVariant.values,
-        columns: FortalBadgeSize.values,
+        rows: UiBadgeVariant.values,
+        columns: UiBadgeSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalCard, FortalCardVariant, FortalCardSize>(
+      _expectCartesian<UiCard, UiCardVariant, UiCardSize>(
         tester,
         within: _sectionChild(tester, 'Card'),
-        rows: FortalCardVariant.values,
-        columns: FortalCardSize.values,
+        rows: UiCardVariant.values,
+        columns: UiCardSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalCallout, FortalCalloutVariant, FortalCalloutSize>(
+      _expectCartesian<UiCallout, UiCalloutVariant, UiCalloutSize>(
         tester,
         within: _sectionChild(tester, 'Callout'),
-        rows: FortalCalloutVariant.values,
-        columns: FortalCalloutSize.values,
+        rows: UiCalloutVariant.values,
+        columns: UiCalloutSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<
-        FortalProgress,
-        FortalProgressVariant,
-        FortalProgressSize
-      >(
+      _expectCartesian<UiProgress, UiProgressVariant, UiProgressSize>(
         tester,
         within: _sectionChild(tester, 'Progress'),
-        rows: FortalProgressVariant.values,
-        columns: FortalProgressSize.values,
+        rows: UiProgressVariant.values,
+        columns: UiProgressSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectCartesian<FortalDataList, Axis, FortalDataListSize>(
+      _expectCartesian<UiDataList, Axis, UiDataListSize>(
         tester,
         within: _sectionChild(tester, 'Data list'),
         rows: Axis.values,
-        columns: FortalDataListSize.values,
+        columns: UiDataListSize.values,
         rowOf: (widget) => widget.orientation,
         columnOf: (widget) => widget.size,
       );
@@ -244,81 +220,77 @@ void main() {
       await _pumpPage(tester, const GalleryNavigationPage());
 
       final sidebarSection = _sectionChild(tester, 'Sidebar');
-      final sidebar = tester.widget<FortalSidebar<String>>(
-        _within<FortalSidebar<String>>(sidebarSection),
+      final sidebar = tester.widget<UiSidebar<String>>(
+        _within<UiSidebar<String>>(sidebarSection),
       );
       expect(sidebar.selectedValue, 'overview');
       expect(sidebar.sections, hasLength(2));
       expect(sidebar.header, isNotNull);
       expect(sidebar.footer, isNotNull);
 
-      _expectValues<FortalTab, FortalTabsSize>(
+      _expectValues<UiTab, UiTabsSize>(
         tester,
         within: _sectionChild(tester, 'Tabs'),
-        expected: FortalTabsSize.values,
+        expected: UiTabsSize.values,
         valueOf: (widget) => widget.size,
       );
-      _expectCartesian<
-        FortalDisclosure,
-        FortalDisclosureVariant,
-        FortalDisclosureSize
-      >(
+      _expectCartesian<UiDisclosure, UiDisclosureVariant, UiDisclosureSize>(
         tester,
         within: _sectionChild(tester, 'Disclosure'),
-        rows: FortalDisclosureVariant.values,
-        columns: FortalDisclosureSize.values,
+        rows: UiDisclosureVariant.values,
+        columns: UiDisclosureSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
       _expectCartesian<
-        FortalAccordion<String>,
-        FortalAccordionVariant,
-        FortalAccordionSize
+        UiAccordion<String>,
+        UiAccordionVariant,
+        UiAccordionSize
       >(
         tester,
         within: _sectionChild(tester, 'Accordion'),
-        rows: FortalAccordionVariant.values,
-        columns: FortalAccordionSize.values,
+        rows: UiAccordionVariant.values,
+        columns: UiAccordionSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
 
       await _pumpPage(tester, const GalleryOverlaysPage());
-      _expectCartesian<FortalMenu<String>, FortalMenuVariant, FortalMenuSize>(
+      _expectCartesian<UiMenu<String>, UiMenuVariant, UiMenuSize>(
         tester,
         within: _sectionChild(tester, 'Menu'),
-        rows: FortalMenuVariant.values,
-        columns: FortalMenuSize.values,
+        rows: UiMenuVariant.values,
+        columns: UiMenuSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
-      _expectValues<FortalPopover, FortalPopoverSize>(
+      _expectValues<UiPopover, UiPopoverSize>(
         tester,
         within: _sectionChild(tester, 'Popover'),
-        expected: FortalPopoverSize.values,
+        expected: UiPopoverSize.values,
         valueOf: (widget) => widget.size,
       );
 
       final dialogSection = _sectionChild(tester, 'Dialog');
       final dialogMatrix = tester
-          .widget<GalleryEnumMatrix<FortalDialogAlign, FortalDialogSize>>(
+          .widget<GalleryEnumMatrix<UiDialogAlign, UiDialogSize>>(
             dialogSection,
           );
-      expect(dialogMatrix.rows, FortalDialogAlign.values);
-      expect(dialogMatrix.columns, FortalDialogSize.values);
+      expect(dialogMatrix.rows, UiDialogAlign.values);
+      expect(dialogMatrix.columns, UiDialogSize.values);
       expect(
         tester
-            .widgetList<FortalButton>(
+            .widgetList<UiButton>(
               find.descendant(
                 of: dialogSection,
-                matching: find.byType(FortalButton),
+                matching: find.byType(UiButton),
               ),
             )
             .map((button) => button.semanticLabel)
             .toSet(),
         {
-          for (final align in FortalDialogAlign.values)
-            for (final size in FortalDialogSize.values)
+          for (final align in UiDialogAlign.values)
+            for (final size in UiDialogSize.values)
               'Open ${enumLabel(align)} ${enumLabel(size)} dialog',
         },
       );
@@ -327,19 +299,19 @@ void main() {
     testWidgets('typography matrices use typed preset values', (tester) async {
       await _pumpPage(tester, const GalleryTypographyPage());
 
-      _expectCartesian<FortalCode, FortalCodeVariant, bool>(
+      _expectCartesian<UiCode, UiCodeVariant, bool>(
         tester,
         within: _sectionChild(tester, 'Code'),
-        rows: FortalCodeVariant.values,
+        rows: UiCodeVariant.values,
         columns: const [false, true],
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.highContrast,
       );
-      _expectCartesian<FortalKbd, FortalKbdVariant, FortalTextSize?>(
+      _expectCartesian<UiKbd, UiKbdVariant, UiTextSize?>(
         tester,
         within: _sectionChild(tester, 'Keyboard keys'),
-        rows: FortalKbdVariant.values,
-        columns: FortalTextSize.values,
+        rows: UiKbdVariant.values,
+        columns: UiTextSize.values,
         rowOf: (widget) => widget.variant,
         columnOf: (widget) => widget.size,
       );
@@ -347,21 +319,21 @@ void main() {
       final weights = _sectionChild(tester, 'Weights');
       for (final values in [
         tester
-            .widgetList<FortalText>(_within<FortalText>(weights))
+            .widgetList<UiText>(_within<UiText>(weights))
             .map((widget) => widget.weight),
         tester
-            .widgetList<FortalHeading>(_within<FortalHeading>(weights))
+            .widgetList<UiHeading>(_within<UiHeading>(weights))
             .map((widget) => widget.weight),
         tester
-            .widgetList<FortalCode>(_within<FortalCode>(weights))
+            .widgetList<UiCode>(_within<UiCode>(weights))
             .map((widget) => widget.weight),
         tester
-            .widgetList<FortalLink>(_within<FortalLink>(weights))
+            .widgetList<UiLink>(_within<UiLink>(weights))
             .map((widget) => widget.weight),
       ]) {
         final actual = values.toList();
-        expect(actual, hasLength(FortalTextWeight.values.length));
-        expect(actual.toSet(), FortalTextWeight.values.toSet());
+        expect(actual, hasLength(UiTextWeight.values.length));
+        expect(actual.toSet(), UiTextWeight.values.toSet());
       }
     });
 
@@ -377,9 +349,9 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
       }
 
-      final dialog = tester.widget<FortalDialog>(find.byType(FortalDialog));
-      expect(dialog.align, FortalDialogAlign.start);
-      expect(dialog.size, FortalDialogSize.size1);
+      final dialog = tester.widget<UiDialog>(find.byType(UiDialog));
+      expect(dialog.align, UiDialogAlign.start);
+      expect(dialog.size, UiDialogSize.size1);
     });
   });
 
@@ -392,7 +364,7 @@ void main() {
           settings: const ThemeSettings(),
           onChanged: (_) {},
           child: MaterialApp(
-            builder: (context, child) => FortalScope(child: child!),
+            builder: (context, child) => UiScope(child: child!),
             home: const Scaffold(body: ThemePanel()),
           ),
         ),
@@ -400,20 +372,17 @@ void main() {
 
       expect(_segmentedValues<ThemeMode>(tester), ThemeMode.values);
       expect(
-        _segmentedValues<FortalPanelBackground>(tester),
-        FortalPanelBackground.values,
+        _segmentedValues<UiPanelBackground>(tester),
+        UiPanelBackground.values,
       );
-      expect(_segmentedValues<FortalRadius>(tester), FortalRadius.values);
-      expect(_segmentedValues<FortalScaling>(tester), FortalScaling.values);
+      expect(_segmentedValues<UiRadius>(tester), UiRadius.values);
+      expect(_segmentedValues<UiScaling>(tester), UiScaling.values);
 
-      final gray = tester.widget<FortalSelect<FortalGrayColor>>(
-        find.byType(FortalSelect<FortalGrayColor>),
+      final gray = tester.widget<UiSelect<UiGrayColor>>(
+        find.byType(UiSelect<UiGrayColor>),
       );
-      expect(
-        gray.items.map((item) => item.value).toList(),
-        FortalGrayColor.values,
-      );
-      for (final accent in FortalAccentColor.values) {
+      expect(gray.items.map((item) => item.value).toList(), UiGrayColor.values);
+      for (final accent in UiAccentColor.values) {
         expect(find.byKey(ValueKey('accent-${accent.name}')), findsOneWidget);
       }
     });
@@ -438,10 +407,10 @@ void main() {
       );
       await tester.pump();
 
-      final root = FortalTheme.of(tester.element(find.byType(DashboardShell)));
-      final danger = FortalTheme.of(tester.element(find.text('Danger zone')));
+      final root = UiTheme.of(tester.element(find.byType(DashboardShell)));
+      final danger = UiTheme.of(tester.element(find.text('Danger zone')));
 
-      expect(danger.accent, FortalAccentColor.red);
+      expect(danger.accent, UiAccentColor.red);
       expect(danger.gray, root.gray);
       expect(danger.brightness, root.brightness);
       expect(danger.panelBackground, root.panelBackground);
@@ -464,7 +433,7 @@ void main() {
         ),
       );
 
-      const expectedAccents = <String, FortalAccentColor>{
+      const expectedAccents = <String, UiAccentColor>{
         'Paid': .green,
         'Pending': .amber,
         'Refunded': .red,
@@ -475,15 +444,15 @@ void main() {
       };
       for (final entry in expectedAccents.entries) {
         expect(
-          FortalTheme.of(tester.element(find.text(entry.key))).accent,
+          UiTheme.of(tester.element(find.text(entry.key))).accent,
           entry.value,
           reason: entry.key,
         );
       }
       expect(
-        tester.widgetList<FortalBadge>(find.byType(FortalBadge)),
+        tester.widgetList<UiBadge>(find.byType(UiBadge)),
         everyElement(
-          isA<FortalBadge>().having(
+          isA<UiBadge>().having(
             (badge) => badge.highContrast,
             'highContrast',
             isTrue,
@@ -497,7 +466,7 @@ void main() {
 Future<void> _pumpPage(WidgetTester tester, Widget page) {
   return tester.pumpWidget(
     MaterialApp(
-      builder: (context, child) => FortalScope(child: child!),
+      builder: (context, child) => UiScope(child: child!),
       home: Scaffold(body: page),
     ),
   );
@@ -549,8 +518,8 @@ void _expectValues<W extends Widget, V>(
 }
 
 List<T> _segmentedValues<T extends Enum>(WidgetTester tester) {
-  final control = tester.widget<FortalSegmentedControl<T>>(
-    find.byType(FortalSegmentedControl<T>),
+  final control = tester.widget<UiSegmentedControl<T>>(
+    find.byType(UiSegmentedControl<T>),
   );
   return control.items.map((item) => item.value).toList();
 }

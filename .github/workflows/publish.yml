@@ -32,9 +32,8 @@ name: Publish to pub.dev
 # remix_cli, remix_ui_icons, and naked_ui are versioned independently from
 # Remix.
 # The CLI consumer check requires its bundled Remix version to exist before
-# the CLI can publish. remix_fortal is not publishable; its
-# source remains in the repository as the Fortal preset's analyzed authoring
-# and parity surface.
+# the CLI can publish. Nothing under `registry_source/` is publishable; it is
+# the private authored catalog the bundled presets derive from.
 on:
   push:
     tags:

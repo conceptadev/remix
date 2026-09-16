@@ -1,0 +1,46 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../components/disclosure.dart';
+import '../components/plan.dart';
+import '../theme/tokens.dart';
+
+@immutable
+final class {{typePrefix}}AgentPlanRecipe {
+  const {{typePrefix}}AgentPlanRecipe({
+    required this.style,
+    required this.disclosureStyle,
+  });
+  final {{typePrefix}}PlanStyler style;
+  final DisclosureStyler disclosureStyle;
+}
+
+{{typePrefix}}AgentPlanRecipe {{valuePrefix}}AgentPlanRecipe({
+  {{typePrefix}}PlanStyler style = const {{typePrefix}}PlanStyler.create(),
+  DisclosureStyler disclosureStyle = const DisclosureStyler.create(),
+}) => {{typePrefix}}AgentPlanRecipe(
+  style: {{typePrefix}}PlanStyler(
+    viewport: BoxStyler().maxHeight(220),
+    item: FlexBoxStyler().spacing(6).padding(.symmetric(vertical: 6)),
+    summaryTitle: TextStyler()
+        .color({{typePrefix}}Tokens.foreground())
+        .fontSize(14)
+        .fontWeight(FontWeight.w600),
+    itemTitle: TextStyler().color({{typePrefix}}Tokens.foreground()).fontSize(14),
+    itemDetail: TextStyler()
+        .color({{typePrefix}}Tokens.mutedForeground())
+        .fontSize(12),
+    count: TextStyler()
+        .color({{typePrefix}}Tokens.mutedForeground())
+        .fontSize(12)
+        .wrap(.padding(.only(right: 8))),
+    indicator: IconStyler().color({{typePrefix}}Tokens.foreground()).size(16),
+    pendingStatus: IconStyler().color({{typePrefix}}Tokens.mutedForeground()).size(18),
+    activeStatus: IconStyler().color({{typePrefix}}Tokens.primary()).size(18),
+    completedStatus: IconStyler().color({{typePrefix}}Tokens.primary()).size(18),
+    cancelledStatus: IconStyler()
+        .color({{typePrefix}}Tokens.mutedForeground())
+        .size(18),
+  ).merge(style),
+  disclosureStyle: {{valuePrefix}}DisclosureStyle(style: disclosureStyle),
+);

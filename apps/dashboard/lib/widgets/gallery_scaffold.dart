@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../utils/text.dart';
 import 'page_header.dart';
@@ -45,7 +45,7 @@ class GallerySection extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => FortalCard(
+  Widget build(BuildContext context) => UiCard(
     size: .size2,
     child: Column(
       crossAxisAlignment: .stretch,
@@ -79,8 +79,8 @@ class GalleryMatrix<R, C> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final divider = BorderSideMix(color: FortalTokens.grayA5(), width: 1);
-    final borderRadius = BorderRadiusMix.all(FortalTokens.radius3());
+    final divider = BorderSideMix(color: UiTokens.grayA5(), width: 1);
+    final borderRadius = BorderRadiusMix.all(UiTokens.radius3());
     final GridBoxStyler gridStyle = .columns([
       const .fixed(112),
       for (final _ in columns) .fixed(cellWidth),

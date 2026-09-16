@@ -1,0 +1,48 @@
+import 'package:flutter/widgets.dart';
+import 'package:remix/remix.dart';
+
+import '../components/button.dart';
+import '../components/card.dart';
+import '../components/message.dart';
+
+@immutable
+final class {{typePrefix}}AgentMessageRecipe {
+  const {{typePrefix}}AgentMessageRecipe({
+    required this.style,
+    required this.surfaceStyle,
+    required this.collapsibleStyle,
+    required this.toggleStyle,
+  });
+  final {{typePrefix}}MessageStyler style;
+  final CardStyler surfaceStyle;
+  final {{typePrefix}}MessageCollapsibleStyler collapsibleStyle;
+  final ButtonStyler toggleStyle;
+}
+
+{{typePrefix}}AgentMessageRecipe {{valuePrefix}}AgentMessageRecipe({
+  {{typePrefix}}MessageStyler style = const {{typePrefix}}MessageStyler.create(),
+  CardStyler surfaceStyle = const CardStyler.create(),
+  {{typePrefix}}MessageCollapsibleStyler collapsibleStyle =
+      const {{typePrefix}}MessageCollapsibleStyler.create(),
+  ButtonStyler toggleStyle = const ButtonStyler.create(),
+}) => {{typePrefix}}AgentMessageRecipe(
+  style: {{typePrefix}}MessageStyler(
+    row: FlexBoxStyler().mainAxisSize(.max).spacing(8),
+    avatar: BoxStyler().size(28, 28),
+    header: BoxStyler().padding(.only(bottom: 6)),
+    body: BoxStyler(),
+    footer: BoxStyler().padding(.only(top: 4)),
+    maxWidth: 640,
+  ).merge(style),
+  surfaceStyle: {{valuePrefix}}CardStyle(style: surfaceStyle),
+  collapsibleStyle: {{typePrefix}}MessageCollapsibleStyler(
+    collapsedHeight: 72,
+    container: BoxStyler(),
+    clipped: BoxStyler(),
+  ).merge(collapsibleStyle),
+  toggleStyle: {{valuePrefix}}ButtonStyle(
+    variant: .ghost,
+    size: .size1,
+    style: toggleStyle,
+  ),
+);

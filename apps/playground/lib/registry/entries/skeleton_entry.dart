@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../../ui/ui.dart';
 
 import '../../widgets/spaced_column.dart';
 
@@ -21,7 +21,7 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final base = fortalSkeletonStyle();
+    final base = playgroundSkeletonStyle();
 
     return SpacedColumn(
       spacing: 24,
@@ -45,11 +45,11 @@ class _SkeletonPreviewState extends State<_SkeletonPreview> {
         _Section(
           title: 'Child-sized — no layout shift',
           children: [
-            FortalSkeleton(
+            PlaygroundSkeleton(
               loading: _loading,
               child: const Text('Jane Appleseed — jane@example.com'),
             ),
-            FortalSkeleton(
+            PlaygroundSkeleton(
               loading: _loading,
               child: RemixButton(label: 'Open profile', onPressed: () {}),
             ),

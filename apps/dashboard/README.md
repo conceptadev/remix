@@ -11,6 +11,18 @@ matrices. The [component catalog](../demo/) remains the exhaustive source for
 every API state and preview knob; the dashboard is the copyable product
 implementation.
 
+## Registry ownership
+
+The dashboard selects the Fortal preset with prefix `Ui` in `remix.yaml`.
+Its full component catalog and eight Agent recipe bundles are installed under
+`lib/ui/`; the dogfood check compares them with the bundled registry. The pages,
+shell, and local simulated runner remain application-owned, not a standalone
+installable dashboard template.
+
+Open **Workspace → Chat** to review the Agent surfaces together. No model or
+tool service is contacted. The [Agent component docs](../../docs/agent/transcript.mdx)
+describe installation and host responsibilities.
+
 ## Reference rules
 
 - Gallery axes pass typed values from the Fortal enums that label them. A new

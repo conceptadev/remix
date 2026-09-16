@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../../ui/ui.dart';
 
 import '../../utils/text.dart';
 import '../../widgets/disclosure_trigger.dart';
@@ -24,9 +24,9 @@ class GalleryNavigationPage extends StatelessWidget {
       GallerySection(
         label: 'Tabs',
         description: 'Both tab sizes with live keyboard and pointer selection.',
-        child: GalleryMatrix<String, FortalTabsSize>(
+        child: GalleryMatrix<String, UiTabsSize>(
           rows: const ['Tabs'],
-          columns: FortalTabsSize.values,
+          columns: UiTabsSize.values,
           rowLabelBuilder: (label) => label,
           columnLabelBuilder: enumLabel,
           cellWidth: 320,
@@ -38,8 +38,8 @@ class GalleryNavigationPage extends StatelessWidget {
         description:
             'Independent expandable panels in every Fortal variant and size.',
         child: GalleryEnumMatrix(
-          rows: FortalDisclosureVariant.values,
-          columns: FortalDisclosureSize.values,
+          rows: UiDisclosureVariant.values,
+          columns: UiDisclosureSize.values,
           cellWidth: 300,
           cellBuilder: (_, variant, size) =>
               _DisclosureDemo(variant: variant, size: size),
@@ -50,8 +50,8 @@ class GalleryNavigationPage extends StatelessWidget {
         description:
             'Coordinated disclosure items where only one panel stays open.',
         child: GalleryEnumMatrix(
-          rows: FortalAccordionVariant.values,
-          columns: FortalAccordionSize.values,
+          rows: UiAccordionVariant.values,
+          columns: UiAccordionSize.values,
           cellWidth: 300,
           cellBuilder: (_, variant, size) =>
               _AccordionDemo(variant: variant, size: size),
@@ -108,7 +108,7 @@ class _SidebarDemoState extends State<_SidebarDemo> {
     child: SizedBox(
       width: 280,
       height: 320,
-      child: FortalSidebar<String>(
+      child: UiSidebar<String>(
         header: const _SidebarDemoHeader(),
         sections: _sections,
         selectedValue: _selected,
@@ -126,7 +126,7 @@ class _SidebarDemoHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-    child: const FortalText('Acme', size: .size4, weight: .bold),
+    child: const UiText('Acme', size: .size4, weight: .bold),
   );
 }
 
@@ -139,8 +139,8 @@ class _SidebarDemoFooter extends StatelessWidget {
     child: Row(
       spacing: 10,
       children: [
-        const FortalAvatar(label: 'AC', size: .size1),
-        const FortalText('Ada Chen', size: .size2, weight: .medium),
+        const UiAvatar(label: 'AC', size: .size1),
+        const UiText('Ada Chen', size: .size2, weight: .medium),
       ],
     ),
   );
@@ -149,13 +149,13 @@ class _SidebarDemoFooter extends StatelessWidget {
 class _DisclosureDemo extends StatelessWidget {
   const _DisclosureDemo({required this.variant, required this.size});
 
-  final FortalDisclosureVariant variant;
-  final FortalDisclosureSize size;
+  final UiDisclosureVariant variant;
+  final UiDisclosureSize size;
 
   @override
   Widget build(BuildContext context) => SizedBox(
     width: 280,
-    child: FortalDisclosure(
+    child: UiDisclosure(
       key: ValueKey('disclosure-${variant.name}-${size.name}'),
       variant: variant,
       size: size,
@@ -174,7 +174,7 @@ class _DisclosureDemo extends StatelessWidget {
 
 class _TabsDemo extends StatefulWidget {
   const _TabsDemo({required this.size});
-  final FortalTabsSize size;
+  final UiTabsSize size;
 
   @override
   State<_TabsDemo> createState() => _TabsDemoState();
@@ -191,34 +191,26 @@ class _TabsDemoState extends State<_TabsDemo> {
       crossAxisAlignment: .stretch,
       spacing: 10,
       children: [
-        FortalTabBar(
+        UiTabBar(
           child: Row(
             children: [
-              FortalTab(
-                size: widget.size,
-                tabId: 'overview',
-                label: 'Overview',
-              ),
-              FortalTab(
-                size: widget.size,
-                tabId: 'activity',
-                label: 'Activity',
-              ),
+              UiTab(size: widget.size, tabId: 'overview', label: 'Overview'),
+              UiTab(size: widget.size, tabId: 'activity', label: 'Activity'),
             ],
           ),
         ),
-        FortalTabView(
+        UiTabView(
           tabId: 'overview',
           child: const Padding(
             padding: EdgeInsets.all(8),
-            child: FortalText('Overview content'),
+            child: UiText('Overview content'),
           ),
         ),
-        FortalTabView(
+        UiTabView(
           tabId: 'activity',
           child: const Padding(
             padding: EdgeInsets.all(8),
-            child: FortalText('Activity content'),
+            child: UiText('Activity content'),
           ),
         ),
       ],
@@ -228,8 +220,8 @@ class _TabsDemoState extends State<_TabsDemo> {
 
 class _AccordionDemo extends StatefulWidget {
   const _AccordionDemo({required this.variant, required this.size});
-  final FortalAccordionVariant variant;
-  final FortalAccordionSize size;
+  final UiAccordionVariant variant;
+  final UiAccordionSize size;
 
   @override
   State<_AccordionDemo> createState() => _AccordionDemoState();
@@ -251,21 +243,21 @@ class _AccordionDemoState extends State<_AccordionDemo> {
     child: Column(
       spacing: 8,
       children: [
-        FortalAccordion<String>(
+        UiAccordion<String>(
           variant: widget.variant,
           size: widget.size,
           value: 'details',
           title: 'What is Fortal?',
-          child: const FortalText(
+          child: const UiText(
             'A Radix-inspired theme and component system for Flutter.',
           ),
         ),
-        FortalAccordion<String>(
+        UiAccordion<String>(
           variant: widget.variant,
           size: widget.size,
           value: 'tokens',
           title: 'Does it support tokens?',
-          child: const FortalText(
+          child: const UiText(
             'Every recipe resolves through the active Mix scope.',
           ),
         ),

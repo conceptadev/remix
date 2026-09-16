@@ -6,6 +6,7 @@
 - Add controlled sidebar collapse, coordinated width/content transitions configured with AnimationStyle, accessible icon-only destinations, and styled tooltips.
 - Add controlled tooltip visibility and preserve enclosing dismissal actions when closed.
 - Add `RemixToastScope`, `showRemixToast`, and the stateless `RemixToast`: queued, nonmodal notifications over `NakedToastScope` with six directional placements, same-id replacement, pause on hover, focus, and background, status or alert announcements, and composed action and close buttons styled through `ToastSpec`. Requires `naked_ui` 1.0.0-beta.15.
+- Export `RemixStyleSpecBuilder`, the builder every Remix component already uses to accept either a fluent style or a resolved `styleSpec`. Packages that compose Remix into their own surfaces previously had to reimplement that either/or, and the copies dropped the `controller` and focus-highlight plumbing that makes state variants resolve.
 
 ## 1.0.0-beta.9
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../data/activity.dart';
 import '../theme/theme_scope.dart';
@@ -36,11 +36,9 @@ class _TopBarState extends State<TopBar> {
     final compact = width < dashboardCompactBreakpoint;
     final toolbarButtonStyle = dashboardToolbarButtonStyle;
     return DashboardShellHeader(
-      horizontalPadding: compact
-          ? FortalTokens.space3()
-          : FortalTokens.space5(),
+      horizontalPadding: compact ? UiTokens.space3() : UiTokens.space5(),
       child: RowBox(
-        style: FlexBoxStyler().spacing(FortalTokens.space2()),
+        style: FlexBoxStyler().spacing(UiTokens.space2()),
         children: [
           if (widget.onMenuPressed case final onMenuPressed?)
             RemixIconButton(
@@ -52,7 +50,7 @@ class _TopBarState extends State<TopBar> {
             ),
           Expanded(
             child: RowBox(
-              style: FlexBoxStyler().spacing(FortalTokens.space3()),
+              style: FlexBoxStyler().spacing(UiTokens.space3()),
               children: [
                 if (width > 900) ...[
                   StyledText(
@@ -63,7 +61,7 @@ class _TopBarState extends State<TopBar> {
                     icon: Directionality.of(context) == TextDirection.ltr
                         ? Icons.chevron_right
                         : Icons.chevron_left,
-                    style: IconStyler().size(14).color(FortalTokens.gray8()),
+                    style: IconStyler().size(14).color(UiTokens.gray8()),
                   ),
                 ],
                 Flexible(
@@ -80,7 +78,7 @@ class _TopBarState extends State<TopBar> {
           if (width > 1000)
             Box(
               style: BoxStyler().width(260),
-              child: FortalTextField(
+              child: UiTextField(
                 key: const ValueKey('global-search'),
                 leading: const Icon(Icons.search, size: 18),
                 hintText: 'Search…',
@@ -93,16 +91,16 @@ class _TopBarState extends State<TopBar> {
             style: toolbarButtonStyle,
             onPressed: () {
               final theme = ThemeScope.of(context);
-              final isDark = FortalTheme.of(context).isDark;
+              final isDark = UiTheme.of(context).isDark;
               theme.onChanged(
                 theme.settings.copyWith(appearance: isDark ? .light : .dark),
               );
             },
-            icon: FortalTheme.of(context).isDark
+            icon: UiTheme.of(context).isDark
                 ? Icons.light_mode_outlined
                 : Icons.dark_mode_outlined,
           ),
-          FortalPopover(
+          UiPopover(
             controller: _notificationsController,
             openOnTap: false,
             semanticLabel: 'Notifications',
@@ -123,14 +121,14 @@ class _TopBarState extends State<TopBar> {
                   RowBox(
                     children: [
                       const Expanded(
-                        child: FortalHeading(
+                        child: UiHeading(
                           'Notifications',
                           headingLevel: 2,
                           size: .size3,
                           weight: .medium,
                         ),
                       ),
-                      FortalButton.ghost(
+                      UiButton.ghost(
                         size: .size1,
                         onPressed: () {
                           _notificationsController.close();
@@ -157,7 +155,7 @@ class _TopBarState extends State<TopBar> {
                               .width(7)
                               .height(7)
                               .margin(.top(6))
-                              .color(FortalTokens.accent9())
+                              .color(UiTokens.accent9())
                               .borderRadius(.circular(4)),
                         ),
                         Expanded(
@@ -166,7 +164,7 @@ class _TopBarState extends State<TopBar> {
                                 .crossAxisAlignment(.start)
                                 .spacing(2),
                             children: [
-                              FortalText(
+                              UiText(
                                 event.title,
                                 size: .size2,
                                 weight: .medium,
@@ -202,7 +200,7 @@ class _TopBarState extends State<TopBar> {
                       style: BoxStyler()
                           .width(7)
                           .height(7)
-                          .color(FortalTokens.accent9())
+                          .color(UiTokens.accent9())
                           .borderRadius(.circular(4)),
                     ),
                   ),
@@ -210,7 +208,7 @@ class _TopBarState extends State<TopBar> {
               ),
             ),
           ),
-          FortalPopover(
+          UiPopover(
             controller: _themeController,
             openOnTap: false,
             semanticLabel: 'Theme settings',
@@ -239,7 +237,7 @@ class _TopBarState extends State<TopBar> {
               alignment: .end,
               sideOffset: 8,
             ),
-            trigger: const FortalAvatar(label: 'LF', size: .size2),
+            trigger: const UiAvatar(label: 'LF', size: .size2),
             actions: const [
               DashboardAction(value: 'profile', label: 'Profile'),
               DashboardAction(value: 'preferences', label: 'Preferences'),

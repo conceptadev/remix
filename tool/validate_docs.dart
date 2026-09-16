@@ -130,7 +130,7 @@ final _iconButtonInvocation = RegExp(
   r'\b(?:RemixIconButton|FortalIconButton)(?:\.[A-Za-z0-9_]+)?\s*\(',
 );
 final _remixImport = RegExp(
-  r'''import\s+['"]package:(?:remix|remix_fortal)/(?:remix|remix_fortal)\.dart['"]\s*;''',
+  r'''import\s+['"]package:remix/remix\.dart['"]\s*;''',
 );
 final _applicationOwnedFortalImport = RegExp(
   r'''import\s+['"]ui/ui\.dart['"]\s*;''',
@@ -143,14 +143,14 @@ const _exampleSourceDirectories = <String>[
   'apps/demo/lib',
   'apps/playground/lib',
   'packages/remix/example',
-  'packages/remix_fortal/example',
+  'registry_source/example',
 ];
 
 // Package library sources aren't examples, but the same retired-API sweep
 // applies: doc comments quote call sites and drift the same way prose does.
 const _packageLibraryDirectories = <String>[
   'packages/remix/lib',
-  'packages/remix_fortal/lib',
+  'registry_source/lib',
 ];
 
 // Test code is part of the canonical-styler contract too. Mix still exposes
@@ -162,7 +162,7 @@ const _testSourceDirectories = <String>[
   'apps/demo/test',
   'apps/playground/test',
   'packages/remix/test',
-  'packages/remix_fortal/test',
+  'registry_source/test',
 ];
 
 const _publishedSkillDirectories = <String>[
@@ -172,7 +172,7 @@ const _publishedSkillDirectories = <String>[
 const _consumerDocumentationFiles = <String>[
   'README.md',
   'packages/remix/README.md',
-  'packages/remix_fortal/README.md',
+  'registry_source/docs/fortal/README.md',
   'packages/remix_cli/README.md',
   'open_code/README.md',
   'open_code/CLEAN_SHEET.md',
@@ -361,11 +361,11 @@ Future<void> main() async {
       final file = File('${tempRoot.path}/snippet_$index.dart');
       // Fortal docs show the barrel an initialized application owns. The
       // temporary validation directory has no application package, so map only
-      // that import to the analyzer-checked authoring package. The Fortal
+      // that import to the analyzer-checked authoring source. The Fortal
       // derivation round trip separately proves that the prefixed APIs match.
       final validationSource = snippet.source.replaceAll(
         _applicationOwnedFortalImport,
-        "import 'package:remix_fortal/remix_fortal.dart';",
+        "import 'package:registry_source/fortal.dart';",
       );
       file.writeAsStringSync(
         '// Generated temporarily by tool/validate_docs.dart.\n'
@@ -848,9 +848,8 @@ _extractAnalyzableSnippets(
         if (_remixApiReference.hasMatch(snippet)) {
           failures.add(
             '$relativePath Dart example ${index + 1} uses Remix or Fortal APIs '
-            'but imports neither package:remix/remix.dart, '
-            'package:remix_fortal/remix_fortal.dart, nor the application-owned '
-            'ui/ui.dart barrel.',
+            'but imports neither package:remix/remix.dart nor the '
+            'application-owned ui/ui.dart barrel.',
           );
         }
         continue;

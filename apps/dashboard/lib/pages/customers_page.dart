@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../data/customers.dart';
 import '../data/models.dart';
@@ -55,7 +55,7 @@ class _CustomersPageState extends State<CustomersPage> {
           PageHeader(
             title: 'Customers',
             description: 'Manage customer access, plans, and account status.',
-            actions: FortalButton(
+            actions: UiButton(
               onPressed: () => showRemixToast(
                 context,
                 RemixToastData(
@@ -71,7 +71,7 @@ class _CustomersPageState extends State<CustomersPage> {
             builder: (context, constraints) {
               final search = SizedBox(
                 width: constraints.maxWidth < 320 ? constraints.maxWidth : 300,
-                child: FortalTextField(
+                child: UiTextField(
                   key: const ValueKey('customer-search'),
                   leading: const Icon(Icons.search, size: 18),
                   hintText: 'Search customers…',
@@ -88,12 +88,12 @@ class _CustomersPageState extends State<CustomersPage> {
                       runSpacing: 6,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        FortalBadge(
+                        UiBadge(
                           size: .size2,
                           highContrast: true,
                           label: '${_selectedIds.length} selected',
                         ),
-                        FortalButton.ghost(
+                        UiButton.ghost(
                           size: .size1,
                           onPressed: () => showRemixToast(
                             context,
@@ -105,7 +105,7 @@ class _CustomersPageState extends State<CustomersPage> {
                           ),
                           label: 'Export',
                         ),
-                        FortalButton.ghost(
+                        UiButton.ghost(
                           size: .size1,
                           onPressed: () => showRemixToast(
                             context,
@@ -133,7 +133,7 @@ class _CustomersPageState extends State<CustomersPage> {
               return Row(children: [search, const Spacer(), ?selection]);
             },
           ),
-          FortalDataTable<Customer>.surface(
+          UiDataTable<Customer>.surface(
             key: const ValueKey('data-grid-customers'),
             rows: visible,
             columns: _columns,
@@ -185,7 +185,7 @@ class _CustomersPageState extends State<CustomersPage> {
         mainAxisSize: .min,
         spacing: 9,
         children: [
-          FortalAvatar(size: .size2, label: customer.initials),
+          UiAvatar(size: .size2, label: customer.initials),
           Flexible(child: DataTableCellText(customer.name, primary: true)),
         ],
       ),

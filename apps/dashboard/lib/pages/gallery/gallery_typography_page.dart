@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../../ui/ui.dart';
 
 import '../../utils/text.dart';
 import '../../widgets/gallery_scaffold.dart';
@@ -27,7 +27,7 @@ class GalleryTypographyPage extends StatelessWidget {
             crossAxisAlignment: .start,
             spacing: 6,
             children: [
-              for (final size in FortalTextSize.values)
+              for (final size in UiTextSize.values)
                 Row(
                   crossAxisAlignment: .baseline,
                   textBaseline: TextBaseline.alphabetic,
@@ -35,10 +35,10 @@ class GalleryTypographyPage extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: 64,
-                      child: FortalCode.ghost(enumLabel(size), size: .size1),
+                      child: UiCode.ghost(enumLabel(size), size: .size1),
                     ),
                     Flexible(
-                      child: FortalText(
+                      child: UiText(
                         'The quick brown fox',
                         size: size,
                         truncate: true,
@@ -55,19 +55,19 @@ class GalleryTypographyPage extends StatelessWidget {
               'Text, heading, code, and link share all four weight presets.',
           child: GalleryEnumMatrix(
             rows: _TypographyFamily.values,
-            columns: FortalTextWeight.values,
+            columns: UiTextWeight.values,
             cellWidth: 130,
             cellBuilder: (context, family, weight) {
               return switch (family) {
-                .text => FortalText('Aa', size: .size4, weight: weight),
-                .heading => FortalHeading(
+                .text => UiText('Aa', size: .size4, weight: weight),
+                .heading => UiHeading(
                   'Aa',
                   headingLevel: 3,
                   size: .size4,
                   weight: weight,
                 ),
-                .code => FortalCode.soft('Aa', size: .size4, weight: weight),
-                .link => FortalLink(
+                .code => UiCode.soft('Aa', size: .size4, weight: weight),
+                .link => UiLink(
                   'Aa',
                   size: .size4,
                   weight: weight,
@@ -93,11 +93,11 @@ class GalleryTypographyPage extends StatelessWidget {
             spacing: 8,
             children: [
               for (final (level, size) in const [
-                (1, FortalTextSize.size6),
-                (2, FortalTextSize.size4),
-                (3, FortalTextSize.size3),
+                (1, UiTextSize.size6),
+                (2, UiTextSize.size4),
+                (3, UiTextSize.size3),
               ])
-                FortalHeading(
+                UiHeading(
                   'Level $level heading at size ${size.name.substring(4)}',
                   headingLevel: level,
                   size: size,
@@ -109,14 +109,14 @@ class GalleryTypographyPage extends StatelessWidget {
         GallerySection(
           label: 'Code',
           description: 'Solid, soft, outline, and ghost inline code.',
-          child: GalleryMatrix<FortalCodeVariant, bool>(
-            rows: FortalCodeVariant.values,
+          child: GalleryMatrix<UiCodeVariant, bool>(
+            rows: UiCodeVariant.values,
             columns: const [false, true],
             rowLabelBuilder: enumLabel,
             columnLabelBuilder: (highContrast) =>
                 highContrast ? 'High contrast' : 'Default',
             cellWidth: 170,
-            cellBuilder: (_, variant, highContrast) => FortalCode(
+            cellBuilder: (_, variant, highContrast) => UiCode(
               'const x = 1;',
               variant: variant,
               size: .size2,
@@ -130,10 +130,10 @@ class GalleryTypographyPage extends StatelessWidget {
           description:
               'Classic key caps and the flat soft variant at all nine sizes.',
           child: GalleryEnumMatrix(
-            rows: FortalKbdVariant.values,
-            columns: FortalTextSize.values,
+            rows: UiKbdVariant.values,
+            columns: UiTextSize.values,
             cellWidth: 130,
-            cellBuilder: (_, variant, size) => FortalKbd(
+            cellBuilder: (_, variant, size) => UiKbd(
               '⌘K',
               variant: variant,
               size: size,
@@ -151,8 +151,8 @@ class GalleryTypographyPage extends StatelessWidget {
             runSpacing: 14,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              for (final underline in FortalLinkUnderline.values)
-                FortalLink(
+              for (final underline in UiLinkUnderline.values)
+                UiLink(
                   enumLabel(underline),
                   underline: underline,
                   onPressed: () => showRemixToast(
@@ -163,7 +163,7 @@ class GalleryTypographyPage extends StatelessWidget {
                     ),
                   ),
                 ),
-              FortalLink(
+              UiLink(
                 'High contrast',
                 highContrast: true,
                 onPressed: () => showRemixToast(
@@ -176,9 +176,9 @@ class GalleryTypographyPage extends StatelessWidget {
               ),
               // Two spellings of the same state: a null callback disables the
               // link exactly as `enabled: false` does.
-              FortalLink('Disabled', enabled: false, onPressed: () {}),
-              const FortalLink('Disabled (no callback)'),
-              FortalLink(
+              UiLink('Disabled', enabled: false, onPressed: () {}),
+              const UiLink('Disabled (no callback)'),
+              UiLink(
                 'Documentation',
                 linkUrl: Uri.parse('https://docs.page/btwld/remix/fortal'),
                 semanticHint: 'Opens the Fortal documentation',
@@ -203,20 +203,16 @@ class GalleryTypographyPage extends StatelessWidget {
             runSpacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: const [
-              FortalText('Neutral', size: .size3),
-              FortalText(
-                'High contrast alone',
-                size: .size3,
-                highContrast: true,
-              ),
-              FortalText('Accent', size: .size3, accent: true),
-              FortalText(
+              UiText('Neutral', size: .size3),
+              UiText('High contrast alone', size: .size3, highContrast: true),
+              UiText('Accent', size: .size3, accent: true),
+              UiText(
                 'Accent high contrast',
                 size: .size3,
                 accent: true,
                 highContrast: true,
               ),
-              FortalHeading(
+              UiHeading(
                 'Accent heading',
                 headingLevel: 3,
                 size: .size3,
@@ -239,7 +235,7 @@ class GalleryTypographyPage extends StatelessWidget {
             children: [
               SizedBox(
                 width: 260,
-                child: FortalText(
+                child: UiText(
                   'Wrap keeps the complete sentence, across as many lines as '
                   'it needs.',
                   size: .size2,
@@ -247,7 +243,7 @@ class GalleryTypographyPage extends StatelessWidget {
               ),
               SizedBox(
                 width: 260,
-                child: FortalText(
+                child: UiText(
                   'Truncate keeps exactly one line, across as many lines as '
                   'it needs.',
                   size: .size2,

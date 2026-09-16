@@ -3,7 +3,7 @@ import 'package:demo/helpers/catalog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:demo/ui/ui.dart';
 
 void main() {
   testWidgets('Remix use case opens and closes its content', (tester) async {

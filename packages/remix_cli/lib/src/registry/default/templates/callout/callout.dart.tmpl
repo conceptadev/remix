@@ -96,19 +96,18 @@ CalloutStyler _base() => CalloutStyler()
     .text(.fontSize(_textSize).color({{typePrefix}}Tokens.foreground()))
     .icon(.size(_iconSize).wrap(.translate(x: 0, y: _iconOffsetY)));
 
-CalloutStyler _variantStyle({{typePrefix}}CalloutVariant variant) =>
-    switch (variant) {
-      .neutral => _toned(
-        fill: {{typePrefix}}Tokens.muted(),
-        outline: {{typePrefix}}Tokens.border(),
-        icon: {{typePrefix}}Tokens.mutedForeground(),
-      ),
-      .destructive => _toned(
-        fill: _noFill,
-        outline: {{typePrefix}}Tokens.destructive(),
-        icon: {{typePrefix}}Tokens.destructive(),
-      ),
-    };
+CalloutStyler _variantStyle({{typePrefix}}CalloutVariant variant) => switch (variant) {
+  .neutral => _toned(
+    fill: {{typePrefix}}Tokens.muted(),
+    outline: {{typePrefix}}Tokens.border(),
+    icon: {{typePrefix}}Tokens.mutedForeground(),
+  ),
+  .destructive => _toned(
+    fill: _noFill,
+    outline: {{typePrefix}}Tokens.destructive(),
+    icon: {{typePrefix}}Tokens.destructive(),
+  ),
+};
 
 /// One surface, one outline, and the glyph color.
 ///

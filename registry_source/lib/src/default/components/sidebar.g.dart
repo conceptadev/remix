@@ -1,0 +1,119 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'sidebar.dart';
+
+// **************************************************************************
+// MixWidgetGenerator
+// **************************************************************************
+
+/// The application's Sidebar recipe.
+///
+/// A sidebar is the navigation panel down one edge of an application shell.
+/// Remix owns the rendering, the header/content/footer stacking, Tab traversal
+/// across destinations, the selection semantics, and the navigation
+/// landmark; this recipe owns the panel surface, the region insets, the
+/// section rhythm, and the label type.
+///
+/// It takes no variant and no size. There is one panel per shell, and the
+/// thing that actually varies between applications — how wide it is — is not
+/// the recipe's to decide: the host sizes the panel, because the same panel
+/// is usually presented as a drawer at narrow widths and the drawer's width
+/// is a layout decision. Nothing here sets a width, and nothing here pads the
+/// header, whose metrics normally have to line up with an application top bar.
+///
+/// This recipe **depends on the `toggle` and `tooltip` items**, which is why
+/// its registry entry lists both beside `theme`. A destination is a toggle: it
+/// is a control that stays pressed, and `SidebarSpec` takes its style as a
+/// `ToggleStyler` field. Handing it the application's own ghost toggle recipe
+/// is what keeps a selected destination and a selected toggle the same colour
+/// without restating one component inside another. The same reasoning covers
+/// the tooltip: when the host collapses the panel to an icon rail, each
+/// destination's label appears in the application's own tooltip recipe.
+///
+/// The panel fill is `background`, the same token the page uses, and the
+/// trailing hairline in `border` is what separates the two — the same choice
+/// the card recipe makes, for the same reason.
+///
+/// [style] is merged **last**, so a single call site can override any part of
+/// the resolved recipe without forking it:
+///
+/// ```dart
+/// VanillaSidebar(
+///   style: SidebarStyler().width(_shellSidebarWidth),
+///   sections: sections,
+///   selectedValue: current,
+///   onSelected: go,
+/// )
+/// ```
+class VanillaSidebar<T extends Object> extends StatelessWidget {
+  const VanillaSidebar({
+    super.key,
+    this.style = const SidebarStyler.create(),
+    this.header,
+    this.collapsed = false,
+    this.showTooltips = true,
+    this.tooltipPositioning,
+    this.expandedWidth,
+    this.collapsedWidth,
+    this.animationStyle = const AnimationStyle(),
+    required this.sections,
+    required this.selectedValue,
+    this.onSelected,
+    this.footer,
+    this.enabled = true,
+    this.semanticLabel,
+    this.excludeSemantics = false,
+  });
+
+  final SidebarStyler style;
+
+  final Widget? header;
+
+  final bool collapsed;
+
+  final bool showTooltips;
+
+  final OverlayPositionConfig? tooltipPositioning;
+
+  final double? expandedWidth;
+
+  final double? collapsedWidth;
+
+  final AnimationStyle animationStyle;
+
+  final List<RemixSidebarSection<T>> sections;
+
+  final T? selectedValue;
+
+  final ValueChanged<T>? onSelected;
+
+  final Widget? footer;
+
+  final bool enabled;
+
+  final String? semanticLabel;
+
+  final bool excludeSemantics;
+
+  @override
+  Widget build(BuildContext context) {
+    return RemixSidebar<T>(
+      key: this.key,
+      style: vanillaSidebarStyle(style: this.style),
+      header: this.header,
+      collapsed: this.collapsed,
+      showTooltips: this.showTooltips,
+      tooltipPositioning: this.tooltipPositioning,
+      expandedWidth: this.expandedWidth,
+      collapsedWidth: this.collapsedWidth,
+      animationStyle: this.animationStyle,
+      sections: this.sections,
+      selectedValue: this.selectedValue,
+      onSelected: this.onSelected,
+      footer: this.footer,
+      enabled: this.enabled,
+      semanticLabel: this.semanticLabel,
+      excludeSemantics: this.excludeSemantics,
+    );
+  }
+}

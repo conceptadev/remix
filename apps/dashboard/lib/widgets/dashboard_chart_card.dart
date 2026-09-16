@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import 'page_header.dart';
 
@@ -34,11 +34,11 @@ class DashboardChartCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gap = MixScope.tokenOf(FortalTokens.space4, context);
-    final defaultInset = MixScope.tokenOf(FortalTokens.space2, context);
-    final scaledPlot = _plotHeight * FortalTheme.of(context).scaling.factor;
+    final gap = MixScope.tokenOf(UiTokens.space4, context);
+    final defaultInset = MixScope.tokenOf(UiTokens.space2, context);
+    final scaledPlot = _plotHeight * UiTheme.of(context).scaling.factor;
 
-    return FortalCard(
+    return UiCard(
       size: .size2,
       child: Column(
         mainAxisSize: .min,

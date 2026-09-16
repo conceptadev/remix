@@ -4,9 +4,10 @@
 /// dart run tool/check_open_code_dogfood.dart
 /// ```
 ///
-/// Playground expects the full default registry; the Agent example expects
-/// its Composer dependencies and the catalog Button. Check expected items even when their files
-/// are missing. The CLI owns config parsing, template rendering, and diffing.
+/// Playground expects the full default registry; demo and dashboard list the
+/// Fortal items they install explicitly, since only the default manifest is
+/// read here.
+/// Check expected items even when their files are missing. The CLI owns config parsing, template rendering, and diffing.
 ///
 /// Application-owned source may be customized. Each deliberate edit belongs in
 /// [_customized]; an entry that matches the template again is also an error.
@@ -26,16 +27,119 @@ const _customized = <String, String>{
 /// Expected items per consumer; null means the entire default registry.
 const _consumers = <String, List<String>?>{
   'apps/playground': null,
-  'packages/remix_agent/example': [
+  // The Fortal review catalog: every non-Agent Fortal item.
+  'apps/demo': [
     'theme',
-    'card',
-    'textfield',
-    'icon_button',
+    'icons',
+    'accordion',
+    'avatar',
+    'badge',
+    'base_button',
     'button',
+    'callout',
+    'card',
+    'chart',
+    'checkbox',
+    'code',
+    'data_list',
+    'data_table',
+    'dialog',
+    'disclosure',
+    'divider',
+    'heading',
+    'icon_button',
+    'kbd',
+    'link',
+    'menu',
+    'popover',
+    'progress',
+    'radio',
+    'segmented_control',
+    'select',
+    'sidebar',
+    'sidebar_layout',
+    'skeleton',
+    'slider',
+    'spinner',
+    'switch',
+    'tabs',
+    'text',
+    'textfield',
+    'toast',
+    'toggle',
+    'toggle_group',
+    'tooltip',
+    'typography',
+  ],
+  // Every Fortal item, Agent surfaces and recipes included.
+  'apps/dashboard': [
+    'theme',
+    'icons',
+    'accordion',
+    'activity_recipe',
+    'answer_recipe',
+    'avatar',
+    'badge',
+    'base_button',
+    'button',
+    'callout',
+    'card',
+    'chart',
+    'checkbox',
+    'code',
+    'composer_recipe',
+    'data_list',
+    'data_table',
+    'dialog',
+    'disclosure',
+    'divider',
+    'execution_recipe',
+    'heading',
+    'icon_button',
+    'kbd',
+    'link',
+    'menu',
+    'message_recipe',
+    'permission_recipe',
+    'plan_recipe',
+    'popover',
+    'progress',
+    'radio',
+    'segmented_control',
+    'select',
+    'sidebar',
+    'sidebar_layout',
+    'skeleton',
+    'slider',
+    'spinner',
+    'switch',
+    'tabs',
+    'text',
+    'textfield',
+    'toast',
+    'toggle',
+    'toggle_group',
+    'tooltip',
+    'transcript_recipe',
+    'typography',
+    'models',
+    'support',
+    'activity',
+    'answer',
+    'composer',
+    'execution',
+    'message',
+    'permission',
+    'plan',
+    'transcript',
   ],
 };
 
 /// What `remix add --diff` prints when the installed source is up to date.
+///
+/// The CLI prints a preamble and then exactly one verdict: this line, or a
+/// `git diff`. Both are recognized below so that a third shape can be reported
+/// as itself rather than silently read as divergence.
 const _clean = 'No authored-source differences.';
 
 Future<void> main(List<String> arguments) async {
@@ -97,7 +201,24 @@ Future<String?> _run(Directory root) async {
         continue;
       }
 
-      final edited = !(result.stdout as String).contains(_clean);
+      // Classifying on the sentinel alone means any reword of it reports all
+      // 40 items as diverged and sends the reader to `--overwrite`, which
+      // cannot fix a change in the CLI's own output. Recognize both verdicts
+      // instead, and name the case where neither or both appear.
+      final lines = (result.stdout as String).split('\n');
+      final clean = lines.any((line) => line.trimRight() == _clean);
+      final diffed = lines.any((line) => line.startsWith('diff --git '));
+      if (clean == diffed) {
+        problems.add(
+          '$label: `remix add $key --diff` printed '
+          '${clean ? 'both a clean verdict and a diff' : 'no recognizable verdict'}'
+          '. The CLI output contract moved; update `_clean` in this check to '
+          'match `installer.dart`.',
+        );
+        continue;
+      }
+
+      final edited = diffed;
       final reason = _customized[label];
       if (!edited && reason != null) {
         problems.add(
@@ -117,8 +238,32 @@ Future<String?> _run(Directory root) async {
   for (final item in unknown) {
     problems.add('$item is listed as customized but is not an expected item.');
   }
+  problems.addAll(_sourcePackageImports(root));
 
   if (problems.isEmpty) return null;
   return 'a consumer and the registry disagree:\n'
       '${problems.map((problem) => '  - $problem').join('\n')}';
+}
+
+/// Applications consume installed source only. Outside their `lib/ui/`, no
+/// file may reach the authoring packages the registry derives from.
+Iterable<String> _sourcePackageImports(Directory root) sync* {
+  final forbidden = RegExp(
+    r"""^\s*(?:import|export)\s+['"]package:(registry_source)/""",
+    multiLine: true,
+  );
+  for (final consumer in _consumers.keys) {
+    final lib = Directory('${root.path}/$consumer/lib');
+    if (!lib.existsSync()) continue;
+    for (final file in lib.listSync(recursive: true).whereType<File>()) {
+      if (!file.path.endsWith('.dart')) continue;
+      final relative = file.path.substring(root.path.length + 1);
+      if (relative.startsWith('$consumer/lib/ui/')) continue;
+      final match = forbidden.firstMatch(file.readAsStringSync());
+      if (match != null) {
+        yield '$relative imports package:${match.group(1)}; applications '
+            'consume installed source only.';
+      }
+    }
+  }
 }

@@ -33,7 +33,7 @@ void main(List<String> arguments) {
     return;
   }
 
-  final packageRoot = Directory('${workspaceRoot.path}/packages/remix_fortal');
+  final packageRoot = Directory('${workspaceRoot.path}/registry_source');
   final manifestFile = File(
     '${packageRoot.path}/reference/radix_themes_3_3_0/manifest.json',
   );
@@ -228,7 +228,7 @@ void _writeFamilySections(
         ? 'Radix `$radix`'
         : 'Fortal extension (no Radix counterpart)';
     buffer
-      ..writeln('$origin · recipe `packages/remix_fortal/$recipePath`')
+      ..writeln('$origin · recipe `registry_source/$recipePath`')
       ..writeln();
 
     if (enums.isNotEmpty) {
@@ -354,7 +354,7 @@ String _recipePath(String id) {
     'text_field' || 'text_area' => 'textfield',
     _ => id,
   };
-  return 'lib/src/components/$recipeName.dart';
+  return 'lib/src/fortal/components/$recipeName.dart';
 }
 
 String _otherDefaults(Map<String, Object?> family, Map<String, Object?> enums) {

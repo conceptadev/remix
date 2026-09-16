@@ -18,7 +18,7 @@ part of 'card.dart';
 ///
 /// The fill is `background`, the same token the page uses, so a card is told
 /// apart by its outline rather than by a second surface color. That is
-/// deliberate: it keeps the token vocabulary at fifteen names, and a theme
+/// deliberate: it keeps the token vocabulary at twenty names, and a theme
 /// that wants a distinct card surface changes this one line.
 ///
 /// [style] is merged **last**, so a single call site can override any part of

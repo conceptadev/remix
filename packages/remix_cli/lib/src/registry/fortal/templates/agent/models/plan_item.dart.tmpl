@@ -1,0 +1,44 @@
+import 'package:flutter/foundation.dart';
+
+import 'statuses.dart';
+
+/// One row in an [{{typePrefix}}Plan].
+@immutable
+class {{typePrefix}}PlanItem {
+  /// Creates a plan item.
+  const {{typePrefix}}PlanItem({
+    required this.id,
+    required this.title,
+    this.status = {{typePrefix}}PlanItemStatus.pending,
+    this.detail,
+  });
+
+  /// Stable identity across list updates.
+  final String id;
+
+  /// Visible title.
+  final String title;
+
+  /// Current status.
+  final {{typePrefix}}PlanItemStatus status;
+
+  /// Optional compact metadata (elapsed time, percent, path).
+  final String? detail;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is {{typePrefix}}PlanItem &&
+          other.runtimeType == runtimeType &&
+          other.id == id &&
+          other.title == title &&
+          other.status == status &&
+          other.detail == detail;
+
+  @override
+  int get hashCode => Object.hash(runtimeType, id, title, status, detail);
+
+  @override
+  String toString() =>
+      '{{typePrefix}}PlanItem(id: $id, title: $title, status: $status, detail: $detail)';
+}

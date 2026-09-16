@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:remix/remix.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import '../ui/ui.dart';
 
 import '../utils/text.dart';
 import '../widgets/action_menu.dart';
@@ -28,18 +28,18 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Placement stays here: FortalSidebar owns no display edge. Passing the
+    // Placement stays here: UiSidebar owns no display edge. Passing the
     // device insets into the generated wrapper keeps them inside its painted
     // surface instead of putting a SafeArea around that surface.
     final insets = MediaQuery.paddingOf(context);
 
     // `Sidebar` stays self-sizing (rather than deferring width entirely to
-    // `FortalSidebarLayout`'s row) so it keeps working the way `sidebar_test`
+    // `UiSidebarLayout`'s row) so it keeps working the way `sidebar_test`
     // exercises it: standalone, in a bare `Row` with no imposed width. The
     // shell's own row wraps this same width in an `AnimatedContainer` using
     // the identical constants and the identical `collapsed` trigger, so the
     // two transitions move together.
-    return FortalSidebar<DashboardPage>(
+    return UiSidebar<DashboardPage>(
       collapsed: collapsed,
       expandedWidth: dashboardSidebarWidth,
       collapsedWidth: dashboardSidebarCollapsedWidth,
@@ -63,11 +63,11 @@ class _Brand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final motion = RemixSidebar.animationOf(context);
-    final inset = FortalTokens.space3.resolve(context);
+    final inset = UiTokens.space3.resolve(context);
     final label = collapsed ? 'Expand navigation' : 'Collapse navigation';
     return DashboardShellHeader(
       key: const ValueKey('dashboard-brand'),
-      horizontalPadding: FortalTokens.space3(),
+      horizontalPadding: UiTokens.space3(),
       child: RowBox(
         children: [
           Expanded(
@@ -77,21 +77,17 @@ class _Brand extends StatelessWidget {
               // The wordmark starts where expanded destination icons start.
               child: Padding(
                 padding: EdgeInsetsDirectional.only(
-                  start: FortalTokens.space4.resolve(context),
+                  start: UiTokens.space4.resolve(context),
                 ),
                 child: _SidebarTextReveal(
                   motion: motion,
-                  child: const FortalText(
-                    'Dashboard',
-                    size: .size5,
-                    weight: .bold,
-                  ),
+                  child: const UiText('Dashboard', size: .size5, weight: .bold),
                 ),
               ),
             ),
           ),
           if (onToggle case final onToggle?) ...[
-            FortalTooltip(
+            UiTooltip(
               positioning: OverlayPositionConfig(
                 side: Directionality.of(context) == TextDirection.ltr
                     ? OverlaySide.right
@@ -125,8 +121,7 @@ class _Brand extends StatelessWidget {
 
 /// Center line of the collapsed rail, where destination icons settle.
 double _railCenter(BuildContext context) =>
-    (dashboardSidebarCollapsedWidth -
-        FortalTokens.borderWidth1.resolve(context)) /
+    (dashboardSidebarCollapsedWidth - UiTokens.borderWidth1.resolve(context)) /
     2;
 
 class _Profile extends StatelessWidget {
@@ -135,19 +130,14 @@ class _Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final motion = RemixSidebar.animationOf(context);
-    final inset = FortalTokens.space2.resolve(context);
+    final inset = UiTokens.space2.resolve(context);
     // The avatar stays on the rail's center line in both presentations.
     final lead =
-        (_railCenter(context) -
-                inset -
-                FortalTokens.space6.resolve(context) / 2)
+        (_railCenter(context) - inset - UiTokens.space6.resolve(context) / 2)
             .clamp(0.0, double.infinity);
     return Box(
       style: BoxStyler().padding(
-        .symmetric(
-          horizontal: FortalTokens.space2(),
-          vertical: FortalTokens.space3(),
-        ),
+        .symmetric(horizontal: UiTokens.space2(), vertical: UiTokens.space3()),
       ),
       child: DashboardActionMenu(
         key: const ValueKey('sidebar-account-trigger'),
@@ -157,7 +147,7 @@ class _Profile extends StatelessWidget {
           child: RowBox(
             children: [
               SizedBox(width: lead),
-              const FortalAvatar(label: 'LF', size: .size2),
+              const UiAvatar(label: 'LF', size: .size2),
               SizedBox(width: 10 * motion.expansion),
               Expanded(
                 child: _SidebarTextReveal(
@@ -167,11 +157,7 @@ class _Profile extends StatelessWidget {
                         .mainAxisSize(.min)
                         .crossAxisAlignment(.start),
                     children: [
-                      const FortalText(
-                        'Leo Farias',
-                        size: .size2,
-                        weight: .medium,
-                      ),
+                      const UiText('Leo Farias', size: .size2, weight: .medium),
                       StyledText(
                         'leo@remix.dev',
                         style: dashboardText(
@@ -188,7 +174,7 @@ class _Profile extends StatelessWidget {
                 child: Icon(
                   Icons.more_horiz,
                   size: 18,
-                  color: MixScope.tokenOf(FortalTokens.gray11, context),
+                  color: MixScope.tokenOf(UiTokens.gray11, context),
                 ),
               ),
             ],

@@ -10,7 +10,7 @@ import 'package:dashboard/widgets/action_menu.dart';
 import 'package:dashboard/widgets/analytics_charts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remix_fortal/remix_fortal.dart';
+import 'package:dashboard/ui/ui.dart';
 
 void main() {
   testWidgets('shell switches to the sheet strictly below 720 pixels', (
@@ -20,12 +20,11 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    // `TopBar` sits inside `FortalSidebarLayout`'s `header` slot in both
+    // `TopBar` sits inside `UiSidebarLayout`'s `header` slot in both
     // presentations, so it is always a descendant of the scope the layout
     // re-provides.
-    bool isCompact() => FortalSidebarLayoutScope.of(
-      tester.element(find.byType(TopBar)),
-    ).isCompact;
+    bool isCompact() =>
+        UiSidebarLayoutScope.of(tester.element(find.byType(TopBar))).isCompact;
 
     tester.view.physicalSize = const Size(720, 800);
     await tester.pumpWidget(const DashboardApp());
@@ -154,10 +153,7 @@ void main() {
   ) async {
     Rect field(String label) => tester.getRect(
       find
-          .ancestor(
-            of: find.text(label),
-            matching: find.byType(FortalTextField),
-          )
+          .ancestor(of: find.text(label), matching: find.byType(UiTextField))
           .first,
     );
 
@@ -169,7 +165,7 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const FortalScope(child: MaterialApp(home: SettingsPage())),
+        child: const UiScope(child: MaterialApp(home: SettingsPage())),
       ),
     );
     final wideName = field('Name');
@@ -182,7 +178,7 @@ void main() {
       ThemeScope(
         settings: const ThemeSettings(),
         onChanged: (_) {},
-        child: const FortalScope(child: MaterialApp(home: SettingsPage())),
+        child: const UiScope(child: MaterialApp(home: SettingsPage())),
       ),
     );
     final stackedName = field('Name');
@@ -202,7 +198,7 @@ void main() {
 
       Future<List<Rect>> pumpAt(double width) async {
         await tester.pumpWidget(
-          FortalScope(
+          UiScope(
             child: MaterialApp(
               home: Align(
                 alignment: Alignment.topLeft,
@@ -243,7 +239,7 @@ Future<List<Rect>> _pumpOverview(
   addTearDown(tester.view.resetDevicePixelRatio);
 
   await tester.pumpWidget(
-    FortalScope(
+    UiScope(
       child: MaterialApp(home: OverviewPage(onViewOrders: () {})),
     ),
   );
@@ -257,6 +253,6 @@ Future<List<Rect>> _pumpOverview(
 
 Rect _cardAround(WidgetTester tester, Finder label) {
   return tester.getRect(
-    find.ancestor(of: label, matching: find.byType(FortalCard)).first,
+    find.ancestor(of: label, matching: find.byType(UiCard)).first,
   );
 }

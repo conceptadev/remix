@@ -1,4 +1,5 @@
-import 'package:naked_ui_example/api/naked_textfield.0.dart' as textfield_example;
+import 'package:naked_ui_example/api/naked_textfield.0.dart'
+    as textfield_example;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

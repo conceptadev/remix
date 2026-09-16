@@ -24,6 +24,14 @@ The catalog also offers `chart` as an optional extension over
 `mix_chart`; it does not depend on `remix_fortal`. There is no remote registry,
 update command, registry lockfile, or content-hash protocol.
 
+Both presets additionally distribute the unstyled Agent items:
+`activity`, `answer`, `composer`, `execution`, `message`, `permission`, `plan`,
+and `transcript`, with shared `models` and `support` dependencies. These are
+application-owned source, not a dependency on the private authoring source.
+Each surface has an opt-in `<component>_recipe` item that installs a complete,
+preset-specific styler bundle under `lib/ui/recipes/`; bare components remain
+unstyled and backward compatible.
+
 ## Install project-locally
 
 The CLI has not been published. The hosted commands below apply after its
@@ -126,8 +134,13 @@ dart run remix_cli:remix add button
 
 The command installs Theme before Button, adds missing compatible hosted
 dependencies, formats the authored files, runs generation only for the
-declared `button.g.dart`, and analyzes the installed UI path. It does not create
-or modify `build.yaml`.
+declared adapters (including previously installed adapters), and analyzes the
+installed UI path. Recipe-only installs do not need `build.yaml`. Installing
+Agent `@MixableSpec` source enables Mix's opt-in spec-styler builder there,
+scoped to the installed files. The CLI preserves comments and unrelated
+settings; it refuses explicit builder disablement, excluded source, or
+conflicting target ownership before writing. `--dry-run` reports the required
+configuration and `--diff` shows it without changing the application.
 
 The current `mix_generator` writes explicit `this.` qualifiers into generated
 adapters, which `flutter_lints` reports as `unnecessary_this` infos. They do
@@ -285,3 +298,7 @@ The MVP's update workflow is explicit:
    adapter.
 
 There is no automatic merge or migration layer in 0.1.0.
+
+Available styled items: `activity_recipe`, `answer_recipe`, `composer_recipe`,
+`execution_recipe`, `message_recipe`, `permission_recipe`, `plan_recipe`, and
+`transcript_recipe`. Each installs only its component and styled-control closure.

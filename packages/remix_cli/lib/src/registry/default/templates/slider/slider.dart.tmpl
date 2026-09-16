@@ -59,9 +59,7 @@ SliderStyler {{valuePrefix}}SliderStyle({
             .borderRadius(.all(_circular))
             // The thumb is a light disc on a light rail, so its own outline is
             // what separates it from the range it sits on.
-            .border(
-              .color({{typePrefix}}Tokens.primary()).width(_thumbBorderWidth),
-            ),
+            .border(.color({{typePrefix}}Tokens.primary()).width(_thumbBorderWidth)),
       )
       // A thumb is a grab target, so it answers the pointer. The outline
       // keeps identifying it; only the fill moves, which is why hovering does
