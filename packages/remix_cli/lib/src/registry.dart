@@ -109,11 +109,30 @@ final class RegistryCatalog {
   final Uri _rootUri;
   final RegistryAssetLoader _loader;
 
-  List<RegistryItem> resolve(String requested) {
-    if (!items.containsKey(requested)) {
-      throw FormatException(
-        'Unknown registry item $requested in the $preset preset.',
-      );
+  List<RegistryItem> resolve(String requested) => resolveAll([requested]);
+
+  /// Orders every item [requested] needs, dependencies before dependents.
+  ///
+  /// One traversal across all roots rather than one per root: the `visited`
+  /// set is shared, so an item two requests both depend on -- theme, most of
+  /// the time -- is emitted once, in a position that satisfies both. That is
+  /// what lets a batch install write each file once and declare each
+  /// dependency once.
+  List<RegistryItem> resolveAll(Iterable<String> requested) {
+    final roots = requested.toList(growable: false);
+    if (roots.isEmpty) {
+      throw const FormatException('Requested no registry items.');
+    }
+    final seenRoots = <String>{};
+    for (final root in roots) {
+      if (!items.containsKey(root)) {
+        throw FormatException(
+          'Unknown registry item $root in the $preset preset.',
+        );
+      }
+      if (!seenRoots.add(root)) {
+        throw FormatException('Registry item $root was requested twice.');
+      }
     }
     final ordered = <RegistryItem>[];
     final visited = <String>{};
@@ -126,7 +145,9 @@ final class RegistryCatalog {
       ordered.add(item);
     }
 
-    visit(requested);
+    for (final root in roots) {
+      visit(root);
+    }
     return List.unmodifiable(ordered);
   }
 

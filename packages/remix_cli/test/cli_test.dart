@@ -146,8 +146,55 @@ void main() {
     );
 
     expect(code, successExitCode);
-    expect(received!.item, 'button');
+    expect(received!.items, ['button']);
     expect(received!.mode, AddMode.diff);
+  });
+
+  test('add dispatches several items in invocation order', () async {
+    AddOptions? received;
+
+    final code = await runRemixCli(
+      ['add', 'button', 'card', 'dialog'],
+      writeOut: fail,
+      writeError: fail,
+      onAdd: (options) async => received = options,
+    );
+
+    expect(code, successExitCode);
+    expect(received!.items, ['button', 'card', 'dialog']);
+    expect(received!.mode, AddMode.write);
+  });
+
+  test('add with no item fails before dispatch', () async {
+    var dispatched = false;
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['add'],
+      writeOut: (_) {},
+      writeError: errors.add,
+      onAdd: (_) async => dispatched = true,
+    );
+
+    expect(code, usageExitCode);
+    expect(errors.join('\n'), contains('add requires at least one item.'));
+    expect(dispatched, isFalse);
+  });
+
+  test('a repeated item fails before dispatch', () async {
+    var dispatched = false;
+    final errors = <String>[];
+
+    final code = await runRemixCli(
+      ['add', 'button', 'card', 'button'],
+      writeOut: (_) {},
+      writeError: errors.add,
+      onAdd: (_) async => dispatched = true,
+    );
+
+    expect(code, usageExitCode);
+    expect(errors.join('\n'), contains('add received button more than once.'));
+    expect(dispatched, isFalse);
   });
 
   test('mutually exclusive add modes fail before dispatch', () async {

@@ -91,6 +91,64 @@ void main() {
     expect(source, isNot(contains('remix_fortal')));
   });
 
+  group('resolveAll', () {
+    test('orders several roots with each shared dependency once', () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+      final ordered = catalog
+          .resolveAll(['button', 'card', 'dialog'])
+          .map((item) => item.name)
+          .toList();
+
+      expect(ordered.toSet(), hasLength(ordered.length));
+      expect(ordered.where((name) => name == 'theme'), hasLength(1));
+      expect(ordered, containsAll(['button', 'card', 'dialog']));
+      // Dependencies still precede every dependent that names them.
+      for (final item in catalog.resolveAll(['button', 'card', 'dialog'])) {
+        for (final dependency in item.registryDependencies) {
+          expect(
+            ordered.indexOf(dependency),
+            lessThan(ordered.indexOf(item.name)),
+            reason: '$dependency must precede ${item.name}',
+          );
+        }
+      }
+    });
+
+    test('one root resolves exactly as resolve does', () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+      expect(
+        catalog.resolveAll(['data_table']).map((item) => item.name),
+        catalog.resolve('data_table').map((item) => item.name),
+      );
+    });
+
+    test('a repeated root fails', () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+      expect(
+        () => catalog.resolveAll(['button', 'card', 'button']),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            contains('requested twice'),
+          ),
+        ),
+      );
+    });
+
+    test('an empty request fails', () async {
+      final catalog = await RegistryCatalog.loadBundled(preset: 'default');
+
+      expect(
+        () => catalog.resolveAll(const []),
+        throwsA(isA<FormatException>()),
+      );
+    });
+  });
+
   test('unknown preset fails before reading an asset and lists bundles', () {
     expect(
       RegistryCatalog.loadBundled(

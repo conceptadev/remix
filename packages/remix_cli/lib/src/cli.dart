@@ -31,9 +31,14 @@ final class InitOptions {
 enum AddMode { write, dryRun, diff, overwrite }
 
 final class AddOptions {
-  const AddOptions({required this.item, required this.mode});
+  const AddOptions({required this.items, required this.mode});
 
-  final String item;
+  /// The explicitly requested registry items, in invocation order.
+  ///
+  /// Registry dependencies are not listed here. The distinction is load
+  /// bearing: [AddMode.overwrite] applies to what the caller asked for and
+  /// never to what was pulled in behind it.
+  final List<String> items;
   final AddMode mode;
 }
 
@@ -173,13 +178,19 @@ final class _AddCommand extends Command<int> {
   String get name => 'add';
 
   @override
-  String get description => 'Install one bundled registry item.';
+  String get description => 'Install bundled registry items.';
 
   @override
   Future<int> run() async {
     final positional = argResults!.rest;
-    if (positional.length != 1) {
-      usageException('add requires exactly one item.');
+    if (positional.isEmpty) {
+      usageException('add requires at least one item.');
+    }
+    final duplicates = <String>{};
+    for (final item in positional) {
+      if (!duplicates.add(item)) {
+        usageException('add received $item more than once.');
+      }
     }
 
     final modes = <AddMode>[
@@ -199,7 +210,7 @@ final class _AddCommand extends Command<int> {
     }
     await handler(
       AddOptions(
-        item: positional.single,
+        items: List.unmodifiable(positional),
         mode: modes.isEmpty ? AddMode.write : modes.single,
       ),
     );

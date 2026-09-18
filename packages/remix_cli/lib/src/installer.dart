@@ -151,7 +151,7 @@ final class Installer {
       await _printDiff(
         dart: diffToolchain.dart,
         root: plan.root,
-        requestedName: plan.requested.name,
+        requestedNames: plan.requestedNames,
         items: plan.items,
         states: plan.states,
         filesByItem: plan.filesByItem,
@@ -194,8 +194,8 @@ final class Installer {
     validateManagedBarrel(currentBarrel);
 
     final catalog = await _registryLoader(config.preset);
-    final items = catalog.resolve(options.item);
-    final requested = items.last;
+    final items = catalog.resolveAll(options.items);
+    final requestedNames = Set<String>.unmodifiable(options.items);
     final rendered = <String, String>{};
     final filesByItem = <String, List<String>>{};
     for (final item in items) {
@@ -223,7 +223,7 @@ final class Installer {
     for (final item in items) {
       states[item.name] = _classify(root, filesByItem[item.name]!);
     }
-    _validateInstallStates(states, requested.name, options.mode);
+    _validateInstallStates(states, requestedNames, options.mode);
 
     final exports = [for (final item in items) ...item.exports];
     final proposedBarrel = updateManagedBarrel(currentBarrel, exports);
@@ -260,7 +260,7 @@ final class Installer {
         final proposed = rendered[relative];
         final source =
             existing.existsSync() &&
-                !(item.name == requested.name &&
+                !(requestedNames.contains(item.name) &&
                     options.mode == AddMode.overwrite)
             ? existing.readAsStringSync()
             : proposed;
@@ -287,6 +287,7 @@ final class Installer {
       root: root,
       config: config,
       items: items,
+      requestedNames: requestedNames,
       rendered: rendered,
       filesByItem: filesByItem,
       states: states,
@@ -316,7 +317,7 @@ final class Installer {
     final root = plan.root;
     final config = plan.config;
     final items = plan.items;
-    final requested = plan.requested;
+    final requestedNames = plan.requestedNames;
     final rendered = plan.rendered;
     final filesByItem = plan.filesByItem;
     final states = plan.states;
@@ -381,7 +382,8 @@ final class Installer {
         final state = states[item.name]!;
         final shouldWrite =
             state == _ItemState.missing ||
-            (item.name == requested.name && options.mode == AddMode.overwrite);
+            (requestedNames.contains(item.name) &&
+                options.mode == AddMode.overwrite);
         if (!shouldWrite) continue;
         for (final relative in filesByItem[item.name]!) {
           _fileWriter.write(_projectFile(root, relative), rendered[relative]!);
@@ -456,7 +458,7 @@ final class Installer {
       final done = completed.isEmpty ? 'none' : completed.join(', ');
       throw StateError(
         '$error\nCompleted steps: $done. Fix the reported problem, then rerun '
-        'remix add ${options.item}.',
+        'remix add ${options.items.join(' ')}.',
       );
     }
 
@@ -467,7 +469,8 @@ final class Installer {
       final action = switch (states[item.name]!) {
         _ItemState.missing => 'Added',
         _ =>
-          item.name == requested.name && options.mode == AddMode.overwrite
+          requestedNames.contains(item.name) &&
+                  options.mode == AddMode.overwrite
               ? 'Updated'
               : 'Preserved',
       };
@@ -541,7 +544,7 @@ final class Installer {
   Future<void> _printDiff({
     required String dart,
     required Directory root,
-    required String requestedName,
+    required Set<String> requestedNames,
     required List<RegistryItem> items,
     required Map<String, _ItemState> states,
     required Map<String, List<String>> filesByItem,
@@ -569,7 +572,7 @@ final class Installer {
       final proposedDartPaths = <String>{};
       for (final item in items) {
         final include =
-            item.name == requestedName ||
+            requestedNames.contains(item.name) ||
             states[item.name] == _ItemState.missing;
         if (!include) continue;
         for (final relative in filesByItem[item.name]!) {
@@ -735,19 +738,19 @@ _ItemState _classify(Directory root, List<String> targets) {
 
 void _validateInstallStates(
   Map<String, _ItemState> states,
-  String requested,
+  Set<String> requested,
   AddMode mode,
 ) {
   for (final entry in states.entries) {
     if (entry.value != _ItemState.partial) continue;
-    if (entry.key != requested) {
+    if (!requested.contains(entry.key)) {
       throw FormatException(
         'Registry dependency ${entry.key} is partially installed; repair it or add it explicitly.',
       );
     }
     if (mode == AddMode.write) {
       throw FormatException(
-        'Requested item $requested is partially installed; use --diff or --overwrite.',
+        'Requested item ${entry.key} is partially installed; use --diff or --overwrite.',
       );
     }
   }
@@ -1025,6 +1028,7 @@ final class _InstallPlan {
     required this.root,
     required this.config,
     required this.items,
+    required this.requestedNames,
     required this.rendered,
     required this.filesByItem,
     required this.states,
@@ -1044,8 +1048,11 @@ final class _InstallPlan {
   final Directory root;
   final ProjectConfig config;
 
-  /// The requested item and its dependencies, dependencies first.
+  /// Every requested item and its dependencies, dependencies first.
   final List<RegistryItem> items;
+
+  /// The names the caller asked for, as opposed to what came in behind them.
+  final Set<String> requestedNames;
 
   /// Rendered source keyed by the project-relative path it belongs at.
   final Map<String, String> rendered;
@@ -1062,9 +1069,6 @@ final class _InstallPlan {
   final List<String> generationTargets;
   final File pubspec;
   final String? builderConfiguration;
-
-  /// The item the user asked for; [items] resolves its dependencies ahead of it.
-  RegistryItem get requested => items.last;
 }
 
 enum _ItemState { missing, partial, complete }

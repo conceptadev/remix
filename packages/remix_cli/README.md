@@ -136,6 +136,18 @@ Use an application prefix such as `Ui` or `Acme`.
 dart run remix_cli:remix add button
 ```
 
+Several items can be named in one command:
+
+```shell
+dart run remix_cli:remix add button card dialog
+```
+
+A batch installs as one unit. The items and everything they depend on are
+ordered once, so a dependency two of them share is written once, and the
+resolve, format, generation, and analysis steps run once for the whole batch
+rather than once per item. Naming an unknown item, or the same item twice,
+fails before anything is written.
+
 The command installs Theme before Button, adds missing compatible hosted
 dependencies, formats the authored files, runs generation only for the
 declared adapters (including previously installed adapters), and analyzes the
@@ -321,7 +333,9 @@ files:
 dart run remix_cli:remix add button --overwrite
 ```
 
-Overwriting Button preserves locally edited Theme files. Compatible existing
+Overwriting Button preserves locally edited Theme files. With several items
+named, `--overwrite` covers each of them and still preserves every dependency
+that came in behind them; overwrite a dependency by naming it explicitly. Compatible existing
 hosted, path, Git, custom-hosted, and override dependency declarations are also
 preserved. An incompatible resolved dependency fails before authored-source
 writes.

@@ -1,5 +1,14 @@
 ## 0.1.0
 
+- `remix add` accepts several items in one invocation, as in
+  `remix add button card dialog`. The batch resolves to a single ordered
+  install, so a shared dependency is written once and the dependency
+  resolution, formatting, code generation, and analysis steps each run once
+  for the whole batch instead of once per item. `--overwrite` applies to every
+  requested item and still never to a dependency pulled in behind one. An
+  unknown or repeated item fails before any write. Single-item invocations are
+  unchanged.
+
 - Adds `sidebar_layout` to both presets: an open-code shell layout, not a
   styled component, that rows an installed `sidebar` beside a header and body
   above its compact breakpoint, and presents it as a start-edge sheet below

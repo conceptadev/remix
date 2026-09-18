@@ -69,7 +69,7 @@ void main() {
         processRunner: runner,
       );
       await installer.add(
-        const AddOptions(item: 'activity', mode: AddMode.write),
+        const AddOptions(items: ['activity'], mode: AddMode.write),
       );
       final config = File(p.join(root.path, 'build.yaml'));
       expect(
@@ -78,7 +78,7 @@ void main() {
       );
       final before = snapshotFiles(root);
       await installer.add(
-        const AddOptions(item: 'activity', mode: AddMode.write),
+        const AddOptions(items: ['activity'], mode: AddMode.write),
       );
       expect(snapshotFiles(root), before);
       config.deleteSync();
@@ -86,7 +86,7 @@ void main() {
           .where((call) => call.arguments.contains('build_runner'))
           .length;
       await installer.add(
-        const AddOptions(item: 'activity', mode: AddMode.write),
+        const AddOptions(items: ['activity'], mode: AddMode.write),
       );
       expect(config.existsSync(), isTrue);
       expect(
@@ -111,12 +111,14 @@ void main() {
       ),
     );
     await installer.add(
-      const AddOptions(item: 'activity', mode: AddMode.dryRun),
+      const AddOptions(items: ['activity'], mode: AddMode.dryRun),
     );
     expect(output.join('\n'), contains('build.yaml'));
     expect(snapshotFiles(root), before);
     output.clear();
-    await installer.add(const AddOptions(item: 'activity', mode: AddMode.diff));
+    await installer.add(
+      const AddOptions(items: ['activity'], mode: AddMode.diff),
+    );
     expect(output.join('\n'), contains('mix_generator:spec_styler_generator'));
     expect(snapshotFiles(root), before);
   });
@@ -143,22 +145,22 @@ void main() {
         );
         final before = snapshotFiles(root);
         for (final mode in [AddMode.dryRun, AddMode.diff]) {
-          await installer.add(AddOptions(item: 'activity', mode: mode));
+          await installer.add(AddOptions(items: ['activity'], mode: mode));
           expect(snapshotFiles(root), before);
         }
         await installer.add(
-          const AddOptions(item: 'activity', mode: AddMode.write),
+          const AddOptions(items: ['activity'], mode: AddMode.write),
         );
         expect(config.readAsStringSync(), contains(target));
         expect(config.readAsStringSync(), isNot(contains(r'$default')));
         final installed = snapshotFiles(root);
         output.clear();
         await installer.add(
-          const AddOptions(item: 'activity', mode: AddMode.diff),
+          const AddOptions(items: ['activity'], mode: AddMode.diff),
         );
         expect(output.join('\n'), contains('No authored-source differences.'));
         await installer.add(
-          const AddOptions(item: 'activity', mode: AddMode.write),
+          const AddOptions(items: ['activity'], mode: AddMode.write),
         );
         expect(snapshotFiles(root), installed);
       },
@@ -179,7 +181,9 @@ void main() {
         processRunner: runner,
       );
       await expectLater(
-        installer.add(const AddOptions(item: 'activity', mode: AddMode.write)),
+        installer.add(
+          const AddOptions(items: ['activity'], mode: AddMode.write),
+        ),
         throwsFormatException,
       );
       expect(runner.calls, isEmpty);
@@ -204,7 +208,9 @@ paths:
       },
     );
 
-    await installer.add(const AddOptions(item: 'button', mode: AddMode.dryRun));
+    await installer.add(
+      const AddOptions(items: ['button'], mode: AddMode.dryRun),
+    );
 
     expect(loadedPreset, 'fortal');
   });
@@ -223,7 +229,7 @@ paths:
       );
 
       await installer.add(
-        const AddOptions(item: 'button', mode: AddMode.write),
+        const AddOptions(items: ['button'], mode: AddMode.write),
       );
 
       expect(writer.paths, [
@@ -278,7 +284,7 @@ paths:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: firstRunner,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write));
       final before = snapshotFiles(root);
 
       final writer = RecordingFileWriter(root);
@@ -289,7 +295,7 @@ paths:
         writeOut: output.add,
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
       expect(snapshotFiles(root), before);
       expect(writer.paths, isEmpty);
@@ -316,7 +322,7 @@ paths:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-      ).add(const AddOptions(item: 'chart', mode: AddMode.write));
+      ).add(const AddOptions(items: ['chart'], mode: AddMode.write));
 
       final pubAdd = runner.calls.singleWhere(
         (call) => call.arguments.take(2).join(' ') == 'pub add',
@@ -354,7 +360,7 @@ paths:
         root,
         flutterPreamble: 'Resolving dependencies...\n',
       ),
-    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(
       File(p.join(root.path, 'lib/ui/components/button.g.dart')).existsSync(),
@@ -459,7 +465,7 @@ packages:
           final before = snapshotFiles(member);
           await expectLater(
             installer.add(
-              const AddOptions(item: 'button', mode: AddMode.write),
+              const AddOptions(items: ['button'], mode: AddMode.write),
             ),
             throwsA(
               isA<StateError>().having(
@@ -473,7 +479,7 @@ packages:
           return;
         }
         await installer.add(
-          const AddOptions(item: 'button', mode: AddMode.write),
+          const AddOptions(items: ['button'], mode: AddMode.write),
         );
 
         expect(
@@ -501,7 +507,7 @@ packages:
       writeOut: (_) {},
       processRunner: happyRunner(root),
       fileWriter: writer,
-    ).add(const AddOptions(item: 'button', mode: AddMode.overwrite));
+    ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
     expect(theme.readAsBytesSync(), themeBytes);
     expect(button.readAsStringSync(), isNot(contains('// local button')));
@@ -520,7 +526,7 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsFormatException,
     );
 
@@ -776,7 +782,7 @@ packages:
           writeOut: (_) {},
           processRunner: runner,
           fileWriter: writer,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
 
@@ -798,7 +804,7 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsFormatException,
     );
 
@@ -818,7 +824,7 @@ packages:
         projectRoot: root,
         writeOut: output.add,
         processRunner: runner,
-      ).add(const AddOptions(item: 'button', mode: AddMode.dryRun));
+      ).add(const AddOptions(items: ['button'], mode: AddMode.dryRun));
 
       expect(snapshotFiles(root), before);
       expect(runner.calls, isEmpty);
@@ -869,7 +875,7 @@ packages:
       projectRoot: root,
       writeOut: output.add,
       processRunner: runner,
-    ).add(const AddOptions(item: 'button', mode: AddMode.diff));
+    ).add(const AddOptions(items: ['button'], mode: AddMode.diff));
 
     expect(snapshotFiles(root), before);
     expect(runner.calls, hasLength(3));
@@ -930,7 +936,7 @@ packages:
             writeLockOnPubGet: false,
             runRealFormatter: true,
           ),
-        ).add(AddOptions(item: item, mode: AddMode.write));
+        ).add(AddOptions(items: [item], mode: AddMode.write));
         final before = snapshotFiles(caseRoot);
         final output = <String>[];
 
@@ -942,7 +948,7 @@ packages:
             runRealFormatter: true,
             runRealGit: true,
           ),
-        ).add(AddOptions(item: item, mode: AddMode.diff));
+        ).add(AddOptions(items: [item], mode: AddMode.diff));
 
         expect(snapshotFiles(caseRoot), before, reason: item);
         expect(output.last, 'No authored-source differences.', reason: item);
@@ -974,7 +980,7 @@ packages:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-      ).add(const AddOptions(item: 'theme', mode: AddMode.diff)),
+      ).add(const AddOptions(items: ['theme'], mode: AddMode.diff)),
       throwsFormatException,
     );
     expect(snapshotFiles(root), before);
@@ -991,7 +997,7 @@ packages:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsStateError,
     );
 
@@ -1017,7 +1023,7 @@ packages:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: happyRunner(caseRoot, failStage: stage),
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsStateError,
         reason: stage,
       );
@@ -1042,7 +1048,7 @@ packages:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: runner,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
       expect(runner.calls, isEmpty);
@@ -1054,7 +1060,7 @@ packages:
           projectRoot: root,
           writeOut: (_) {},
           processRunner: runner,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsFormatException,
       );
       expect(runner.calls, isEmpty);
@@ -1105,7 +1111,7 @@ dependency_overrides:
           projectRoot: caseRoot,
           writeOut: (_) {},
           processRunner: runner,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write));
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
         expect(pubspec.readAsBytesSync(), before, reason: declaration);
         expect(
@@ -1145,7 +1151,7 @@ dev_dependencies:
           writeOut: (_) {},
           processRunner: happyRunner(root, writeLockOnPubGet: false),
           fileWriter: writer,
-        ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
         throwsStateError,
       );
 
@@ -1175,7 +1181,7 @@ dev_dependencies:
               writeOut: (_) {},
               processRunner: happyRunner(caseRoot, writeLockOnPubGet: false),
               fileWriter: writer,
-            ).add(const AddOptions(item: 'accordion', mode: AddMode.write)),
+            ).add(const AddOptions(items: ['accordion'], mode: AddMode.write)),
             throwsStateError,
             reason: preset,
           );
@@ -1199,7 +1205,7 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root, lockedRemix: '$drifted'),
-    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(
       output,
@@ -1221,7 +1227,7 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root),
-    ).add(const AddOptions(item: 'button', mode: AddMode.write));
+    ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
     expect(output, everyElement(isNot(startsWith('Resolved remix'))));
   });
@@ -1273,7 +1279,7 @@ dev_dependencies:
             writeOut: (_) {},
             processRunner: runner,
             fileWriter: writer,
-          ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+          ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
           throwsA(
             isFormatException.having(
               (error) => error.message,
@@ -1329,7 +1335,7 @@ dev_dependencies:
           writeOut: (_) {},
           processRunner: runner,
           fileWriter: writer,
-        ).add(const AddOptions(item: 'chart', mode: AddMode.write)),
+        ).add(const AddOptions(items: ['chart'], mode: AddMode.write)),
         throwsA(
           isFormatException.having(
             (error) => error.message,
@@ -1373,7 +1379,7 @@ dependencies:
         projectRoot: root,
         writeOut: (_) {},
         processRunner: runner,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write));
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 
       expect(pubspec.readAsBytesSync(), before);
       expect(
@@ -1410,7 +1416,7 @@ dev_dependencies:
         writeOut: (_) {},
         processRunner: runner,
         fileWriter: writer,
-      ).add(const AddOptions(item: 'button', mode: AddMode.write)),
+      ).add(const AddOptions(items: ['button'], mode: AddMode.write)),
       throwsA(
         isFormatException.having(
           (error) => error.message,
@@ -1438,7 +1444,7 @@ dev_dependencies:
       projectRoot: root,
       writeOut: output.add,
       processRunner: happyRunner(root),
-    ).add(const AddOptions(item: 'button', mode: AddMode.overwrite));
+    ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
     expect(output, containsAll(['Added theme.', 'Added button.']));
   });
@@ -1453,7 +1459,7 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: happyRunner(root),
-      ).add(const AddOptions(item: 'button', mode: AddMode.overwrite));
+      ).add(const AddOptions(items: ['button'], mode: AddMode.overwrite));
 
       expect(output, containsAll(['Preserved theme.', 'Updated button.']));
     },
@@ -1470,11 +1476,152 @@ dev_dependencies:
         projectRoot: root,
         writeOut: output.add,
         processRunner: happyRunner(root),
-      ).add(const AddOptions(item: 'theme', mode: AddMode.overwrite));
+      ).add(const AddOptions(items: ['theme'], mode: AddMode.overwrite));
 
       expect(output, contains('Updated theme.'));
     },
   );
+
+  group('installing several items in one invocation', () {
+    test(
+      'writes the same tree the same items written one at a time do',
+      () async {
+        // The batch is only worth having if it is indistinguishable from the
+        // sequence it replaces. Compare the whole project, not a file list.
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+        await Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: happyRunner(root),
+        ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
+        final batched = snapshotFiles(root);
+
+        final sequential = createFlutterPackage();
+        addTearDown(() => sequential.deleteSync(recursive: true));
+        await Installer(projectRoot: sequential, writeOut: (_) {}).initialize(
+          const InitOptions(prefix: 'Ui', preset: 'default', uiPath: 'lib/ui'),
+        );
+        writeRequiredPubspec(sequential);
+        writeRequiredLock(sequential);
+        for (final item in ['button', 'card']) {
+          await Installer(
+            projectRoot: sequential,
+            writeOut: (_) {},
+            processRunner: happyRunner(sequential),
+          ).add(AddOptions(items: [item], mode: AddMode.write));
+        }
+
+        expect(batched, snapshotFiles(sequential));
+      },
+    );
+
+    test('resolves, formats, and generates once for the whole batch', () async {
+      // This is the reason the batch exists: the expensive tail runs per
+      // invocation, so four items in one call must not pay it four times.
+      writeRequiredPubspec(root, remixUiIcons: '^0.1.0');
+      writeRequiredLock(root, remixUiIcons: '0.1.0');
+      final runner = happyRunner(root, writeLockOnPubGet: false);
+
+      await Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: runner,
+      ).add(
+        const AddOptions(
+          items: ['activity', 'answer', 'message'],
+          mode: AddMode.write,
+        ),
+      );
+
+      int callsMatching(bool Function(ProcessInvocation) test) =>
+          runner.calls.where(test).length;
+      expect(callsMatching((call) => call.arguments.join(' ') == 'pub get'), 1);
+      expect(
+        callsMatching((call) => call.arguments.contains('build_runner')),
+        1,
+      );
+      expect(callsMatching((call) => call.arguments.first == 'format'), 1);
+      expect(callsMatching((call) => call.arguments.first == 'analyze'), 1);
+      for (final item in ['activity', 'answer', 'message']) {
+        expect(
+          File(p.join(root.path, 'lib/ui/components/$item.dart')).existsSync(),
+          isTrue,
+          reason: item,
+        );
+      }
+    });
+
+    test(
+      'a dependency two requests share is installed and reported once',
+      () async {
+        writeRequiredPubspec(root);
+        writeRequiredLock(root);
+        final output = <String>[];
+
+        await Installer(
+          projectRoot: root,
+          writeOut: output.add,
+          processRunner: happyRunner(root),
+        ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
+
+        expect(output.where((line) => line == 'Added theme.'), hasLength(1));
+        expect(output, contains('Added button.'));
+        expect(output, contains('Added card.'));
+        final barrel = File(
+          p.join(root.path, 'lib/ui/ui.dart'),
+        ).readAsStringSync();
+        expect("export 'theme/tokens.dart';".allMatches(barrel), hasLength(1));
+      },
+    );
+
+    test('overwrite covers every requested item and no dependency', () async {
+      await Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: happyRunner(root),
+      ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.write));
+      final theme = File(p.join(root.path, 'lib/ui/theme/tokens.dart'));
+      theme.writeAsStringSync('// edited by the consumer\n');
+      final output = <String>[];
+
+      await Installer(
+        projectRoot: root,
+        writeOut: output.add,
+        processRunner: happyRunner(root),
+      ).add(
+        const AddOptions(items: ['button', 'card'], mode: AddMode.overwrite),
+      );
+
+      expect(output, contains('Updated button.'));
+      expect(output, contains('Updated card.'));
+      expect(output, contains('Preserved theme.'));
+      expect(theme.readAsStringSync(), '// edited by the consumer\n');
+    });
+
+    test('an unknown item in the batch fails before any write', () async {
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+      final before = snapshotFiles(root);
+      final runner = RecordingProcessRunner(
+        (invocation) => throw StateError('Unexpected ${invocation.display}'),
+      );
+
+      await expectLater(
+        Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: runner,
+        ).add(
+          const AddOptions(items: ['button', 'missing'], mode: AddMode.write),
+        ),
+        throwsA(isA<FormatException>()),
+      );
+
+      expect(snapshotFiles(root), before);
+      expect(runner.calls, isEmpty);
+    });
+  });
 }
 
 Future<void> installButton(Directory root) async {
@@ -1484,7 +1631,7 @@ Future<void> installButton(Directory root) async {
     projectRoot: root,
     writeOut: (_) {},
     processRunner: happyRunner(root),
-  ).add(const AddOptions(item: 'button', mode: AddMode.write));
+  ).add(const AddOptions(items: ['button'], mode: AddMode.write));
 }
 
 /// The Dart the installer resolves from [fakeFlutterMachineJson]'s SDK root.
