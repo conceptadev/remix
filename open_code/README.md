@@ -27,7 +27,7 @@ dart run remix_cli:remix init --prefix Acme --preset default
 dart run remix_cli:remix add button
 ```
 
-One `add` installs one item. The catalog is `theme`, the opt-in `icons` seam,
+One `add` installs every named item plus shared dependencies once. The catalog is `theme`, the opt-in `icons` seam,
 the optional `chart` extension, plus `accordion`, `avatar`, `badge`, `button`,
 `callout`, `card`, `checkbox`, `dashboard_demo`, `dashboard_shell`, `data_list`, `data_table`, `dialog`,
 `disclosure`, `divider`, `icon_button`, `link`, `menu`, `popover`, `progress`,

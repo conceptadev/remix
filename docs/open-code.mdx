@@ -99,7 +99,7 @@ Global options:
     --version    Print the remix_cli version.
 
 Available commands:
-  add    Install one bundled registry item.
+  add    Install bundled registry items.
   init   Initialize Remix source installation settings.
 
 Run "remix help <command>" for more information about a command.
@@ -449,7 +449,7 @@ If you like the upstream version, take it wholesale:
 remix add button --overwrite
 ```
 
-`--overwrite` replaces **only the item you named**. Already-installed registry
+`--overwrite` replaces **only the items you named**. Already-installed registry
 dependencies are untouched, so updating Button never silently rewrites a Theme
 you have customized:
 
@@ -615,7 +615,7 @@ components that use them. Fortal's component names use the configured prefix,
 so an Acme installation exposes `AcmeSidebar`, `AcmeHeading`, and
 `AcmeText` alongside its generated controls.
 
-One `add` installs one item. The names above use the default `Ui` prefix;
+One `add` installs every named item plus shared dependencies once. The names above use the default `Ui` prefix;
 `--prefix Acme` gives you `AcmeButton` and friends. An axis is an enum the
 recipe declares, and a recipe whose axis is named `variant` also gets one
 named constructor per value, so `UiBadge.destructive(label: 'Failing')` works

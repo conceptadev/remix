@@ -1599,6 +1599,66 @@ dev_dependencies:
       expect(theme.readAsStringSync(), '// edited by the consumer\n');
     });
 
+    test(
+      'overwrite updates a requested item that is also a dependency',
+      () async {
+        // Theme is Button's dependency *and* named in the same invocation.
+        // Requested-vs-dependency is a name set, not a last-item check, so
+        // --overwrite must rewrite Theme rather than preserve it.
+        await Installer(
+          projectRoot: root,
+          writeOut: (_) {},
+          processRunner: happyRunner(root),
+        ).add(const AddOptions(items: ['button'], mode: AddMode.write));
+        final theme = File(p.join(root.path, 'lib/ui/theme/tokens.dart'));
+        final button = File(p.join(root.path, 'lib/ui/components/button.dart'));
+        theme.writeAsStringSync('// edited theme\n');
+        button.writeAsStringSync('// edited button\n');
+        final output = <String>[];
+
+        await Installer(
+          projectRoot: root,
+          writeOut: output.add,
+          processRunner: happyRunner(root),
+        ).add(
+          const AddOptions(items: ['theme', 'button'], mode: AddMode.overwrite),
+        );
+
+        expect(output, contains('Updated theme.'));
+        expect(output, contains('Updated button.'));
+        expect(output, isNot(contains('Preserved theme.')));
+        expect(theme.readAsStringSync(), isNot('// edited theme\n'));
+        expect(button.readAsStringSync(), isNot('// edited button\n'));
+      },
+    );
+
+    test('dry-run and diff leave the tree unchanged', () async {
+      // Preview modes share the same plan as a real install. Naming two items
+      // must not be enough to start writing.
+      writeRequiredPubspec(root);
+      writeRequiredLock(root);
+      final before = snapshotFiles(root);
+      final dryRunner = happyRunner(root);
+
+      await Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: dryRunner,
+      ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.dryRun));
+
+      expect(snapshotFiles(root), before);
+      expect(dryRunner.calls, isEmpty);
+
+      final diffRunner = happyRunner(root);
+      await Installer(
+        projectRoot: root,
+        writeOut: (_) {},
+        processRunner: diffRunner,
+      ).add(const AddOptions(items: ['button', 'card'], mode: AddMode.diff));
+
+      expect(snapshotFiles(root), before);
+    });
+
     test('an unknown item in the batch fails before any write', () async {
       writeRequiredPubspec(root);
       writeRequiredLock(root);

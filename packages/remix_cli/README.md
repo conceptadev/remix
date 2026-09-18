@@ -183,8 +183,8 @@ lib/ui/
     button.g.dart
 ```
 
-One `add` installs one item and its registry dependencies. Repeat it for each
-component you need. Default component items add an authored file and a
+One `add` installs every named item plus shared dependencies once.
+Default component items add an authored file and a
 generated part to `components/`. Fortal also has shared source items without
 generated parts, such as `base_button` and `typography`.
 Existing authored source stays untouched. When generation runs, the build

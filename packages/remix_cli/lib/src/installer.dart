@@ -738,12 +738,12 @@ _ItemState _classify(Directory root, List<String> targets) {
 
 void _validateInstallStates(
   Map<String, _ItemState> states,
-  Set<String> requested,
+  Set<String> requestedNames,
   AddMode mode,
 ) {
   for (final entry in states.entries) {
     if (entry.value != _ItemState.partial) continue;
-    if (!requested.contains(entry.key)) {
+    if (!requestedNames.contains(entry.key)) {
       throw FormatException(
         'Registry dependency ${entry.key} is partially installed; repair it or add it explicitly.',
       );
